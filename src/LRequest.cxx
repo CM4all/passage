@@ -41,7 +41,7 @@ public:
 	}
 };
 
-static constexpr char lua_request_class[] = "qrelay.request";
+static constexpr char lua_request_class[] = "passage.request";
 typedef Lua::Class<RichRequest, lua_request_class> LuaRequest;
 
 static int
