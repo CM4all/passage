@@ -54,10 +54,8 @@ try {
 
 	const auto L = handler->GetState();
 	NewLuaRequest(L, std::move(request), peer_cred);
-	if (lua_pcall(L, 1, 1, 0))
+	if (lua_pcall(L, 1, 0, 0))
 		throw Lua::PopError(L);
-
-	AtScopeExit(L) { lua_pop(L, 1); };
 
 } catch (...) {
 	logger(1, std::current_exception());
