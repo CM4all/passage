@@ -141,3 +141,5 @@ executable('cm4all-passage-client',
   ],
   install: true,
 )
+
+subdir('doc')
