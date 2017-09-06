@@ -39,6 +39,8 @@ public:
 	static void Register(lua_State *L);
 
 private:
+	void Do(const Action &action);
+
 	/* virtual methods from class UdpHandler */
 	void OnUdpDatagram(const void *data, size_t length,
 			   SocketAddress address, int uid) override;

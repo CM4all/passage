@@ -6,6 +6,7 @@
 #include "Request.hxx"
 #include "LRequest.hxx"
 #include "LAction.hxx"
+#include "Action.hxx"
 #include "lua/Error.hxx"
 #include "net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
@@ -42,6 +43,18 @@ PassageConnection::Register(lua_State *L)
 }
 
 void
+PassageConnection::Do(const Action &action)
+{
+	assert(pending_response);
+
+	switch (action.type) {
+	case Action::Type::UNDEFINED:
+		assert(false);
+		gcc_unreachable();
+	}
+}
+
+void
 PassageConnection::OnUdpDatagram(const void *data, size_t length,
 				 SocketAddress address, int)
 try {
@@ -60,8 +73,16 @@ try {
 
 	const auto L = handler->GetState();
 	NewLuaRequest(L, std::move(request), peer_cred);
-	if (lua_pcall(L, 1, 0, 0))
+	if (lua_pcall(L, 1, 1, 0))
 		throw Lua::PopError(L);
+
+	AtScopeExit(L) { lua_pop(L, 1); };
+
+	auto *action = CheckLuaAction(L, -1);
+	if (action == nullptr)
+		throw std::runtime_error("Wrong return type from Lua handler");
+
+	Do(*action);
 
 	if (pending_response) {
 		pending_response = false;
