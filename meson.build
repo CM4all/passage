@@ -31,6 +31,7 @@ boost = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 liblua = dependency('luajit')
 libevent = dependency('libevent', version: '>= 2.0.19')
 libsystemd = dependency('libsystemd')
+libbp = dependency('libcm4all-beng-proxy')
 
 inc = include_directories('src', 'libcommon/src')
 
@@ -121,9 +122,11 @@ executable('cm4all-passage',
   'src/Connection.cxx',
   'src/Request.cxx',
   'src/LRequest.cxx',
+  'src/FadeChildren.cxx',
   'src/Main.cxx',
   include_directories: inc,
   dependencies: [
+    libbp,
     boost, libevent, libsystemd,
     liblua,
     util_dep,

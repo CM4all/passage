@@ -4,6 +4,9 @@
 
 #include "LRequest.hxx"
 #include "Request.hxx"
+#include "LAction.hxx"
+#include "Action.hxx"
+#include "LAddress.hxx"
 #include "lua/Class.hxx"
 #include "CgroupProc.hxx"
 #include "MountProc.hxx"
@@ -99,9 +102,32 @@ try {
 	return luaL_error(L, e.what());
 }
 
+static int
+NewFadeChildrenAction(lua_State *L)
+{
+	// TODO: support tag parameter
+
+	if (lua_gettop(L) != 2)
+		return luaL_error(L, "Invalid parameters");
+
+	AllocatedSocketAddress address;
+
+	try {
+		address = GetLuaAddress(L, 2);
+	} catch (const std::exception &e) {
+		return luaL_error(L, e.what());
+	}
+
+	auto &action = *NewLuaAction(L, 1);
+	action.type = Action::Type::FADE_CHILDREN;
+	action.address = std::move(address);
+	return 1;
+}
+
 static constexpr struct luaL_reg request_methods [] = {
 	{"get_cgroup", GetCgroup},
 	{"get_mount_info", GetMountInfo},
+	{"fade_children", NewFadeChildrenAction},
 	{nullptr, nullptr}
 };
 

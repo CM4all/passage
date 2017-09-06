@@ -9,9 +9,12 @@
 struct Action {
 	enum class Type {
 		UNDEFINED,
+		FADE_CHILDREN,
 	};
 
 	Type type = Type::UNDEFINED;
+
+	AllocatedSocketAddress address;
 
 	bool IsDefined() const {
 		return type != Type::UNDEFINED;

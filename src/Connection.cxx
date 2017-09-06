@@ -7,6 +7,7 @@
 #include "LRequest.hxx"
 #include "LAction.hxx"
 #include "Action.hxx"
+#include "FadeChildren.hxx"
 #include "lua/Error.hxx"
 #include "net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
@@ -51,6 +52,11 @@ PassageConnection::Do(const Action &action)
 	case Action::Type::UNDEFINED:
 		assert(false);
 		gcc_unreachable();
+
+	case Action::Type::FADE_CHILDREN:
+		// TODO: support tag parameter
+		FadeChildren(action.address, nullptr);
+		break;
 	}
 }
 

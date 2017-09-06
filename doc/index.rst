@@ -86,7 +86,10 @@ such action objects; they do not actually perform the action.
 
 The following actions are possible:
 
-* TODO: implement
+* :samp:`fade_children(ADDRESS)`: send a :samp:`FADE_CHILDREN` control
+  packet to the given address.  The address is either a string
+  containing a (numeric) IP address, or an `address` object created by
+  :samp:`control_resolve()`.
 
 
 Addresses
