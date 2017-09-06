@@ -4,6 +4,8 @@
 
 #include "CommandLine.hxx"
 #include "Instance.hxx"
+#include "LAddress.hxx"
+#include "LResolver.hxx"
 #include "system/SetupProcess.hxx"
 #include "net/AllocatedSocketAddress.hxx"
 #include "lua/Value.hxx"
@@ -62,6 +64,9 @@ SetupConfigState(lua_State *L, Instance &instance)
 {
 	luaL_openlibs(L);
 
+	RegisterLuaAddress(L);
+	RegisterLuaResolver(L);
+
 	Lua::SetGlobal(L, "systemd", Lua::LightUserData(&systemd_magic));
 
 	Lua::SetGlobal(L, "passage_listen",
@@ -75,6 +80,8 @@ SetupRuntimeState(lua_State *L)
     Lua::SetGlobal(L, "passage_listen", nullptr);
 
     PassageConnection::Register(L);
+
+    UnregisterLuaResolver(L);
 }
 
 static int
