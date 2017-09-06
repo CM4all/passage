@@ -41,12 +41,16 @@ PassageConnection::Register(lua_State *L)
 
 void
 PassageConnection::OnUdpDatagram(const void *data, size_t length,
-				 SocketAddress, int)
+				 SocketAddress address, int)
 try {
+	assert(!pending_response);
+
 	if (length == 0) {
 		delete this;
 		return;
 	}
+
+	pending_response = true;
 
 	Request request(StringView((const char *)data, length));
 
@@ -57,7 +61,16 @@ try {
 	if (lua_pcall(L, 1, 0, 0))
 		throw Lua::PopError(L);
 
+	if (pending_response) {
+		pending_response = false;
+		listener.Reply(address, "OK", 2);
+	}
 } catch (...) {
+	if (pending_response) {
+		pending_response = false;
+		listener.Reply(address, "ERROR", 5);
+	}
+
 	logger(1, std::current_exception());
 	delete this;
 }

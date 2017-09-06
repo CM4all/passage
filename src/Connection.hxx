@@ -28,6 +28,8 @@ class PassageConnection final
 
 	UdpListener listener;
 
+	bool pending_response = false;
+
 public:
 	PassageConnection(Lua::ValuePtr _handler,
 			  const RootLogger &parent_logger,
