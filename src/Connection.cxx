@@ -5,6 +5,7 @@
 #include "Instance.hxx"
 #include "Request.hxx"
 #include "LRequest.hxx"
+#include "LAction.hxx"
 #include "lua/Error.hxx"
 #include "net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
@@ -36,6 +37,7 @@ PassageConnection::PassageConnection(Lua::ValuePtr _handler,
 void
 PassageConnection::Register(lua_State *L)
 {
+    RegisterLuaAction(L);
     RegisterLuaRequest(L);
 }
 

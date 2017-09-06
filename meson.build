@@ -112,6 +112,7 @@ net_dep = declare_dependency(link_with: net)
 executable('cm4all-passage',
   'src/CommandLine.cxx',
   'src/system/SetupProcess.cxx',
+  'src/LAction.cxx',
   'src/LAddress.cxx',
   'src/LResolver.cxx',
   'src/CgroupProc.cxx',
