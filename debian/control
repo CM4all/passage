@@ -21,6 +21,15 @@ Description: Passage daemon
  Passage is a daemon which allows jailed/containerized processes to
  talk to the host to trigger certain actions.
 
+Package: cm4all-passage-client
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Passage client
+ Passage is a daemon which allows jailed/containerized processes to
+ talk to the host to trigger certain actions.
+ .
+ This package contains a simple and generic client.
+
 Package: cm4all-passage-doc
 Section: non-free/doc
 Architecture: all

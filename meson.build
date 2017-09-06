@@ -131,3 +131,13 @@ executable('cm4all-passage',
   install: true,
   install_dir: 'sbin',
 )
+
+executable('cm4all-passage-client',
+  'src/Client.cxx',
+  include_directories: inc,
+  dependencies: [
+    net_dep,
+    util_dep,
+  ],
+  install: true,
+)
