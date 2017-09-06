@@ -1,0 +1,9 @@
+[Unit]
+Description=CM4all Passage
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=notify
+User=cm4all-passage
+ExecStart=/usr/sbin/cm4all-passage --config /etc/cm4all/passage/config.lua

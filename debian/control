@@ -1,0 +1,31 @@
+Source: cm4all-passage
+Section: non-free/admin
+Priority: extra
+Maintainer: Max Kellermann <mk@cm4all.com>
+Build-Depends: debhelper (>= 10), dh-systemd,
+ meson (>= 0.37),
+ g++ (>= 4:6),
+ libc6-dev (>= 2.13),
+ libboost-program-options-dev (>= 1.54),
+ libevent-dev (>= 2.0.19),
+ libsystemd-dev,
+ libluajit-5.1-dev,
+ python3-sphinx
+Standards-Version: 4.0.0
+Vcs-git: git.intern.cm-ag:/srv/git/master/passage.git
+
+Package: cm4all-passage
+Architecture: any
+Depends: ${shlibs:Depends}, systemd-sysv, adduser
+Description: Passage daemon
+ Passage is a daemon which allows jailed/containerized processes to
+ talk to the host to trigger certain actions.
+
+Package: cm4all-passage-doc
+Section: non-free/doc
+Architecture: all
+Description: Documentation for cm4all-passage
+ Passage is a daemon which allows jailed/containerized processes to
+ talk to the host to trigger certain actions.
+ .
+ This package contains documentation.

@@ -1,0 +1,9 @@
+/*.debhelper
+/*.substvars
+/*-stamp
+/files
+
+/build/
+/tmp/
+/cm4all-passage/
+/cm4all-passage-doc/

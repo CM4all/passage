@@ -1,0 +1,3 @@
+usr/sbin/cm4all-passage
+config.lua etc/cm4all/passage
+debian/cm4all-passage.service debian/cm4all-passage.socket lib/systemd/system
