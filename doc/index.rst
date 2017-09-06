@@ -89,6 +89,34 @@ The following actions are possible:
 * TODO: implement
 
 
+Addresses
+^^^^^^^^^
+
+It is recommended to create all `address` objects during startup, to
+avoid putting unnecessary pressure on the Lua garbage collector, and
+to reduce the overhead for invoking the system resolver (which blocks
+*Passage* execution).  The function `control_resolve()` creates such an
+`address` object::
+
+  server1 = control_resolve('192.168.0.2')
+  server2 = control_resolve('[::1]:4321')
+  server3 = control_resolve('server1.local:1234')
+  server4 = control_resolve('/run/server5.sock')
+  server5 = control_resolve('@server4')
+
+These examples do the following:
+
+- convert a numeric IPv4 address to an `address` object (port defaults
+  to 5478, the *beng-proxy* control standard port)
+- convert a numeric IPv6 address with a non-standard port to an
+  `address` object
+- invoke the system resolver to resolve a host name to an IP address
+  (which blocks qrelay startup; not recommended)
+- convert a path string to a "local" socket address
+- convert a name to an abstract "local" socket address (prefix '@' is
+  converted to a null byte, making the address "abstract")
+
+
 About Lua
 ^^^^^^^^^
 
