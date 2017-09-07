@@ -16,13 +16,14 @@ static void
 SendControl(SocketDescriptor fd, SocketAddress address,
 	    enum beng_control_command cmd, ConstBuffer<void> payload)
 {
+	uint32_t magic = ToBE32(control_magic);
 	struct beng_control_header header = {
 		.length = ToBE16(payload.size),
 		.command = ToBE16(uint16_t(cmd)),
 	};
 
 	struct iovec v[] = {
-		{ const_cast<uint32_t *>(&control_magic), sizeof(control_magic) },
+		{ &magic, sizeof(magic) },
 		{ &header, sizeof(header) },
 		{ const_cast<void *>(payload.data), payload.size },
 	};
@@ -41,7 +42,7 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 	if (nbytes < 0)
 		throw MakeErrno("Failed to send control packet");
 
-	if (size_t(nbytes) != sizeof(control_magic) + sizeof(header) + payload.size)
+	if (size_t(nbytes) != sizeof(magic) + sizeof(header) + payload.size)
 		throw std::runtime_error("Short control send");
 }
 
