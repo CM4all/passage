@@ -11,6 +11,8 @@
 
 #include <stdlib.h>
 
+struct Usage {};
+
 static UniqueSocketDescriptor
 CreateConnect(SocketAddress address)
 {
@@ -79,10 +81,8 @@ ReceiveResponse(SocketDescriptor fd)
 int
 main(int argc, char **argv)
 try {
-	if (argc != 3) {
-		fprintf(stderr, "Usage: %s PATH COMMAND\n", argv[0]);
-		return EXIT_FAILURE;
-	}
+	if (argc != 3)
+		throw Usage();
 
 	const char *const path = argv[1];
 	const StringView command(argv[2]);
@@ -94,6 +94,9 @@ try {
 	ReceiveResponse(fd);
 
 	return EXIT_SUCCESS;
+} catch (Usage) {
+	fprintf(stderr, "Usage: %s PATH COMMAND\n", argv[0]);
+	return EXIT_FAILURE;
 } catch (const std::exception &e) {
 	PrintException(e);
 	return EXIT_FAILURE;
