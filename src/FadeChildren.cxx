@@ -22,17 +22,20 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 		.command = ToBE16(uint16_t(cmd)),
 	};
 
+	const size_t padding = (0 - payload.size) & 0x3;
+
 	struct iovec v[] = {
 		{ &magic, sizeof(magic) },
 		{ &header, sizeof(header) },
 		{ const_cast<void *>(payload.data), payload.size },
+		{ &magic, padding },
 	};
 
 	struct msghdr msg = {
 		.msg_name = const_cast<struct sockaddr *>(address.GetAddress()),
 		.msg_namelen = address.GetSize(),
 		.msg_iov = v,
-		.msg_iovlen = 2u + !payload.IsNull(),
+		.msg_iovlen = 2u + 2u * !payload.IsNull(),
 		.msg_control = nullptr,
 		.msg_controllen = 0,
 		.msg_flags = 0,
@@ -42,7 +45,7 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 	if (nbytes < 0)
 		throw MakeErrno("Failed to send control packet");
 
-	if (size_t(nbytes) != sizeof(magic) + sizeof(header) + payload.size)
+	if (size_t(nbytes) != sizeof(magic) + sizeof(header) + payload.size + padding)
 		throw std::runtime_error("Short control send");
 }
 
