@@ -1,6 +1,6 @@
 cm4all-passage (0.2) unstable; urgency=low
 
-  * 
+  * control: prepend protocol magic in beng-proxy control packets
 
  --   
 
