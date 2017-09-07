@@ -1,5 +1,5 @@
 [Socket]
-ListenStream=/run/cm4all/passage/socket
+ListenSequentialPacket=/run/cm4all/passage/socket
 PassCredentials=true
 
 [Install]
