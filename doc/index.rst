@@ -173,7 +173,9 @@ response share the same general structure::
 
 A packet consists of at least one command (request) or status
 (response).  The command is an unquoted string consisting of ASCII
-letters, digits or underscore.
+letters, digits or underscore.  The response status can be either
+:samp:`OK` or :samp:`ERROR` (unquoted).  An error status may be
+followed by a message as the first (and only) parameter.
 
 There may be positional string parameters, and named headers.  The
 last newline character may be omitted.  Finally, binary data may be
