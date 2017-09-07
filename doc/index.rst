@@ -91,6 +91,13 @@ The following actions are possible:
   containing a (numeric) IP address, or an `address` object created by
   :samp:`control_resolve()`.
 
+Returning without an action from the handler function (i.e. returning
+:samp:`nil`) is considered a silent success.
+
+If you encounter a problem, raise an exception by invoking the Lua
+function :samp:`error()`.  The message passed to this function will be
+logged.
+
 
 Addresses
 ^^^^^^^^^
