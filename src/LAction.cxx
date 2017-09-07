@@ -8,10 +8,10 @@
 #include "lua/Value.hxx"
 
 struct LAction : Action {
-	Lua::Value mail;
+	Lua::Value request;
 
-	LAction(lua_State *L, Lua::StackIndex mail_idx)
-		:mail(L, mail_idx) {}
+	LAction(lua_State *L, Lua::StackIndex request_idx)
+		:request(L, request_idx) {}
 };
 
 static constexpr char lua_action_class[] = "passage.action";
@@ -25,9 +25,9 @@ RegisterLuaAction(lua_State *L)
 }
 
 Action *
-NewLuaAction(lua_State *L, int mail_idx)
+NewLuaAction(lua_State *L, int request_idx)
 {
-	return LuaAction::New(L, L, Lua::StackIndex(mail_idx));
+	return LuaAction::New(L, L, Lua::StackIndex(request_idx));
 }
 
 Action *
@@ -37,8 +37,8 @@ CheckLuaAction(lua_State *L, int idx)
 }
 
 void
-PushLuaActionMail(const Action &_action)
+PushLuaActionRequest(const Action &_action)
 {
 	auto &action = (const LAction &)_action;
-	action.mail.Push();
+	action.request.Push();
 }

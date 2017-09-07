@@ -11,17 +11,17 @@ void
 RegisterLuaAction(lua_State *L);
 
 /**
- * @param mail_idx the index of the associated #MutableMail instance
- * on the Lua stack
+ * @param request_idx the index of the associated #Request instance on
+ * the Lua stack
  */
 Action *
-NewLuaAction(lua_State *L, int mail_idx);
+NewLuaAction(lua_State *L, int request_idx);
 
 Action *
 CheckLuaAction(lua_State *L, int idx);
 
 /**
- * Push the associated mail object on the Lua stack.
+ * Push the associated request object on the Lua stack.
  */
 void
-PushLuaActionMail(const Action &action);
+PushLuaActionRequest(const Action &action);
