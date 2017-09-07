@@ -6,6 +6,8 @@
 
 #include "net/AllocatedSocketAddress.hxx"
 
+#include <string>
+
 struct Action {
 	enum class Type {
 		UNDEFINED,
@@ -15,6 +17,8 @@ struct Action {
 	Type type = Type::UNDEFINED;
 
 	AllocatedSocketAddress address;
+
+	std::string param;
 
 	bool IsDefined() const {
 		return type != Type::UNDEFINED;
