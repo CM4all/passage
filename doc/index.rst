@@ -172,10 +172,13 @@ response share the same general structure::
   \0BINARY
 
 A packet consists of at least one command (request) or status
-(response).  There may be positional string parameters, and named
-headers.  The last newline character may be omitted.  Finally, binary
-data may be appended, separated from the rest with a null byte.
-Ancillary data may contain file descriptors.
+(response).  The command is an unquoted string consisting of ASCII
+letters, digits or underscore.
+
+There may be positional string parameters, and named headers.  The
+last newline character may be omitted.  Finally, binary data may be
+appended, separated from the rest with a null byte.  Ancillary data
+may contain file descriptors.
 
 The meaning of commands, parameters, headers, binary data and the file
 descriptors is defined by the Lua configuration script.

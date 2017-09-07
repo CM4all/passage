@@ -12,7 +12,7 @@
 static constexpr bool
 IsValidCommandChar(char ch)
 {
-	return IsAlphaNumericASCII(ch);
+	return IsAlphaNumericASCII(ch) || ch == '_';
 }
 
 static void
