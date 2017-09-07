@@ -187,3 +187,15 @@ descriptors is defined by the Lua configuration script.
 
 **Note** that parameters, headers and binary data are not yet
 implemented.
+
+
+Common Commands
+^^^^^^^^^^^^^^^
+
+This section describes common commands, to establish a convention on
+how they shall be implemented.
+
+* :samp:`fade_children`: send a :samp:`FADE_CHILDREN` control
+  packet to a configured address.  The Lua script shall determine the
+  client's identity and should only fade child processes belonging to
+  that user account.
