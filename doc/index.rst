@@ -184,3 +184,6 @@ may contain file descriptors.
 
 The meaning of commands, parameters, headers, binary data and the file
 descriptors is defined by the Lua configuration script.
+
+**Note** that parameters, headers and binary data are not yet
+implemented.
