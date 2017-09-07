@@ -153,7 +153,7 @@ The Debian package :file:`cm4all-passage-client` contains a very
 simple and generic client.  There are two parameters: the socket path
 to connect to and the command.  Example::
 
-  cm4all-passage-client /run/cm4all/passage/socket restart
+  cm4all-passage-client restart
 
 
 Protocol

@@ -7,6 +7,7 @@
 #include "net/UniqueSocketDescriptor.hxx"
 #include "system/Error.hxx"
 #include "util/PrintException.hxx"
+#include "util/StringCompare.hxx"
 #include "util/StringView.hxx"
 
 #include <stdlib.h>
@@ -81,11 +82,22 @@ ReceiveResponse(SocketDescriptor fd)
 int
 main(int argc, char **argv)
 try {
-	if (argc != 3)
+	const char *path = "/run/cm4all/passage/socket";
+
+	int i = 1;
+	for (i = 1; i < argc && *argv[i] == '-'; ++i) {
+		if (auto p = StringAfterPrefix(argv[i], "--server=")) {
+			path = p;
+		} else {
+			fprintf(stderr, "Unknown option: %s\n", argv[i]);
+			throw Usage();
+		}
+	}
+
+	if (i + 1 != argc)
 		throw Usage();
 
-	const char *const path = argv[1];
-	const StringView command(argv[2]);
+	const StringView command(argv[i]);
 
 	CheckCommand(command);
 
