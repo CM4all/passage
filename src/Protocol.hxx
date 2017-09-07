@@ -12,10 +12,10 @@
 static void
 CheckCommand(StringView s)
 {
-    if (s.IsEmpty())
-        throw std::runtime_error("Empty command");
+	if (s.IsEmpty())
+		throw std::runtime_error("Empty command");
 
-    for (char ch : s)
-        if (!IsAlphaNumericASCII(ch))
-            throw std::runtime_error("Malformed command");
+	for (char ch : s)
+		if (!IsAlphaNumericASCII(ch))
+			throw std::runtime_error("Malformed command");
 }
