@@ -107,7 +107,7 @@ try {
 
 	return EXIT_SUCCESS;
 } catch (Usage) {
-	fprintf(stderr, "Usage: %s PATH COMMAND\n", argv[0]);
+	fprintf(stderr, "Usage: %s [--server=PATH] COMMAND\n", argv[0]);
 	return EXIT_FAILURE;
 } catch (const std::exception &e) {
 	PrintException(e);
