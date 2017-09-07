@@ -119,6 +119,21 @@ These examples do the following:
 - convert a name to an abstract "local" socket address (prefix '@' is
   converted to a null byte, making the address "abstract")
 
+Security
+^^^^^^^^
+
+This software and the Lua code used to configure it is very sensitive,
+because untrusted processes can send arbitrary data to it.
+
+Never trust the information from the packet payload.
+
+Do not try to establish an authentication protocol.  If you want to
+know who the client is, query those attributes which cannot be changed
+by the client, such as cgroup membership and file system mounts.
+Consider that the client may be able to create a new mount namespace
+and change all mounts.  If you have doubts about the client's
+identity, bail out (e.g. with Lua's :samp:`error()` function).
+
 
 About Lua
 ^^^^^^^^^
