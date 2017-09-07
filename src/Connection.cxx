@@ -54,8 +54,8 @@ PassageConnection::Do(const Action &action)
 		gcc_unreachable();
 
 	case Action::Type::FADE_CHILDREN:
-		// TODO: support tag parameter
-		FadeChildren(action.address, nullptr);
+		FadeChildren(action.address,
+			     action.param.empty() ? nullptr : action.param.c_str());
 		break;
 	}
 }

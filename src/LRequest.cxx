@@ -105,9 +105,8 @@ try {
 static int
 NewFadeChildrenAction(lua_State *L)
 {
-	// TODO: support tag parameter
-
-	if (lua_gettop(L) != 2)
+	const auto top = lua_gettop(L);
+	if (top < 2 || top > 3)
 		return luaL_error(L, "Invalid parameters");
 
 	AllocatedSocketAddress address;
@@ -118,9 +117,19 @@ NewFadeChildrenAction(lua_State *L)
 		return luaL_error(L, e.what());
 	}
 
+	const char *child_tag = nullptr;
+	if (top >= 3) {
+		if (!lua_isstring(L, 3))
+			luaL_argerror(L, 3, "string expected");
+
+		child_tag = lua_tostring(L, 3);
+	}
+
 	auto &action = *NewLuaAction(L, 1);
 	action.type = Action::Type::FADE_CHILDREN;
 	action.address = std::move(address);
+	if (child_tag != nullptr)
+		action.param = child_tag;
 	return 1;
 }
 
