@@ -18,7 +18,7 @@ IsValidCommandChar(char ch)
 static void
 CheckCommand(StringView s)
 {
-	if (s.IsEmpty())
+	if (s.empty())
 		throw std::runtime_error("Empty command");
 
 	for (char ch : s)
