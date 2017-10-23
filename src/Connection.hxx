@@ -6,8 +6,8 @@
 #define CONNECTION_HXX
 
 #include "lua/ValuePtr.hxx"
-#include "net/UdpListener.hxx"
-#include "net/UdpHandler.hxx"
+#include "event/net/UdpListener.hxx"
+#include "event/net/UdpHandler.hxx"
 #include "io/Logger.hxx"
 #include "util/ConstBuffer.hxx"
 

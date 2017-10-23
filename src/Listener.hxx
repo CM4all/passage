@@ -6,7 +6,7 @@
 #define LISTENER_HXX
 
 #include "Connection.hxx"
-#include "net/TemplateServerSocket.hxx"
+#include "event/net/TemplateServerSocket.hxx"
 #include "lua/ValuePtr.hxx"
 
 typedef TemplateServerSocket<PassageConnection,
