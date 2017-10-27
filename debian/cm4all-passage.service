@@ -7,3 +7,6 @@ After=network-online.target
 Type=notify
 User=cm4all-passage
 ExecStart=/usr/sbin/cm4all-passage --config /etc/cm4all/passage/config.lua
+
+[Install]
+WantedBy=multi-user.target
