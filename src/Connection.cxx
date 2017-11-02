@@ -44,6 +44,15 @@ PassageConnection::Register(lua_State *L)
 }
 
 void
+PassageConnection::SendResponse(SocketAddress address, StringView status)
+{
+	assert(pending_response);
+
+	pending_response = false;
+	listener.Reply(address, status.data, status.size);
+}
+
+void
 PassageConnection::Do(const Action &action)
 {
 	assert(pending_response);
@@ -90,15 +99,11 @@ try {
 
 	Do(*action);
 
-	if (pending_response) {
-		pending_response = false;
-		listener.Reply(address, "OK", 2);
-	}
+	if (pending_response)
+		SendResponse(address, "OK");
 } catch (...) {
-	if (pending_response) {
-		pending_response = false;
-		listener.Reply(address, "ERROR", 5);
-	}
+	if (pending_response)
+		SendResponse(address, "ERROR");
 
 	logger(1, std::current_exception());
 	delete this;

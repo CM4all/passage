@@ -41,6 +41,8 @@ public:
 private:
 	void Do(const Action &action);
 
+	void SendResponse(SocketAddress address, StringView status);
+
 	/* virtual methods from class UdpHandler */
 	void OnUdpDatagram(const void *data, size_t length,
 			   SocketAddress address, int uid) override;
