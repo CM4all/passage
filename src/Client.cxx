@@ -53,26 +53,28 @@ static void
 ReceiveResponse(SocketDescriptor fd)
 {
 	char buffer[4096];
-	ssize_t nbytes = recv(fd.Get(), buffer, sizeof(buffer) - 1, 0);
+	ssize_t nbytes = recv(fd.Get(), buffer, sizeof(buffer), 0);
 	if (nbytes < 0)
 		throw MakeErrno("Failed to receive response");
 	if (nbytes == 0)
 		throw std::runtime_error("Server closed the connection prematurely");
 
-	buffer[nbytes] = 0;
+	StringView payload(buffer, nbytes);
 
-	char *newline = strchr(buffer, '\n');
+	const char *newline = payload.Find('\n');
 	if (newline != nullptr)
-		newline = 0;
+		payload.size = newline - payload.data;
 
-	if (strncmp(buffer, "OK", 2) == 0 &&
-	    (buffer[2] == 0 || buffer[2] == ' ')) {
+	if (payload.StartsWith("OK") &&
+	    (payload.size == 2 || payload[2] == ' ')) {
 		return;
-	} else if (strncmp(buffer, "ERROR", 5) == 0) {
-		if (buffer[5] == ' ')
-			throw std::runtime_error(std::string("Server error: ") + (buffer + 6));
-		else if (buffer[5] == 0)
+	} else if (payload.StartsWith("ERROR")) {
+		if (payload.size == 5)
 			throw std::runtime_error("Server error");
+		if (payload[5] == ' ')
+			throw std::runtime_error("Server error: " +
+						 std::string(payload.data + 6,
+							     payload.size - 6));
 		else
 			throw std::runtime_error("Malformed server error");
 	} else
