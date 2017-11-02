@@ -91,6 +91,11 @@ The following actions are possible:
   containing a (numeric) IP address, or an `address` object created by
   :samp:`control_resolve()`.
 
+* :samp:`exec_pipe(PATH, ARG, ...)`: execute the given program
+  (should be an absolute path because there is no :envvar:`$PATH`
+  resolution here) and connect a pipe to its standard output; send the
+  pipe's reading side to the client.
+
 Returning without an action from the handler function (i.e. returning
 :samp:`nil`) is considered a silent success.
 

@@ -40,7 +40,7 @@ public:
 	static void Register(lua_State *L);
 
 private:
-	void Do(const Action &action);
+	void Do(SocketAddress address, const Action &action);
 
 	void SendResponse(SocketAddress address, StringView status);
 	void SendResponse(SocketAddress address, StringView status,

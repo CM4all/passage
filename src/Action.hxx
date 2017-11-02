@@ -7,11 +7,13 @@
 #include "net/AllocatedSocketAddress.hxx"
 
 #include <string>
+#include <forward_list>
 
 struct Action {
 	enum class Type {
 		UNDEFINED,
 		FADE_CHILDREN,
+		EXEC_PIPE,
 	};
 
 	Type type = Type::UNDEFINED;
@@ -19,6 +21,8 @@ struct Action {
 	AllocatedSocketAddress address;
 
 	std::string param;
+
+	std::forward_list<std::string> args;
 
 	bool IsDefined() const {
 		return type != Type::UNDEFINED;

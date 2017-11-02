@@ -8,11 +8,13 @@
 #include "LAction.hxx"
 #include "Action.hxx"
 #include "FadeChildren.hxx"
+#include "ExecPipe.hxx"
 #include "lua/Error.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/ScmRightsBuilder.hxx"
 #include "util/PrintException.hxx"
+#include "util/StaticArray.hxx"
 #include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
 #include "util/Macros.hxx"
@@ -90,7 +92,7 @@ PassageConnection::SendResponse(SocketAddress address, StringView status,
 }
 
 void
-PassageConnection::Do(const Action &action)
+PassageConnection::Do(SocketAddress address, const Action &action)
 {
 	assert(pending_response);
 
@@ -102,6 +104,21 @@ PassageConnection::Do(const Action &action)
 	case Action::Type::FADE_CHILDREN:
 		FadeChildren(action.address,
 			     action.param.empty() ? nullptr : action.param.c_str());
+		break;
+
+	case Action::Type::EXEC_PIPE:
+		{
+			StaticArray<const char *, 64> args;
+			for (const auto &i : action.args)
+				if (!args.checked_append(i.c_str()))
+					throw std::runtime_error("Too many EXEC_PIPE arguments");
+			if (!args.checked_append(nullptr))
+				throw std::runtime_error("Too many EXEC_PIPE arguments");
+
+			SendResponse(address, "OK", ExecPipe(args.front(),
+							     &args.front()).ToFileDescriptor());
+		}
+
 		break;
 	}
 }
@@ -134,7 +151,7 @@ try {
 	if (action == nullptr)
 		throw std::runtime_error("Wrong return type from Lua handler");
 
-	Do(*action);
+	Do(address, *action);
 
 	if (pending_response)
 		SendResponse(address, "OK");

@@ -133,10 +133,34 @@ NewFadeChildrenAction(lua_State *L)
 	return 1;
 }
 
+static int
+NewExecPipeAction(lua_State *L)
+{
+	const auto top = lua_gettop(L);
+	if (top < 2)
+		return luaL_error(L, "Invalid parameters");
+
+	Action action;
+	action.type = Action::Type::EXEC_PIPE;
+
+	auto tail = action.args.before_begin();
+
+	for (int i = 2; i <= top; ++i) {
+		if (!lua_isstring(L, i))
+			luaL_argerror(L, i, "string expected");
+
+		tail = action.args.emplace_after(tail, lua_tostring(L, i));
+	}
+
+	NewLuaAction(L, 1, std::move(action));
+	return 1;
+}
+
 static constexpr struct luaL_reg request_methods [] = {
 	{"get_cgroup", GetCgroup},
 	{"get_mount_info", GetMountInfo},
 	{"fade_children", NewFadeChildrenAction},
+	{"exec_pipe", NewExecPipeAction},
 	{nullptr, nullptr}
 };
 

@@ -1,6 +1,7 @@
 cm4all-passage (0.3) unstable; urgency=low
 
   * systemd: add "Install" section
+  * request: add action "exec_pipe"
 
  --   
 

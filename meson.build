@@ -133,6 +133,7 @@ executable('cm4all-passage',
   'src/Request.cxx',
   'src/LRequest.cxx',
   'src/FadeChildren.cxx',
+  'src/ExecPipe.cxx',
   'src/Main.cxx',
   include_directories: inc,
   dependencies: [
