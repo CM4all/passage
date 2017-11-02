@@ -3,6 +3,7 @@
  */
 
 #include "Protocol.hxx"
+#include "net/ReceiveMessage.hxx"
 #include "net/AllocatedSocketAddress.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "system/Error.hxx"
@@ -49,17 +50,16 @@ SendRequest(SocketDescriptor fd, StringView command)
 		throw MakeErrno("Short send");
 }
 
-static void
-ReceiveResponse(SocketDescriptor fd)
+static UniqueFileDescriptor
+ReceiveResponse(SocketDescriptor s)
 {
-	char buffer[4096];
-	ssize_t nbytes = recv(fd.Get(), buffer, sizeof(buffer), 0);
-	if (nbytes < 0)
-		throw MakeErrno("Failed to receive response");
-	if (nbytes == 0)
+	ReceiveMessageBuffer<4096, 1024> buffer;
+	auto result = ReceiveMessage(s, buffer, 0);
+	if (result.payload.empty())
 		throw std::runtime_error("Server closed the connection prematurely");
 
-	StringView payload(buffer, nbytes);
+	StringView payload((const char *)result.payload.data,
+			   result.payload.size);
 
 	const char *newline = payload.Find('\n');
 	if (newline != nullptr)
@@ -67,7 +67,9 @@ ReceiveResponse(SocketDescriptor fd)
 
 	if (payload.StartsWith("OK") &&
 	    (payload.size == 2 || payload[2] == ' ')) {
-		return;
+		return result.fds.empty()
+			? UniqueFileDescriptor()
+			: std::move(result.fds.front());
 	} else if (payload.StartsWith("ERROR")) {
 		if (payload.size == 5)
 			throw std::runtime_error("Server error");
@@ -79,6 +81,19 @@ ReceiveResponse(SocketDescriptor fd)
 			throw std::runtime_error("Malformed server error");
 	} else
 		throw std::runtime_error("Malformed response");
+}
+
+static void
+Copy(FileDescriptor in, FileDescriptor out)
+{
+	while (true) {
+		char buffer[8192];
+		auto nbytes = in.Read(buffer, sizeof(buffer));
+		if (nbytes <= 0)
+			break;
+
+		out.Write(buffer, nbytes);
+	}
 }
 
 int
@@ -105,7 +120,15 @@ try {
 
 	auto fd = CreateConnect(path);
 	SendRequest(fd, command);
-	ReceiveResponse(fd);
+	auto returned_fd = ReceiveResponse(fd);
+
+	if (returned_fd.IsDefined() && returned_fd.IsPipe()) {
+		/* if the returned file descriptor is a pipe, copy its
+		   data to stdout */
+		fd.Close();
+		Copy(returned_fd.ToFileDescriptor(),
+		     FileDescriptor(STDOUT_FILENO));
+	}
 
 	return EXIT_SUCCESS;
 } catch (Usage) {
