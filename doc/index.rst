@@ -157,10 +157,10 @@ Usage
 -----
 
 The Debian package :file:`cm4all-passage-client` contains a very
-simple and generic client.  There are two parameters: the socket path
-to connect to and the command.  Example::
+simple and generic client.  The first parameter specifies the command.
+Example::
 
-  cm4all-passage-client restart
+  cm4all-passage-client fade_children
 
 
 Protocol
