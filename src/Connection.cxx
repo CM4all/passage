@@ -9,10 +9,13 @@
 #include "Action.hxx"
 #include "FadeChildren.hxx"
 #include "lua/Error.hxx"
+#include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
+#include "net/ScmRightsBuilder.hxx"
 #include "util/PrintException.hxx"
 #include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
+#include "util/Macros.hxx"
 
 static std::string
 MakeLoggerDomain(const struct ucred &cred, SocketAddress)
@@ -50,6 +53,40 @@ PassageConnection::SendResponse(SocketAddress address, StringView status)
 
 	pending_response = false;
 	listener.Reply(address, status.data, status.size);
+}
+
+void
+PassageConnection::SendResponse(SocketAddress address, StringView status,
+				FileDescriptor fd)
+{
+	assert(pending_response);
+
+	pending_response = false;
+
+	const auto payload = status.ToVoid();
+
+	struct iovec vec[] = {
+		{
+			.iov_base = const_cast<void *>(payload.data),
+			.iov_len = payload.size,
+		},
+	};
+
+	struct msghdr m = {
+		.msg_name = const_cast<void *>(static_cast<const void *>(address.GetAddress())),
+		.msg_namelen = address.GetSize(),
+		.msg_iov = vec,
+		.msg_iovlen = ARRAY_SIZE(vec),
+		.msg_control = nullptr,
+		.msg_controllen = 0,
+		.msg_flags = 0,
+	};
+
+	ScmRightsBuilder<1> rb(m);
+	rb.push_back(fd.Get());
+	rb.Finish(m);
+
+	sendmsg(listener.GetSocket().Get(), &m, MSG_DONTWAIT|MSG_NOSIGNAL);
 }
 
 void

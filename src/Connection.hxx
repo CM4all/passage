@@ -16,6 +16,7 @@
 struct Action;
 class EventLoop;
 class UniqueSocketDescriptor;
+class FileDescriptor;
 
 class PassageConnection final
 	: public boost::intrusive::list_base_hook<boost::intrusive::link_mode<boost::intrusive::auto_unlink>>,
@@ -42,6 +43,8 @@ private:
 	void Do(const Action &action);
 
 	void SendResponse(SocketAddress address, StringView status);
+	void SendResponse(SocketAddress address, StringView status,
+			  FileDescriptor fd);
 
 	/* virtual methods from class UdpHandler */
 	void OnUdpDatagram(const void *data, size_t length,
