@@ -12,6 +12,9 @@ struct LAction : Action {
 
 	LAction(lua_State *L, Lua::StackIndex request_idx)
 		:request(L, request_idx) {}
+
+	LAction(lua_State *L, Lua::StackIndex request_idx, Action &&_action)
+		:Action(std::move(_action)), request(L, request_idx) {}
 };
 
 static constexpr char lua_action_class[] = "passage.action";
@@ -28,6 +31,13 @@ Action *
 NewLuaAction(lua_State *L, int request_idx)
 {
 	return LuaAction::New(L, L, Lua::StackIndex(request_idx));
+}
+
+Action *
+NewLuaAction(lua_State *L, int request_idx, Action &&action)
+{
+	return LuaAction::New(L, L, Lua::StackIndex(request_idx),
+			      std::move(action));
 }
 
 Action *

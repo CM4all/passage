@@ -18,6 +18,9 @@ Action *
 NewLuaAction(lua_State *L, int request_idx);
 
 Action *
+NewLuaAction(lua_State *L, int request_idx, Action &&action);
+
+Action *
 CheckLuaAction(lua_State *L, int idx);
 
 /**
