@@ -18,43 +18,43 @@ struct SocketAddress;
 class UniqueSocketDescriptor;
 
 class Instance final {
-    EventLoop event_loop;
-    ShutdownListener shutdown_listener;
+	EventLoop event_loop;
+	ShutdownListener shutdown_listener;
 
-    Lua::State lua_state;
+	Lua::State lua_state;
 
-    std::forward_list<PassageListener> listeners;
+	std::forward_list<PassageListener> listeners;
 
 public:
-    RootLogger logger;
+	RootLogger logger;
 
-    Instance();
-    ~Instance();
+	Instance();
+	~Instance();
 
-    EventLoop &GetEventLoop() {
-        return event_loop;
-    }
+	EventLoop &GetEventLoop() {
+		return event_loop;
+	}
 
-    lua_State *GetLuaState() {
-        return lua_state.get();
-    }
+	lua_State *GetLuaState() {
+		return lua_state.get();
+	}
 
-    void AddListener(UniqueSocketDescriptor &&fd,
-                     Lua::ValuePtr &&handler);
+	void AddListener(UniqueSocketDescriptor &&fd,
+			 Lua::ValuePtr &&handler);
 
-    void AddListener(SocketAddress address,
-                     Lua::ValuePtr &&handler);
+	void AddListener(SocketAddress address,
+			 Lua::ValuePtr &&handler);
 
-    /**
-     * Listen for incoming connections on sockets passed by systemd
-     * (systemd socket activation).
-     */
-    void AddSystemdListener(Lua::ValuePtr &&handler);
+	/**
+	 * Listen for incoming connections on sockets passed by systemd
+	 * (systemd socket activation).
+	 */
+	void AddSystemdListener(Lua::ValuePtr &&handler);
 
-    void Check();
+	void Check();
 
 private:
-    void ShutdownCallback();
+	void ShutdownCallback();
 };
 
 #endif

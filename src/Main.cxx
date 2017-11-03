@@ -77,11 +77,11 @@ SetupConfigState(lua_State *L, Instance &instance)
 static void
 SetupRuntimeState(lua_State *L)
 {
-    Lua::SetGlobal(L, "passage_listen", nullptr);
+	Lua::SetGlobal(L, "passage_listen", nullptr);
 
-    PassageConnection::Register(L);
+	PassageConnection::Register(L);
 
-    UnregisterLuaResolver(L);
+	UnregisterLuaResolver(L);
 }
 
 static int

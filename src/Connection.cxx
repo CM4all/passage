@@ -44,8 +44,8 @@ PassageConnection::PassageConnection(Lua::ValuePtr _handler,
 void
 PassageConnection::Register(lua_State *L)
 {
-    RegisterLuaAction(L);
-    RegisterLuaRequest(L);
+	RegisterLuaAction(L);
+	RegisterLuaRequest(L);
 }
 
 void

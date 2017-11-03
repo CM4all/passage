@@ -8,7 +8,7 @@
 #include <string>
 
 struct CommandLine {
-    std::string config_path;
+	std::string config_path;
 };
 
 CommandLine
