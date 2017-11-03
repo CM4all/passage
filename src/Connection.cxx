@@ -31,15 +31,15 @@ MakeLoggerDomain(const struct ucred &cred, SocketAddress)
 	return buffer;
 }
 
-PassageConnection::PassageConnection(Lua::ValuePtr _handler,
+PassageConnection::PassageConnection(Instance &instance,
+				     Lua::ValuePtr _handler,
 				     const RootLogger &parent_logger,
-				     EventLoop &event_loop,
 				     UniqueSocketDescriptor &&_fd,
 				     SocketAddress address)
 	:handler(std::move(_handler)),
 	 peer_cred(_fd.GetPeerCredentials()),
 	 logger(parent_logger, MakeLoggerDomain(peer_cred, address).c_str()),
-	 listener(event_loop, std::move(_fd), *this) {}
+	 listener(instance.GetEventLoop(), std::move(_fd), *this) {}
 
 void
 PassageConnection::Register(lua_State *L)

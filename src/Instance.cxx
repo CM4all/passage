@@ -32,8 +32,8 @@ Instance::~Instance()
 inline void
 Instance::AddListener(UniqueSocketDescriptor &&fd, Lua::ValuePtr &&handler)
 {
-	listeners.emplace_front(event_loop, std::move(handler),
-				logger, event_loop);
+	listeners.emplace_front(event_loop, *this, std::move(handler),
+				logger);
 	listeners.front().Listen(std::move(fd));
 }
 

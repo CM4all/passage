@@ -10,7 +10,7 @@
 #include "lua/ValuePtr.hxx"
 
 typedef TemplateServerSocket<PassageConnection,
-			     Lua::ValuePtr,
-			     RootLogger, EventLoop &> PassageListener;
+			     Instance &, Lua::ValuePtr,
+			     RootLogger> PassageListener;
 
 #endif

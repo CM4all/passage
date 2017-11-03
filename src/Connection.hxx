@@ -14,7 +14,7 @@
 #include <boost/intrusive/list.hpp>
 
 struct Action;
-class EventLoop;
+class Instance;
 class UniqueSocketDescriptor;
 class FileDescriptor;
 
@@ -32,9 +32,9 @@ class PassageConnection final
 	bool pending_response = false;
 
 public:
-	PassageConnection(Lua::ValuePtr _handler,
+	PassageConnection(Instance &_instance,
+			  Lua::ValuePtr _handler,
 			  const RootLogger &parent_logger,
-			  EventLoop &event_loop,
 			  UniqueSocketDescriptor &&_fd, SocketAddress address);
 
 	static void Register(lua_State *L);
