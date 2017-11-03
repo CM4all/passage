@@ -5,6 +5,7 @@
 #pragma once
 
 class UniqueFileDescriptor;
+class ChildProcessRegistry;
 
 /**
  * Launch a process with a pipe connected to STDOUT.
@@ -13,4 +14,5 @@ class UniqueFileDescriptor;
  * @return the pipe's read end
  */
 UniqueFileDescriptor
-ExecPipe(const char *path, const char *const*args);
+ExecPipe(ChildProcessRegistry &registry,
+	 const char *path, const char *const*args);

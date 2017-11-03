@@ -31,12 +31,12 @@ MakeLoggerDomain(const struct ucred &cred, SocketAddress)
 	return buffer;
 }
 
-PassageConnection::PassageConnection(Instance &instance,
+PassageConnection::PassageConnection(Instance &_instance,
 				     Lua::ValuePtr _handler,
 				     const RootLogger &parent_logger,
 				     UniqueSocketDescriptor &&_fd,
 				     SocketAddress address)
-	:handler(std::move(_handler)),
+	:instance(_instance), handler(std::move(_handler)),
 	 peer_cred(_fd.GetPeerCredentials()),
 	 logger(parent_logger, MakeLoggerDomain(peer_cred, address).c_str()),
 	 listener(instance.GetEventLoop(), std::move(_fd), *this) {}
@@ -115,7 +115,8 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 			if (!args.checked_append(nullptr))
 				throw std::runtime_error("Too many EXEC_PIPE arguments");
 
-			SendResponse(address, "OK", ExecPipe(args.front(),
+			SendResponse(address, "OK", ExecPipe(instance.GetChildProcessRegistry(),
+							     args.front(),
 							     &args.front()).ToFileDescriptor());
 		}
 

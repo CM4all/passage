@@ -6,6 +6,7 @@
 #define INSTANCE_HXX
 
 #include "Listener.hxx"
+#include "spawn/Registry.hxx"
 #include "io/Logger.hxx"
 #include "event/Loop.hxx"
 #include "event/ShutdownListener.hxx"
@@ -21,6 +22,8 @@ class Instance final {
 	EventLoop event_loop;
 	ShutdownListener shutdown_listener;
 
+	ChildProcessRegistry child_process_registry;
+
 	Lua::State lua_state;
 
 	std::forward_list<PassageListener> listeners;
@@ -33,6 +36,10 @@ public:
 
 	EventLoop &GetEventLoop() {
 		return event_loop;
+	}
+
+	ChildProcessRegistry &GetChildProcessRegistry() {
+		return child_process_registry;
 	}
 
 	lua_State *GetLuaState() {

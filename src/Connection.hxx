@@ -22,6 +22,8 @@ class PassageConnection final
 	: public boost::intrusive::list_base_hook<boost::intrusive::link_mode<boost::intrusive::auto_unlink>>,
 	UdpHandler {
 
+	Instance &instance;
+
 	Lua::ValuePtr handler;
 
 	const struct ucred peer_cred;

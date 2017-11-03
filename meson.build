@@ -120,6 +120,14 @@ event_net = static_library('event_net',
   ])
 event_net_dep = declare_dependency(link_with: event_net)
 
+spawn = static_library('spawn',
+  'libcommon/src/spawn/Registry.cxx',
+  include_directories: inc,
+  dependencies: [
+  ])
+spawn_dep = declare_dependency(link_with: spawn,
+                               dependencies: [event_dep])
+
 executable('cm4all-passage',
   'src/CommandLine.cxx',
   'src/system/SetupProcess.cxx',
@@ -143,6 +151,7 @@ executable('cm4all-passage',
     util_dep,
     lua_dep,
     event_net_dep,
+    spawn_dep,
   ],
   install: true,
   install_dir: 'sbin',

@@ -3,12 +3,14 @@
  */
 
 #include "ExecPipe.hxx"
+#include "spawn/Registry.hxx"
 #include "system/Error.hxx"
 #include "system/SetupProcess.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 
 UniqueFileDescriptor
-ExecPipe(const char *path, const char *const*args)
+ExecPipe(ChildProcessRegistry &registry,
+	 const char *path, const char *const*args)
 {
 	UniqueFileDescriptor r, w;
 	if (!UniqueFileDescriptor::CreatePipe(r, w))
@@ -27,6 +29,8 @@ ExecPipe(const char *path, const char *const*args)
 			path, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
+
+	registry.Add(pid, path, nullptr);
 
 	return r;
 }

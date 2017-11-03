@@ -20,6 +20,7 @@ extern "C" {
 
 Instance::Instance()
 	:shutdown_listener(event_loop, BIND_THIS_METHOD(ShutdownCallback)),
+	 child_process_registry(event_loop),
 	 lua_state(luaL_newstate())
 {
 	shutdown_listener.Enable();
