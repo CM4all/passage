@@ -100,7 +100,7 @@ net = static_library('net',
   'libcommon/src/net/djb/NetstringGenerator.cxx',
   include_directories: inc,
   dependencies: [
-    declare_dependency(link_with: event),
+    event_dep,
     io_dep,
   ])
 net_dep = declare_dependency(link_with: net)
