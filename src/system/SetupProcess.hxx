@@ -15,4 +15,10 @@
 void
 SetupProcess();
 
+/**
+ * Set up a forked child process.
+ */
+void
+PostFork();
+
 #endif

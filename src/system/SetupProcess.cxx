@@ -19,3 +19,30 @@ SetupProcess()
 	/* reduce glibc's thread cancellation overhead */
 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, nullptr);
 }
+
+static void
+UnignoreSignals()
+{
+	/* restore all signals which were set to SIG_IGN */
+	static constexpr int signals[] = {
+		SIGPIPE,
+	};
+
+	for (auto i : signals)
+		signal(i, SIG_DFL);
+}
+
+static void
+UnblockSignals()
+{
+	sigset_t mask;
+	sigfillset(&mask);
+	sigprocmask(SIG_UNBLOCK, &mask, nullptr);
+}
+
+void
+PostFork()
+{
+	UnignoreSignals();
+	UnblockSignals();
+}

@@ -4,6 +4,7 @@
 
 #include "ExecPipe.hxx"
 #include "system/Error.hxx"
+#include "system/SetupProcess.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 
 UniqueFileDescriptor
@@ -18,6 +19,8 @@ ExecPipe(const char *path, const char *const*args)
 		throw MakeErrno("fork() failed");
 
 	if (pid == 0) {
+		PostFork();
+
 		w.CheckDuplicate(FileDescriptor(STDOUT_FILENO));
 		execv(path, const_cast<char*const*>(args));
 		fprintf(stderr, "Failed to execute '%s': %s\n",
