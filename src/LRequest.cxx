@@ -137,19 +137,22 @@ static int
 NewExecPipeAction(lua_State *L)
 {
 	const auto top = lua_gettop(L);
-	if (top < 2)
+	if (top != 2)
 		return luaL_error(L, "Invalid parameters");
+
+	if (!lua_istable(L, 2))
+		luaL_argerror(L, 2, "array expected");
 
 	Action action;
 	action.type = Action::Type::EXEC_PIPE;
 
 	auto tail = action.args.before_begin();
 
-	for (int i = 2; i <= top; ++i) {
-		if (!lua_isstring(L, i))
-			luaL_argerror(L, i, "string expected");
+	for (lua_pushnil(L); lua_next(L, 2); lua_pop(L, 1)) {
+		if (!lua_isstring(L, -1))
+			luaL_error(L, "string expected");
 
-		tail = action.args.emplace_after(tail, lua_tostring(L, i));
+		tail = action.args.emplace_after(tail, lua_tostring(L, -1));
 	}
 
 	NewLuaAction(L, 1, std::move(action));
