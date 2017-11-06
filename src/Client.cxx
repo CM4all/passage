@@ -63,7 +63,7 @@ ReceiveResponse(SocketDescriptor s)
 
 	const char *newline = payload.Find('\n');
 	if (newline != nullptr)
-		payload.size = newline - payload.data;
+		payload.SetEnd(newline);
 
 	if (payload.StartsWith("OK") &&
 	    (payload.size == 2 || payload[2] == ' ')) {
