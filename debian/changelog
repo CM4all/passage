@@ -3,7 +3,7 @@ cm4all-passage (0.3) unstable; urgency=low
   * systemd: add "Install" section
   * request: add action "exec_pipe"
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Mon, 06 Nov 2017 11:11:09 -0000
 
 cm4all-passage (0.2) unstable; urgency=low
 
