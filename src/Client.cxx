@@ -66,20 +66,24 @@ ReceiveResponse(SocketDescriptor s)
 	if (newline != nullptr)
 		payload.SetEnd(newline);
 
-	if (payload.StartsWith("OK") &&
-	    (payload.size == 2 || payload[2] == ' ')) {
+	StringView args = nullptr;
+	const char *space = payload.Find(' ');
+	if (space != nullptr) {
+		args = StringView(space + 1, payload.end());
+		payload.SetEnd(space);
+	}
+
+	if (payload.Equals("OK")) {
 		return result.fds.empty()
 			? UniqueFileDescriptor()
 			: std::move(result.fds.front());
-	} else if (payload.StartsWith("ERROR")) {
-		if (payload.size == 5)
+	} else if (payload.Equals("ERROR")) {
+		if (args.empty())
 			throw std::runtime_error("Server error");
-		if (payload[5] == ' ')
-			throw std::runtime_error("Server error: " +
-						 std::string(payload.data + 6,
-							     payload.size - 6));
 		else
-			throw std::runtime_error("Malformed server error");
+			throw std::runtime_error("Server error: " +
+						 std::string(args.data,
+							     args.size));
 	} else
 		throw std::runtime_error("Malformed response");
 }
