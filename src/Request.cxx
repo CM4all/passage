@@ -25,11 +25,17 @@ NextLine(StringView &buffer) noexcept
 	return NextSplit(buffer, '\n');
 }
 
+static StringView
+NextUnquoted(StringView &buffer) noexcept
+{
+	return NextSplit(buffer, ' ');
+}
+
 Request::Request(StringView payload)
 {
 	auto line = NextLine(payload);
 
-	const auto _command = line;
+	const auto _command = NextUnquoted(line);
 	CheckCommand(_command);
 	command.assign(_command.data, _command.size);
 }
