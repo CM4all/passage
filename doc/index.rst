@@ -58,6 +58,8 @@ The following attributes can be queried:
 
 * :samp:`command`: The command string.
 
+* :samp:`args`: An array containing command arguments.
+
 * :samp:`pid`: The client's process id.
 
 * :samp:`uid`: The client's user id.

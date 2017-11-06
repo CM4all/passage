@@ -191,6 +191,14 @@ LuaRequestIndex(lua_State *L)
 	if (StringIsEqual(name, "command")) {
 		Lua::Push(L, request.command.c_str());
 		return 1;
+	} else if (StringIsEqual(name, "args")) {
+		lua_newtable(L);
+
+		int i = 1;
+		for (const auto &a : request.args)
+			Lua::SetTable(L, -3, i, a.c_str());
+
+		return 1;
 	} else if (StringIsEqual(name, "pid")) {
 		if (!request.HavePeerCred())
 			return 0;
