@@ -7,6 +7,8 @@
 #include "Protocol.hxx"
 #include "util/StringView.hxx"
 
+#include <stdexcept>
+
 static StringView
 NextSplit(StringView &buffer, char separator) noexcept
 {
@@ -55,6 +57,19 @@ ParseEntity(StringView payload)
 		auto value = NextUnquoted(line);
 		args_tail = entity.args.emplace_after(args_tail,
 						      value.data, value.size);
+	}
+
+	while (!(line = NextLine(payload)).empty()) {
+		const char *colon = line.Find(':');
+		if (colon == nullptr || colon == line.begin())
+			throw std::runtime_error("Bad header syntax");
+
+		StringView name(line.begin(), colon);
+		StringView value(colon + 1, line.end());
+		value.StripLeft();
+
+		entity.headers.emplace(std::string(name.data, name.size),
+				       std::string(value.data, value.size));
 	}
 
 	return entity;
