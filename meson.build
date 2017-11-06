@@ -1,6 +1,8 @@
 project('CM4all Passage', 'cpp', version: '0.3',
   default_options : ['cpp_std=c++14'])
 
+compiler = meson.get_compiler('cpp')
+
 # TODO: use get_option('b_ndebug'), but that doesn't work with Meson 0.37.1
 if get_option('buildtype') == 'debug'
   debug = true
@@ -32,6 +34,26 @@ liblua = dependency('luajit')
 libevent = dependency('libevent', version: '>= 2.0.19')
 libsystemd = dependency('libsystemd')
 libbp = dependency('libcm4all-beng-proxy')
+
+gtest_compile_args = [
+  '-Wno-undef',
+]
+
+if compiler.get_id() == 'gcc'
+  gtest_compile_args += [
+    '-Wno-suggest-attribute=format',
+    '-Wno-suggest-attribute=noreturn',
+    '-Wno-missing-declarations',
+
+    # needed on Jessie for gtest's IsNullLiteralHelper
+    '-Wno-conversion-null',
+  ]
+endif
+
+gtest = declare_dependency(
+  dependencies: [dependency('gtest', main: true)],
+  compile_args: gtest_compile_args,
+)
 
 inc = include_directories('src', 'libcommon/src')
 
@@ -86,6 +108,7 @@ net = static_library('net',
   'libcommon/src/net/SocketAddress.cxx',
   'libcommon/src/net/StaticSocketAddress.cxx',
   'libcommon/src/net/AllocatedSocketAddress.cxx',
+  'libcommon/src/net/MaskedSocketAddress.cxx',
   'libcommon/src/net/IPv4Address.cxx',
   'libcommon/src/net/IPv6Address.cxx',
   'libcommon/src/net/HostParser.cxx',
@@ -167,4 +190,6 @@ executable('cm4all-passage-client',
   install: true,
 )
 
+subdir('libcommon/test/util')
+subdir('libcommon/test/net')
 subdir('doc')
