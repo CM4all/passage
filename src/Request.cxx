@@ -12,7 +12,8 @@
 
 Request::Request(StringView payload)
 {
-	CheckCommand(payload);
+	const auto _command = payload;
+	CheckCommand(_command);
 
-	command.assign(payload.data, payload.size);
+	command.assign(_command.data, _command.size);
 }
