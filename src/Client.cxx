@@ -75,7 +75,7 @@ ReceiveResponse(SocketDescriptor s)
 			throw std::runtime_error("Server error");
 		else
 			throw std::runtime_error("Server error: " +
-						 response.args);
+						 response.args.front());
 	} else
 		throw std::runtime_error("Malformed response");
 }

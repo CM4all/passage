@@ -43,9 +43,17 @@ ParseEntity(StringView payload)
 	CheckCommand(command);
 	entity.command.assign(command.data, command.size);
 
-	if (!line.empty())
-		// TODO: tokenize and unquote the arguments
-		entity.args.assign(line.data, line.size);
+	auto args_tail = entity.args.before_begin();
+	while (true) {
+		line.StripLeft();
+		if (line.empty())
+			break;
+
+		// TODO unquote
+		auto value = NextUnquoted(line);
+		args_tail = entity.args.emplace_after(args_tail,
+						      value.data, value.size);
+	}
 
 	return entity;
 }
