@@ -188,7 +188,7 @@ LuaRequestIndex(lua_State *L)
 	}
 
 	if (strcmp(name, "command") == 0) {
-		Lua::Push(L, request.GetCommand().c_str());
+		Lua::Push(L, request.command.c_str());
 		return 1;
 	} else if (strcmp(name, "pid") == 0) {
 		if (!request.HavePeerCred())
