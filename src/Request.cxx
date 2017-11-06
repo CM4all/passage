@@ -38,4 +38,8 @@ Request::Request(StringView payload)
 	const auto _command = NextUnquoted(line);
 	CheckCommand(_command);
 	command.assign(_command.data, _command.size);
+
+	if (!line.empty())
+		// TODO: tokenize and unquote the arguments
+		args.assign(line.data, line.size);
 }
