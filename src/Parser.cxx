@@ -2,6 +2,7 @@
  * author: Max Kellermann <mk@cm4all.com>
  */
 
+#include "Parser.hxx"
 #include "Request.hxx"
 #include "Protocol.hxx"
 #include "util/StringView.hxx"
@@ -31,15 +32,20 @@ NextUnquoted(StringView &buffer) noexcept
 	return NextSplit(buffer, ' ');
 }
 
-Request::Request(StringView payload)
+Request
+ParseRequest(StringView payload)
 {
+	Request request;
+
 	auto line = NextLine(payload);
 
-	const auto _command = NextUnquoted(line);
-	CheckCommand(_command);
-	command.assign(_command.data, _command.size);
+	const auto command = NextUnquoted(line);
+	CheckCommand(command);
+	request.command.assign(command.data, command.size);
 
 	if (!line.empty())
 		// TODO: tokenize and unquote the arguments
-		args.assign(line.data, line.size);
+		request.args.assign(line.data, line.size);
+
+	return request;
 }

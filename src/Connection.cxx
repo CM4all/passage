@@ -3,6 +3,7 @@
  */
 
 #include "Instance.hxx"
+#include "Parser.hxx"
 #include "Request.hxx"
 #include "LRequest.hxx"
 #include "LAction.hxx"
@@ -137,7 +138,7 @@ try {
 
 	pending_response = true;
 
-	Request request(StringView((const char *)data, length));
+	auto request = ParseRequest(StringView((const char *)data, length));
 
 	handler->Push();
 

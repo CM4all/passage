@@ -1,4 +1,4 @@
-project('CM4all Passage', 'cpp', version: '0.4',
+project('CM4all Passage', 'cpp', version: '0.3',
   default_options : ['cpp_std=c++14'])
 
 compiler = meson.get_compiler('cpp')
@@ -161,7 +161,7 @@ executable('cm4all-passage',
   'src/MountProc.cxx',
   'src/Instance.cxx',
   'src/Connection.cxx',
-  'src/Request.cxx',
+  'src/Parser.cxx',
   'src/LRequest.cxx',
   'src/FadeChildren.cxx',
   'src/ExecPipe.cxx',
