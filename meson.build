@@ -182,6 +182,7 @@ executable('cm4all-passage',
 
 executable('cm4all-passage-client',
   'src/Client.cxx',
+  'src/Parser.cxx',
   include_directories: inc,
   dependencies: [
     net_dep,
