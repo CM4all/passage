@@ -4,7 +4,7 @@
 
 #include "Instance.hxx"
 #include "Parser.hxx"
-#include "Request.hxx"
+#include "Entity.hxx"
 #include "LRequest.hxx"
 #include "LAction.hxx"
 #include "Action.hxx"
@@ -138,7 +138,7 @@ try {
 
 	pending_response = true;
 
-	auto request = ParseRequest(StringView((const char *)data, length));
+	auto request = ParseEntity(StringView((const char *)data, length));
 
 	handler->Push();
 

@@ -3,7 +3,7 @@
  */
 
 #include "Parser.hxx"
-#include "Request.hxx"
+#include "Entity.hxx"
 #include "Protocol.hxx"
 #include "util/StringView.hxx"
 
@@ -32,20 +32,20 @@ NextUnquoted(StringView &buffer) noexcept
 	return NextSplit(buffer, ' ');
 }
 
-Request
-ParseRequest(StringView payload)
+Entity
+ParseEntity(StringView payload)
 {
-	Request request;
+	Entity entity;
 
 	auto line = NextLine(payload);
 
 	const auto command = NextUnquoted(line);
 	CheckCommand(command);
-	request.command.assign(command.data, command.size);
+	entity.command.assign(command.data, command.size);
 
 	if (!line.empty())
 		// TODO: tokenize and unquote the arguments
-		request.args.assign(line.data, line.size);
+		entity.args.assign(line.data, line.size);
 
-	return request;
+	return entity;
 }

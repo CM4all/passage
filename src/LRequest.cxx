@@ -3,7 +3,7 @@
  */
 
 #include "LRequest.hxx"
-#include "Request.hxx"
+#include "Entity.hxx"
 #include "LAction.hxx"
 #include "Action.hxx"
 #include "LAddress.hxx"
@@ -14,12 +14,12 @@
 #include <sys/socket.h>
 #include <string.h>
 
-class RichRequest : public Request {
+class RichRequest : public Entity {
 	const struct ucred cred;
 
 public:
-	RichRequest(Request &&src, const struct ucred &_peer_cred)
-		:Request(std::move(src)), cred(_peer_cred) {}
+	RichRequest(Entity &&src, const struct ucred &_peer_cred)
+		:Entity(std::move(src)), cred(_peer_cred) {}
 
 	bool HavePeerCred() const noexcept {
 		return cred.pid >= 0;
@@ -221,13 +221,13 @@ RegisterLuaRequest(lua_State *L)
 	lua_pop(L, 1);
 }
 
-Request *
-NewLuaRequest(lua_State *L, Request &&src, const struct ucred &peer_cred)
+Entity *
+NewLuaRequest(lua_State *L, Entity &&src, const struct ucred &peer_cred)
 {
 	return LuaRequest::New(L, std::move(src), peer_cred);
 }
 
-Request &
+Entity &
 CastLuaRequest(lua_State *L, int idx)
 {
 	return LuaRequest::Cast(L, idx);

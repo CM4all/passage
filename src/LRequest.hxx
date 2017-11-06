@@ -6,13 +6,13 @@
 
 struct ucred;
 struct lua_State;
-struct Request;
+struct Entity;
 
 void
 RegisterLuaRequest(lua_State *L);
 
-Request *
-NewLuaRequest(lua_State *L, Request &&src, const struct ucred &peer_cred);
+Entity *
+NewLuaRequest(lua_State *L, Entity &&src, const struct ucred &peer_cred);
 
-Request &
+Entity &
 CastLuaRequest(lua_State *L, int idx);

@@ -6,7 +6,10 @@
 
 #include <string>
 
-struct Request {
+/**
+ * A request or response.
+ */
+struct Entity {
 	std::string command;
 	std::string args;
 };

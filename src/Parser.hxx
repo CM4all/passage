@@ -7,10 +7,10 @@
 #include <string>
 
 struct StringView;
-class Request;
+struct Entity;
 
 /**
  * Throws on error.
  */
-Request
-ParseRequest(StringView s);
+Entity
+ParseEntity(StringView s);
