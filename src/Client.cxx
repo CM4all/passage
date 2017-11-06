@@ -44,13 +44,19 @@ CreateConnect(const char *path)
 }
 
 static void
+SendOrThrow(SocketDescriptor fd, ConstBuffer<void> payload)
+{
+	ssize_t nbytes = send(fd.Get(), payload.data, payload.size, 0);
+	if (nbytes < 0)
+		throw MakeErrno("Failed to send");
+	if (size_t(nbytes) < payload.size)
+		throw MakeErrno("Short send");
+}
+
+static void
 SendRequest(SocketDescriptor fd, StringView command)
 {
-	ssize_t nbytes = send(fd.Get(), command.data, command.size, 0);
-	if (nbytes < 0)
-		throw MakeErrno("Failed to send request");
-	if (size_t(nbytes) < command.size)
-		throw MakeErrno("Short send");
+	SendOrThrow(fd, command.ToVoid());
 }
 
 static UniqueFileDescriptor
