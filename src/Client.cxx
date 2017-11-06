@@ -12,6 +12,7 @@
 #include "util/StringView.hxx"
 
 #include <stdlib.h>
+#include <fcntl.h>
 
 struct Usage {};
 
@@ -86,6 +87,18 @@ ReceiveResponse(SocketDescriptor s)
 static void
 Copy(FileDescriptor in, FileDescriptor out)
 {
+	while (true) {
+		ssize_t nbytes = splice(in.Get(), nullptr, out.Get(), nullptr,
+					1024 * 1024 * 1024, SPLICE_F_MOVE);
+		if (nbytes == 0)
+			return;
+
+		if (nbytes < 0)
+			/* whatever happened - fall back to simple
+			   read() + write() */
+			break;
+	}
+
 	while (true) {
 		char buffer[8192];
 		auto nbytes = in.Read(buffer, sizeof(buffer));
