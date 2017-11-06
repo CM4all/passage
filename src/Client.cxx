@@ -54,9 +54,17 @@ SendOrThrow(SocketDescriptor fd, ConstBuffer<void> payload)
 }
 
 static void
-SendRequest(SocketDescriptor fd, StringView command)
+SendRequest(SocketDescriptor fd, StringView command,
+	    ConstBuffer<const char *> args)
 {
-	SendOrThrow(fd, command.ToVoid());
+	std::string payload(command.data, command.size);
+	for (const auto s : args) {
+		// TODO: quote argument value
+		payload.push_back(' ');
+		payload.append(s);
+	}
+
+	SendOrThrow(fd, StringView(payload.data(), payload.size()).ToVoid());
 }
 
 static UniqueFileDescriptor
@@ -126,15 +134,16 @@ try {
 		}
 	}
 
-	if (i + 1 != argc)
+	if (i >= argc)
 		throw Usage();
 
-	const StringView command(argv[i]);
+	const StringView command(argv[i++]);
+	const ConstBuffer<const char *> args(&argv[i], argc - i);
 
 	CheckCommand(command);
 
 	auto fd = CreateConnect(path);
-	SendRequest(fd, command);
+	SendRequest(fd, command, args);
 	auto returned_fd = ReceiveResponse(fd);
 
 	if (returned_fd.IsDefined() && returned_fd.IsPipe()) {
@@ -147,7 +156,8 @@ try {
 
 	return EXIT_SUCCESS;
 } catch (Usage) {
-	fprintf(stderr, "Usage: %s [--server=PATH] COMMAND\n", argv[0]);
+	fprintf(stderr, "Usage: %s [--server=PATH] COMMAND [ARGS...]\n",
+		argv[0]);
 	return EXIT_FAILURE;
 } catch (const std::exception &e) {
 	PrintException(e);
