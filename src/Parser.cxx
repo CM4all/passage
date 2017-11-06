@@ -14,8 +14,10 @@ NextSplit(StringView &buffer, char separator) noexcept
 	const char *newline = buffer.Find(separator);
 	if (newline == nullptr)
 		buffer = nullptr;
-	else
+	else {
 		buffer.MoveFront(newline + 1);
+		result.SetEnd(newline);
+	}
 
 	return result;
 }
