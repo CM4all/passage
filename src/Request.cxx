@@ -5,15 +5,31 @@
 #include "Request.hxx"
 #include "Protocol.hxx"
 #include "util/StringView.hxx"
-#include "util/CharUtil.hxx"
-#include "util/Compiler.h"
 
-#include <stdexcept>
+static StringView
+NextSplit(StringView &buffer, char separator) noexcept
+{
+	StringView result = buffer;
+	const char *newline = buffer.Find(separator);
+	if (newline == nullptr)
+		buffer = nullptr;
+	else
+		buffer.MoveFront(newline + 1);
+
+	return result;
+}
+
+static StringView
+NextLine(StringView &buffer) noexcept
+{
+	return NextSplit(buffer, '\n');
+}
 
 Request::Request(StringView payload)
 {
-	const auto _command = payload;
-	CheckCommand(_command);
+	auto line = NextLine(payload);
 
+	const auto _command = line;
+	CheckCommand(_command);
 	command.assign(_command.data, _command.size);
 }
