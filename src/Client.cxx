@@ -51,6 +51,33 @@ SendRequest(SocketDescriptor fd, StringView command)
 		throw MakeErrno("Short send");
 }
 
+struct Response {
+	StringView status = nullptr;
+
+	StringView args = nullptr;
+};
+
+static Response
+ParseResponse(StringView payload)
+{
+	Response response;
+
+	const char *newline = payload.Find('\n');
+	const StringView first_line = newline != nullptr
+		? StringView(payload.begin(), newline)
+		: payload;
+
+	const char *space = first_line.Find(' ');
+	if (space != nullptr) {
+		response.status = StringView(first_line.begin(), space);
+		response.args = StringView(space + 1, first_line.end());
+		response.args.StripLeft();
+	} else
+		response.status = first_line;
+
+	return response;
+}
+
 static UniqueFileDescriptor
 ReceiveResponse(SocketDescriptor s)
 {
@@ -62,28 +89,19 @@ ReceiveResponse(SocketDescriptor s)
 	StringView payload((const char *)result.payload.data,
 			   result.payload.size);
 
-	const char *newline = payload.Find('\n');
-	if (newline != nullptr)
-		payload.SetEnd(newline);
+	const auto response = ParseResponse(payload);
 
-	StringView args = nullptr;
-	const char *space = payload.Find(' ');
-	if (space != nullptr) {
-		args = StringView(space + 1, payload.end());
-		payload.SetEnd(space);
-	}
-
-	if (payload.Equals("OK")) {
+	if (response.status.Equals("OK")) {
 		return result.fds.empty()
 			? UniqueFileDescriptor()
 			: std::move(result.fds.front());
-	} else if (payload.Equals("ERROR")) {
-		if (args.empty())
+	} else if (response.status.Equals("ERROR")) {
+		if (response.args.empty())
 			throw std::runtime_error("Server error");
 		else
 			throw std::runtime_error("Server error: " +
-						 std::string(args.data,
-							     args.size));
+						 std::string(response.args.data,
+							     response.args.size));
 	} else
 		throw std::runtime_error("Malformed response");
 }
