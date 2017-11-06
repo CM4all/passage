@@ -10,6 +10,7 @@
 #include "lua/Class.hxx"
 #include "CgroupProc.hxx"
 #include "MountProc.hxx"
+#include "util/StringAPI.hxx"
 
 #include <sys/socket.h>
 #include <string.h>
@@ -181,28 +182,28 @@ LuaRequestIndex(lua_State *L)
 	const char *name = lua_tostring(L, 2);
 
 	for (const auto *i = request_methods; i->name != nullptr; ++i) {
-		if (strcmp(i->name, name) == 0) {
+		if (StringIsEqual(i->name, name)) {
 			Lua::Push(L, i->func);
 			return 1;
 		}
 	}
 
-	if (strcmp(name, "command") == 0) {
+	if (StringIsEqual(name, "command")) {
 		Lua::Push(L, request.command.c_str());
 		return 1;
-	} else if (strcmp(name, "pid") == 0) {
+	} else if (StringIsEqual(name, "pid")) {
 		if (!request.HavePeerCred())
 			return 0;
 
 		Lua::Push(L, request.GetPid());
 		return 1;
-	} else if (strcmp(name, "uid") == 0) {
+	} else if (StringIsEqual(name, "uid")) {
 		if (!request.HavePeerCred())
 			return 0;
 
 		Lua::Push(L, request.GetUid());
 		return 1;
-	} else if (strcmp(name, "gid") == 0) {
+	} else if (StringIsEqual(name, "gid")) {
 		if (!request.HavePeerCred())
 			return 0;
 
