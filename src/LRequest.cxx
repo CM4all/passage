@@ -200,6 +200,13 @@ LuaRequestIndex(lua_State *L)
 			Lua::SetTable(L, -3, i++, a);
 
 		return 1;
+	} else if (StringIsEqual(name, "headers")) {
+		lua_newtable(L);
+
+		for (const auto &i : request.headers)
+			Lua::SetTable(L, -3, i.first, i.second);
+
+		return 1;
 	} else if (StringIsEqual(name, "pid")) {
 		if (!request.HavePeerCred())
 			return 0;
