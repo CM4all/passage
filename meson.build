@@ -193,4 +193,5 @@ executable('cm4all-passage-client',
 
 subdir('libcommon/test/util')
 subdir('libcommon/test/net')
+subdir('test')
 subdir('doc')
