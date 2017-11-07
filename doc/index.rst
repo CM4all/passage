@@ -130,7 +130,7 @@ These examples do the following:
 - convert a numeric IPv6 address with a non-standard port to an
   `address` object
 - invoke the system resolver to resolve a host name to an IP address
-  (which blocks qrelay startup; not recommended)
+  (which blocks passage startup; not recommended)
 - convert a path string to a "local" socket address
 - convert a name to an abstract "local" socket address (prefix '@' is
   converted to a null byte, making the address "abstract")
