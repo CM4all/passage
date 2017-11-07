@@ -164,11 +164,16 @@ Usage
 -----
 
 The Debian package :file:`cm4all-passage-client` contains a very
-simple and generic client.  The first parameter specifies the command.
+simple and generic client.  The first parameter specifies the command,
+and positional argument strings can be specified after that.
 Example::
 
   cm4all-passage-client fade_children
 
+By default, the client connects to :file:`/run/cm4all/passage/socket`,
+but the option :envvar:`--server=PATH` can be used to change that::
+
+  cm4all-passage-client --server=/tmp/passage.socket fade_children
 
 Protocol
 --------
