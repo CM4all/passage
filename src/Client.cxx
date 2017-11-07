@@ -122,6 +122,17 @@ try {
 	for (i = 1; i < argc && *argv[i] == '-'; ++i) {
 		if (auto p = StringAfterPrefix(argv[i], "--server=")) {
 			path = p;
+		} else if (auto h = StringAfterPrefix(argv[i], "--header=")) {
+			const char *colon = strchr(h, ':');
+			if (colon == nullptr || colon == h) {
+				fprintf(stderr, "Malformed header: %s\n", h);
+				throw Usage();
+			}
+
+			// TODO: verify valid name
+			request.headers.emplace(std::piecewise_construct,
+						std::forward_as_tuple(h, colon),
+						std::forward_as_tuple(colon + 1));
 		} else {
 			fprintf(stderr, "Unknown option: %s\n", argv[i]);
 			throw Usage();

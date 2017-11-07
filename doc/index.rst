@@ -170,6 +170,9 @@ Example::
 
   cm4all-passage-client fade_children
 
+The option :envvar:`--header=NAME:VALUE` can be used to send headers
+to the server.
+
 By default, the client connects to :file:`/run/cm4all/passage/socket`,
 but the option :envvar:`--server=PATH` can be used to change that::
 
