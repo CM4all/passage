@@ -7,6 +7,7 @@
 #include "LAction.hxx"
 #include "Action.hxx"
 #include "LAddress.hxx"
+#include "lua/String.hxx"
 #include "lua/Class.hxx"
 #include "CgroupProc.hxx"
 #include "MountProc.hxx"
@@ -196,7 +197,7 @@ LuaRequestIndex(lua_State *L)
 
 		int i = 1;
 		for (const auto &a : request.args)
-			Lua::SetTable(L, -3, i, a.c_str());
+			Lua::SetTable(L, -3, i, a);
 
 		return 1;
 	} else if (StringIsEqual(name, "pid")) {
