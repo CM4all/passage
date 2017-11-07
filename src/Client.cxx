@@ -163,7 +163,7 @@ try {
 
 	return EXIT_SUCCESS;
 } catch (Usage) {
-	fprintf(stderr, "Usage: %s [--server=PATH] COMMAND [ARGS...]\n",
+	fprintf(stderr, "Usage: %s [--server=PATH] [--header=NAME:VALUE ...] COMMAND [ARGS...]\n",
 		argv[0]);
 	return EXIT_FAILURE;
 } catch (const std::exception &e) {
