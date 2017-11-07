@@ -15,4 +15,6 @@ struct Entity {
 	std::string command;
 	std::forward_list<std::string> args;
 	std::map<std::string, std::string> headers;
+
+	std::string Serialize() const noexcept;
 };
