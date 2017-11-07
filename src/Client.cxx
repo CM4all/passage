@@ -54,16 +54,9 @@ SendOrThrow(SocketDescriptor fd, ConstBuffer<void> payload)
 }
 
 static void
-SendRequest(SocketDescriptor fd, StringView command,
-	    ConstBuffer<const char *> args)
+SendRequest(SocketDescriptor fd, const Entity &request)
 {
-	std::string payload(command.data, command.size);
-	for (const auto s : args) {
-		// TODO: quote argument value
-		payload.push_back(' ');
-		payload.append(s);
-	}
-
+	const auto payload = request.Serialize();
 	SendOrThrow(fd, StringView(payload.data(), payload.size()).ToVoid());
 }
 
@@ -123,6 +116,7 @@ int
 main(int argc, char **argv)
 try {
 	const char *path = "/run/cm4all/passage/socket";
+	Entity request;
 
 	int i = 1;
 	for (i = 1; i < argc && *argv[i] == '-'; ++i) {
@@ -138,12 +132,14 @@ try {
 		throw Usage();
 
 	const StringView command(argv[i++]);
-	const ConstBuffer<const char *> args(&argv[i], argc - i);
-
 	CheckCommand(command);
+	request.command.assign(command.data, command.size);
+
+	for (auto args_tail = request.args.before_begin(); i < argc; ++i)
+		args_tail = request.args.emplace_after(args_tail, argv[i]);
 
 	auto fd = CreateConnect(path);
-	SendRequest(fd, command, args);
+	SendRequest(fd, request);
 	auto returned_fd = ReceiveResponse(fd);
 
 	if (returned_fd.IsDefined() && returned_fd.IsPipe()) {
