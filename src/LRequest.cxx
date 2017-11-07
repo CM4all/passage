@@ -197,7 +197,7 @@ LuaRequestIndex(lua_State *L)
 
 		int i = 1;
 		for (const auto &a : request.args)
-			Lua::SetTable(L, -3, i, a);
+			Lua::SetTable(L, -3, i++, a);
 
 		return 1;
 	} else if (StringIsEqual(name, "pid")) {
