@@ -166,7 +166,7 @@ try {
 }
 
 void
-PassageConnection::OnUdpError(std::exception_ptr ep)
+PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
 {
 	PrintException(ep);
 	delete this;
