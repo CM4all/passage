@@ -124,7 +124,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 	}
 }
 
-void
+bool
 PassageConnection::OnUdpDatagram(const void *data, size_t length,
 				 SocketAddress address, int)
 try {
@@ -132,7 +132,7 @@ try {
 
 	if (length == 0) {
 		delete this;
-		return;
+		return false;
 	}
 
 	pending_response = true;
@@ -156,12 +156,15 @@ try {
 
 	if (pending_response)
 		SendResponse(address, "OK");
+
+	return true;
 } catch (...) {
 	if (pending_response)
 		SendResponse(address, "ERROR");
 
 	logger(1, std::current_exception());
 	delete this;
+	return false;
 }
 
 void
