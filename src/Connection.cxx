@@ -14,7 +14,6 @@
 #include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/ScmRightsBuilder.hxx"
-#include "util/PrintException.hxx"
 #include "util/StaticArray.hxx"
 #include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
@@ -168,6 +167,6 @@ try {
 void
 PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
 {
-	PrintException(ep);
+	logger(1, ep);
 	delete this;
 }
