@@ -189,7 +189,7 @@ NewExecPipeAction(lua_State *L)
 	return 1;
 }
 
-static constexpr struct luaL_reg request_methods [] = {
+static constexpr struct luaL_Reg request_methods [] = {
 	{"get_cgroup", GetCgroup},
 	{"get_mount_info", GetMountInfo},
 	{"fade_children", NewFadeChildrenAction},
