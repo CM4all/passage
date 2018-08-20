@@ -145,7 +145,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 			SendResponse(address, "OK", ExecPipe(instance.GetChildProcessRegistry(),
 							     args.front(),
-							     &args.front()).ToFileDescriptor());
+							     &args.front()));
 		}
 
 		break;

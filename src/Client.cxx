@@ -185,8 +185,7 @@ try {
 		/* if the returned file descriptor is a pipe, copy its
 		   data to stdout */
 		fd.Close();
-		Copy(returned_fd.ToFileDescriptor(),
-		     FileDescriptor(STDOUT_FILENO));
+		Copy(returned_fd, FileDescriptor(STDOUT_FILENO));
 	}
 
 	return EXIT_SUCCESS;
