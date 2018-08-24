@@ -43,7 +43,7 @@
 
 #include <forward_list>
 
-struct SocketAddress;
+class SocketAddress;
 class UniqueSocketDescriptor;
 
 class Instance final {
