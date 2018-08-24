@@ -41,6 +41,7 @@
 #include "MountProc.hxx"
 #include "util/StringAPI.hxx"
 
+#include <assert.h>
 #include <sys/socket.h>
 #include <string.h>
 
