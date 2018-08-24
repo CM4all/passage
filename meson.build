@@ -97,6 +97,7 @@ event = static_library('event',
   'libcommon/src/event/ShutdownListener.cxx',
   'libcommon/src/event/CleanupTimer.cxx',
   'libcommon/src/event/DeferEvent.cxx',
+  'libcommon/src/event/NewSocketEvent.cxx',
   'libcommon/src/event/SignalEvent.cxx',
   include_directories: inc,
   dependencies: [
