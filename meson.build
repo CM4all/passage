@@ -25,9 +25,20 @@ if debug
   common_flags += ['-DPOISON']
 endif
 
-add_global_arguments(common_flags,
+test_common_flags = [
+]
+
+test_cxxflags = test_common_flags + [
   '-Wno-non-virtual-dtor',
-  language: 'cpp')
+]
+
+add_global_arguments(common_flags, language: 'cpp')
+
+foreach f: test_cxxflags
+  if compiler.has_argument(f)
+    add_global_arguments(f, language: 'cpp')
+  endif
+endforeach
 
 boost = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 liblua = dependency('luajit')
