@@ -41,6 +41,8 @@
 
 #include <boost/intrusive/list.hpp>
 
+#include <sys/socket.h>
+
 struct Action;
 class Instance;
 class UniqueSocketDescriptor;
