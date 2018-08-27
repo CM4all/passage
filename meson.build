@@ -46,7 +46,6 @@ endforeach
 
 boost = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 liblua = dependency('luajit')
-libevent = dependency('libevent', version: '>= 2.0.19')
 libsystemd = dependency('libsystemd')
 libbp = dependency('libcm4all-beng-proxy')
 
@@ -100,12 +99,12 @@ event = static_library('event',
   'libcommon/src/event/Loop.cxx',
   'libcommon/src/event/ShutdownListener.cxx',
   'libcommon/src/event/CleanupTimer.cxx',
+  'libcommon/src/event/TimerEvent.cxx',
   'libcommon/src/event/DeferEvent.cxx',
-  'libcommon/src/event/NewSocketEvent.cxx',
+  'libcommon/src/event/SocketEvent.cxx',
   'libcommon/src/event/SignalEvent.cxx',
   include_directories: inc,
   dependencies: [
-    libevent,
     util_dep,
   ])
 event_dep = declare_dependency(link_with: event)
@@ -152,7 +151,6 @@ event_net = static_library('event_net',
   'libcommon/src/event/net/djb/NetstringClient.cxx',
   include_directories: inc,
   dependencies: [
-    libevent,
     event_dep,
     net_dep,
     util_dep,
@@ -170,6 +168,7 @@ spawn_dep = declare_dependency(link_with: spawn,
 executable('cm4all-passage',
   'src/CommandLine.cxx',
   'src/system/SetupProcess.cxx',
+  'libcommon/src/system/EpollFD.cxx',
   'src/LAction.cxx',
   'src/LAddress.cxx',
   'src/LResolver.cxx',
@@ -186,7 +185,7 @@ executable('cm4all-passage',
   include_directories: inc,
   dependencies: [
     libbp,
-    boost, libevent, libsystemd,
+    boost, libsystemd,
     liblua,
     util_dep,
     lua_dep,
