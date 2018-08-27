@@ -44,8 +44,7 @@ foreach f: test_cxxflags
   endif
 endforeach
 
-boost = dependency('boost', modules: ['program_options'], version: '>= 1.54')
-liblua = dependency('luajit')
+boost_program_options = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 libsystemd = dependency('libsystemd')
 libbp = dependency('libcm4all-beng-proxy')
 
@@ -71,91 +70,16 @@ gtest = declare_dependency(
 
 inc = include_directories('src', 'libcommon/src')
 
-util = static_library('util',
-  'libcommon/src/util/AllocatedString.cxx',
-  'libcommon/src/util/Exception.cxx',
-  'libcommon/src/util/LeakDetector.cxx',
-  'libcommon/src/util/PrintException.cxx',
-  'libcommon/src/util/StringBuilder.cxx',
-  'libcommon/src/util/StringParser.cxx',
-  'libcommon/src/util/StringStrip.cxx',
-  'libcommon/src/util/StringView.cxx',
-  include_directories: inc,
-  dependencies: [
-  ])
-util_dep = declare_dependency(link_with: util)
+libcommon_enable_c = false
+libcommon_enable_DefaultFifoBuffer = false
 
-lua = static_library('lua',
-  'libcommon/src/lua/Error.cxx',
-  'libcommon/src/lua/RunFile.cxx',
-  'libcommon/src/lua/State.cxx',
-  dependencies: [
-    liblua,
-  ]
-)
-lua_dep = declare_dependency(link_with: lua)
-
-event = static_library('event',
-  'libcommon/src/event/Loop.cxx',
-  'libcommon/src/event/ShutdownListener.cxx',
-  'libcommon/src/event/CleanupTimer.cxx',
-  'libcommon/src/event/TimerEvent.cxx',
-  'libcommon/src/event/DeferEvent.cxx',
-  'libcommon/src/event/SocketEvent.cxx',
-  'libcommon/src/event/SignalEvent.cxx',
-  include_directories: inc,
-  dependencies: [
-    util_dep,
-  ])
-event_dep = declare_dependency(link_with: event)
-
-io = static_library('io',
-  'libcommon/src/io/FileDescriptor.cxx',
-  'libcommon/src/io/WriteBuffer.cxx',
-  'libcommon/src/io/MultiWriteBuffer.cxx',
-  'libcommon/src/io/Logger.cxx',
-  include_directories: inc,
-  dependencies: [
-  ])
-io_dep = declare_dependency(link_with: io)
-
-net = static_library('net',
-  'libcommon/src/net/SocketAddress.cxx',
-  'libcommon/src/net/StaticSocketAddress.cxx',
-  'libcommon/src/net/AllocatedSocketAddress.cxx',
-  'libcommon/src/net/MaskedSocketAddress.cxx',
-  'libcommon/src/net/IPv4Address.cxx',
-  'libcommon/src/net/IPv6Address.cxx',
-  'libcommon/src/net/HostParser.cxx',
-  'libcommon/src/net/AddressInfo.cxx',
-  'libcommon/src/net/Resolver.cxx',
-  'libcommon/src/net/Parser.cxx',
-  'libcommon/src/net/ToString.cxx',
-  'libcommon/src/net/SocketDescriptor.cxx',
-  'libcommon/src/net/UniqueSocketDescriptor.cxx',
-  'libcommon/src/net/djb/NetstringInput.cxx',
-  'libcommon/src/net/djb/NetstringHeader.cxx',
-  'libcommon/src/net/djb/NetstringGenerator.cxx',
-  include_directories: inc,
-  dependencies: [
-    event_dep,
-    io_dep,
-  ])
-net_dep = declare_dependency(link_with: net)
-
-event_net = static_library('event_net',
-  'libcommon/src/event/net/ConnectSocket.cxx',
-  'libcommon/src/event/net/ServerSocket.cxx',
-  'libcommon/src/event/net/UdpListener.cxx',
-  'libcommon/src/event/net/djb/NetstringServer.cxx',
-  'libcommon/src/event/net/djb/NetstringClient.cxx',
-  include_directories: inc,
-  dependencies: [
-    event_dep,
-    net_dep,
-    util_dep,
-  ])
-event_net_dep = declare_dependency(link_with: event_net)
+subdir('libcommon/src/util')
+subdir('libcommon/src/lua')
+subdir('libcommon/src/io')
+subdir('libcommon/src/system')
+subdir('libcommon/src/event')
+subdir('libcommon/src/net')
+subdir('libcommon/src/event/net')
 
 spawn = static_library('spawn',
   'libcommon/src/spawn/Registry.cxx',
@@ -168,7 +92,6 @@ spawn_dep = declare_dependency(link_with: spawn,
 executable('cm4all-passage',
   'src/CommandLine.cxx',
   'src/system/SetupProcess.cxx',
-  'libcommon/src/system/EpollFD.cxx',
   'src/LAction.cxx',
   'src/LAddress.cxx',
   'src/LResolver.cxx',
@@ -185,7 +108,7 @@ executable('cm4all-passage',
   include_directories: inc,
   dependencies: [
     libbp,
-    boost, libsystemd,
+    boost_program_options, libsystemd,
     liblua,
     util_dep,
     lua_dep,
