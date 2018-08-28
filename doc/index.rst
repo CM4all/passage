@@ -35,7 +35,7 @@ which can be inspected.  Multiple listeners can share the same handler
 by declaring the function explicitly::
 
   function handler(request)
-    if request.command == 'restart'
+    if request.command == 'restart' then
       return request:fade_children(control_address)
     else
       error("Unknown command")
