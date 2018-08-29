@@ -37,9 +37,8 @@
 #include "event/net/UdpListener.hxx"
 #include "event/net/UdpHandler.hxx"
 #include "io/Logger.hxx"
-#include "util/ConstBuffer.hxx"
 
-#include <boost/intrusive/list.hpp>
+#include <boost/intrusive/list_hook.hpp>
 
 #include <sys/socket.h>
 
