@@ -64,7 +64,8 @@ l_control_resolve(lua_State *L)
 	try {
 		ai = Resolve(s, 5478, &hints);
 	} catch (...) {
-		Lua::Raise(L, std::current_exception());
+		Lua::Push(L, std::current_exception());
+		return lua_error(L);
 	}
 
 	NewLuaAddress(L, std::move(ai.GetBest()));
