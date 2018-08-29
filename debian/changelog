@@ -1,6 +1,7 @@
 cm4all-passage (0.5) unstable; urgency=low
 
   * eliminate dependency on libevent
+  * fix passage_listen() error message
 
  --   
 
