@@ -37,6 +37,7 @@
 #include "LAddress.hxx"
 #include "lua/String.hxx"
 #include "lua/Class.hxx"
+#include "lua/Error.hxx"
 #include "CgroupProc.hxx"
 #include "MountProc.hxx"
 #include "util/StringAPI.hxx"
@@ -100,8 +101,8 @@ try {
 
 	Lua::Push(L, path.c_str());
 	return 1;
-} catch (const std::runtime_error &e) {
-	return luaL_error(L, e.what());
+} catch (...) {
+	Lua::Raise(L, std::current_exception());
 }
 
 static int
@@ -129,8 +130,8 @@ try {
 	Lua::SetField(L, -2, "filesystem", m.filesystem.c_str());
 	Lua::SetField(L, -2, "source", m.source.c_str());
 	return 1;
-} catch (const std::runtime_error &e) {
-	return luaL_error(L, e.what());
+} catch (...) {
+	Lua::Raise(L, std::current_exception());
 }
 
 static int
