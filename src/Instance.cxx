@@ -98,7 +98,7 @@ Instance::AddSystemdListener(Lua::ValuePtr &&handler)
 
 	for (unsigned i = 0; i < unsigned(n); ++i)
 		AddListener(UniqueSocketDescriptor(SD_LISTEN_FDS_START + i),
-			    std::move(handler));
+			    Lua::ValuePtr(handler));
 }
 
 void

@@ -3,6 +3,7 @@ cm4all-passage (0.5) unstable; urgency=low
   * eliminate dependency on libevent
   * fix passage_listen() error message
   * set local socket permissions to 0666
+  * fix multiple systemd sockets
 
  --   
 
