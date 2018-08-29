@@ -42,6 +42,7 @@
 #include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/ScmRightsBuilder.hxx"
+#include "net/SendMessage.hxx"
 #include "util/StaticArray.hxx"
 #include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
@@ -95,28 +96,21 @@ PassageConnection::SendResponse(SocketAddress address, StringView status,
 
 	const auto payload = status.ToVoid();
 
-	struct iovec vec[] = {
+	const struct iovec vec[] = {
 		{
 			.iov_base = const_cast<void *>(payload.data),
 			.iov_len = payload.size,
 		},
 	};
 
-	struct msghdr m = {
-		.msg_name = const_cast<void *>(static_cast<const void *>(address.GetAddress())),
-		.msg_namelen = address.GetSize(),
-		.msg_iov = vec,
-		.msg_iovlen = ARRAY_SIZE(vec),
-		.msg_control = nullptr,
-		.msg_controllen = 0,
-		.msg_flags = 0,
-	};
+	MessageHeader m = ConstBuffer<struct iovec>(vec);
+	m.SetAddress(address);
 
 	ScmRightsBuilder<1> rb(m);
 	rb.push_back(fd.Get());
 	rb.Finish(m);
 
-	sendmsg(listener.GetSocket().Get(), &m, MSG_DONTWAIT|MSG_NOSIGNAL);
+	SendMessage(listener.GetSocket(), m, MSG_DONTWAIT|MSG_NOSIGNAL);
 }
 
 void

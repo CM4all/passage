@@ -33,6 +33,7 @@
 #include "FadeChildren.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
+#include "net/SendMessage.hxx"
 #include "system/Error.hxx"
 #include "util/ByteOrder.hxx"
 #include "util/ConstBuffer.hxx"
@@ -52,27 +53,18 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 
 	const size_t padding = (0 - payload.size) & 0x3;
 
-	struct iovec v[] = {
+	const struct iovec v[] = {
 		{ &magic, sizeof(magic) },
 		{ &header, sizeof(header) },
 		{ const_cast<void *>(payload.data), payload.size },
 		{ &magic, padding },
 	};
 
-	struct msghdr msg = {
-		.msg_name = const_cast<struct sockaddr *>(address.GetAddress()),
-		.msg_namelen = address.GetSize(),
-		.msg_iov = v,
-		.msg_iovlen = 2u + 2u * !payload.IsNull(),
-		.msg_control = nullptr,
-		.msg_controllen = 0,
-		.msg_flags = 0,
-	};
+	MessageHeader msg =
+		ConstBuffer<struct iovec>(v, 2u + 2u * !payload.IsNull());
+	msg.SetAddress(address);
 
-	auto nbytes = sendmsg(fd.Get(), &msg, MSG_DONTWAIT|MSG_NOSIGNAL);
-	if (nbytes < 0)
-		throw MakeErrno("Failed to send control packet");
-
+	auto nbytes = SendMessage(fd, msg, MSG_DONTWAIT|MSG_NOSIGNAL);
 	if (size_t(nbytes) != sizeof(magic) + sizeof(header) + payload.size + padding)
 		throw std::runtime_error("Short control send");
 }
