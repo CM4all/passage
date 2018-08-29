@@ -33,7 +33,7 @@
 #include "Instance.hxx"
 #include "Listener.hxx"
 #include "event/net/UdpListener.hxx"
-#include "net/SocketAddress.hxx"
+#include "net/SocketConfig.hxx"
 #include "system/Error.hxx"
 
 extern "C" {
@@ -43,8 +43,6 @@ extern "C" {
 #include <systemd/sd-daemon.h>
 
 #include <stdexcept>
-
-#include <sys/un.h>
 
 Instance::Instance()
 	:shutdown_listener(event_loop, BIND_THIS_METHOD(ShutdownCallback)),
@@ -69,31 +67,16 @@ Instance::AddListener(UniqueSocketDescriptor &&fd, Lua::ValuePtr &&handler)
 static UniqueSocketDescriptor
 MakeListener(SocketAddress address)
 {
-	const int family = address.GetFamily();
 	constexpr int socktype = SOCK_SEQPACKET;
-	constexpr int protocol = 0;
 
-	UniqueSocketDescriptor fd;
-	if (!fd.CreateNonBlock(family, socktype, protocol))
-		throw MakeErrno("Failed to create socket");
+	SocketConfig config(address);
 
-	if (family == AF_LOCAL) {
-		const struct sockaddr_un *sun = (const struct sockaddr_un *)address.GetAddress();
-		if (sun->sun_path[0] != '\0')
-			/* delete non-abstract socket files before reusing them */
-			unlink(sun->sun_path);
+	/* we want to receive the client's UID */
+	config.pass_cred = true;
 
-		/* we want to receive the client's UID */
-		fd.SetBoolOption(SOL_SOCKET, SO_PASSCRED, true);
-	}
+	config.listen = 64;
 
-	if (!fd.Bind(address))
-		throw MakeErrno("Failed to bind");
-
-	if (!fd.Listen(64))
-		throw MakeErrno("Failed to listen");
-
-	return fd;
+	return config.Create(socktype);
 }
 
 void
