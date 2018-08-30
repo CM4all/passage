@@ -14,7 +14,7 @@ Build-Depends: debhelper (>= 10), dh-systemd,
  libcm4all-beng-proxy2-dev,
  python3-sphinx
 Standards-Version: 4.0.0
-Vcs-git: git@dev.intern.cm-ag:max/passage.git
+Vcs-git: git://github.com/CM4all/passage
 
 Package: cm4all-passage
 Architecture: any
