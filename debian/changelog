@@ -6,7 +6,7 @@ cm4all-passage (0.5) unstable; urgency=low
   * fix multiple systemd sockets
   * debian: enable compiler optimization
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Thu, 30 Aug 2018 11:02:58 -0000
 
 cm4all-passage (0.4) unstable; urgency=low
 
