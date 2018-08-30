@@ -20,7 +20,8 @@ contains at least one :samp:`passage_listen()` call, for example::
 
 The first parameter is the socket path to listen on.  Passing the
 global variable :envvar:`systemd` (not the string literal
-:samp:`"systemd"`) will listen on the sockets passed by systemd::
+:samp:`"systemd"`) will listen on the sockets passed by systemd (from
+unit :file:`cm4all-passage.socket`)::
 
   passage_listen(systemd, function(request) ...
 
