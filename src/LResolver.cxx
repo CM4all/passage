@@ -45,7 +45,7 @@ extern "C" {
 
 static int
 l_control_resolve(lua_State *L)
-{
+try {
 	if (lua_gettop(L) != 1)
 		return luaL_error(L, "Invalid parameter count");
 
@@ -59,17 +59,12 @@ l_control_resolve(lua_State *L)
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 
-	AddressInfoList ai;
-
-	try {
-		ai = Resolve(s, 5478, &hints);
-	} catch (...) {
-		Lua::Push(L, std::current_exception());
-		return lua_error(L);
-	}
-
+	const auto ai = Resolve(s, 5478, &hints);
 	NewLuaAddress(L, std::move(ai.GetBest()));
 	return 1;
+} catch (...) {
+	Lua::Push(L, std::current_exception());
+	return lua_error(L);
 }
 
 void
