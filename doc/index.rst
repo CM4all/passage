@@ -10,6 +10,8 @@ talk to the host to trigger certain actions.
 Configuration
 -------------
 
+.. highlight:: lua
+
 The file :file:`/etc/cm4all/passage/config.lua` is a `Lua
 <http://www.lua.org/>`_ script which is executed at startup.  It
 contains at least one :samp:`passage_listen()` call, for example::
@@ -165,6 +167,8 @@ Note that in Lua, attributes are referenced with a dot
 
 Usage
 -----
+
+.. highlight:: shell
 
 The Debian package :file:`cm4all-passage-client` contains a very
 simple and generic client.  The first parameter specifies the command,
