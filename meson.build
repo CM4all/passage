@@ -1,4 +1,4 @@
-project('CM4all Passage', 'cpp', version: '0.5',
+project('CM4all Passage', 'cpp', version: '0.6',
   default_options : ['cpp_std=c++14'])
 
 compiler = meson.get_compiler('cpp')
