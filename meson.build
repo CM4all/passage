@@ -38,12 +38,7 @@ test_cxxflags = test_common_flags + [
 ]
 
 add_global_arguments(common_flags, language: 'cpp')
-
-foreach f: test_cxxflags
-  if compiler.has_argument(f)
-    add_global_arguments(f, language: 'cpp')
-  endif
-endforeach
+add_global_arguments(compiler.get_supported_arguments(test_cxxflags), language: 'cpp')
 
 boost_program_options = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 libsystemd = dependency('libsystemd')
