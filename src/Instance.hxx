@@ -60,7 +60,7 @@ public:
 	RootLogger logger;
 
 	Instance();
-	~Instance();
+	~Instance() noexcept;
 
 	EventLoop &GetEventLoop() {
 		return event_loop;
@@ -89,7 +89,7 @@ public:
 	void Check();
 
 private:
-	void ShutdownCallback();
+	void ShutdownCallback() noexcept;
 };
 
 #endif

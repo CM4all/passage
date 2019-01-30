@@ -52,9 +52,7 @@ Instance::Instance()
 	shutdown_listener.Enable();
 }
 
-Instance::~Instance()
-{
-}
+Instance::~Instance() noexcept = default;
 
 inline void
 Instance::AddListener(UniqueSocketDescriptor &&fd, Lua::ValuePtr &&handler)
@@ -109,7 +107,7 @@ Instance::Check()
 }
 
 void
-Instance::ShutdownCallback()
+Instance::ShutdownCallback() noexcept
 {
 	logger(3, "quit");
 	event_loop.Break();
