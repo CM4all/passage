@@ -39,14 +39,16 @@
 #include "util/ConstBuffer.hxx"
 #include "util/StringView.hxx"
 
-#include <beng-proxy/control.h>
+#include <beng-proxy/Control.hxx>
+
+using namespace BengProxy;
 
 static void
 SendControl(SocketDescriptor fd, SocketAddress address,
-	    enum beng_control_command cmd, ConstBuffer<void> payload)
+	    ControlCommand cmd, ConstBuffer<void> payload)
 {
 	uint32_t magic = ToBE32(control_magic);
-	struct beng_control_header header = {
+	ControlHeader header{
 		.length = ToBE16(payload.size),
 		.command = ToBE16(uint16_t(cmd)),
 	};
@@ -70,7 +72,7 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 }
 
 static void
-SendControl(SocketAddress address, enum beng_control_command cmd,
+SendControl(SocketAddress address, ControlCommand cmd,
 	    ConstBuffer<void> payload)
 {
 	UniqueSocketDescriptor fd;
@@ -83,5 +85,6 @@ SendControl(SocketAddress address, enum beng_control_command cmd,
 void
 FadeChildren(SocketAddress address, const char *tag)
 {
-	SendControl(address, CONTROL_FADE_CHILDREN, StringView(tag).ToVoid());
+	SendControl(address, ControlCommand::FADE_CHILDREN,
+		    StringView(tag).ToVoid());
 }

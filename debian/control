@@ -10,7 +10,7 @@ Build-Depends: debhelper (>= 12~),
  libsystemd-dev,
  libluajit-5.1-dev,
  libgtest-dev,
- libcm4all-beng-proxy2-dev,
+ libcm4all-beng-proxy3-dev (>= 15.7),
  python3-sphinx
 Standards-Version: 4.0.0
 Vcs-git: git://github.com/CM4all/passage

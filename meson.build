@@ -57,7 +57,7 @@ add_global_arguments(compiler.get_supported_arguments(test_cxxflags), language: 
 
 boost_program_options = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 libsystemd = dependency('libsystemd')
-libbp = dependency('libcm4all-beng-proxy')
+libbp = dependency('libcm4all-beng-proxy3', version: '>= 15.7')
 
 gtest_compile_args = [
   '-Wno-undef',
