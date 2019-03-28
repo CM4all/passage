@@ -13,7 +13,8 @@ Build-Depends: debhelper (>= 12~),
  libcm4all-beng-proxy3-dev (>= 15.7),
  python3-sphinx
 Standards-Version: 4.0.0
-Vcs-git: git://github.com/CM4all/passage
+Vcs-Browser: https://github.com/CM4all/passage
+Vcs-Git: git://github.com/CM4all/passage
 
 Package: cm4all-passage
 Architecture: any
