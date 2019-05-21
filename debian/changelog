@@ -1,6 +1,7 @@
 cm4all-passage (0.6) unstable; urgency=low
 
   * debian: use debhelper 12
+  * debian: use dh_sphinxdoc
   * migrate to libcm4all-beng-proxy3-dev
 
  --   
