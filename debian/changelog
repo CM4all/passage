@@ -4,7 +4,7 @@ cm4all-passage (0.6) unstable; urgency=low
   * debian: use dh_sphinxdoc
   * migrate to libcm4all-beng-proxy3-dev
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Fri, 09 Aug 2019 13:59:54 +0200
 
 cm4all-passage (0.5) unstable; urgency=low
 
