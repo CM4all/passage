@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Content Management AG
+ * Copyright 2007-2020 CM4all GmbH
  * All rights reserved.
  *
  * author: Max Kellermann <mk@cm4all.com>
@@ -39,6 +39,7 @@
 #include "FadeChildren.hxx"
 #include "ExecPipe.hxx"
 #include "lua/Error.hxx"
+#include "io/Iovec.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/ScmRightsBuilder.hxx"
@@ -94,13 +95,8 @@ PassageConnection::SendResponse(SocketAddress address, StringView status,
 
 	pending_response = false;
 
-	const auto payload = status.ToVoid();
-
 	const struct iovec vec[] = {
-		{
-			.iov_base = const_cast<void *>(payload.data),
-			.iov_len = payload.size,
-		},
+		MakeIovec(status),
 	};
 
 	MessageHeader m = ConstBuffer<struct iovec>(vec);
