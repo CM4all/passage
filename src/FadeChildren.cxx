@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Content Management AG
+ * Copyright 2007-2020 CM4all GmbH
  * All rights reserved.
  *
  * author: Max Kellermann <mk@cm4all.com>
@@ -34,6 +34,7 @@
 #include "net/SocketAddress.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "net/SendMessage.hxx"
+#include "io/Iovec.hxx"
 #include "system/Error.hxx"
 #include "util/ByteOrder.hxx"
 #include "util/ConstBuffer.hxx"
@@ -56,9 +57,9 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 	const size_t padding = (0 - payload.size) & 0x3;
 
 	const struct iovec v[] = {
-		{ &magic, sizeof(magic) },
-		{ &header, sizeof(header) },
-		{ const_cast<void *>(payload.data), payload.size },
+		MakeIovecT(magic),
+		MakeIovecT(header),
+		MakeIovec(payload),
 		{ &magic, padding },
 	};
 
