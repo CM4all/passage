@@ -2,7 +2,7 @@ cm4all-passage (0.7) unstable; urgency=low
 
   * meson.build: disable ld.so lazy binding and enable relro
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Tue, 03 Nov 2020 13:56:20 +0100
 
 cm4all-passage (0.6) unstable; urgency=low
 
