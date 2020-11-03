@@ -1,6 +1,10 @@
 project('CM4all Passage', 'cpp', version: '0.7',
   meson_version: '>= 0.47',
-  default_options : ['cpp_std=c++17'])
+  default_options : [
+    'cpp_std=c++17',
+    'warning_level=3',
+  ],
+)
 
 compiler = meson.get_compiler('cpp')
 
@@ -13,8 +17,6 @@ endif
 
 common_flags = [
   '-D_GNU_SOURCE',
-  '-Wall',
-  '-Wextra',
   '-Wwrite-strings', '-Wcast-qual', '-Wcast-align', '-Wfloat-equal',
   '-Wshadow', '-Wpointer-arith', '-Wsign-compare',
   '-Wmissing-declarations', '-Wmissing-noreturn', '-Wmissing-format-attribute',
