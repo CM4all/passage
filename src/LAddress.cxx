@@ -40,6 +40,8 @@ extern "C" {
 #include <lauxlib.h>
 }
 
+#include <new>
+
 #include <string.h>
 
 static constexpr char lua_address_class[] = "passage.address";
