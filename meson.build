@@ -8,12 +8,7 @@ project('CM4all Passage', 'cpp', version: '0.8',
 
 compiler = meson.get_compiler('cpp')
 
-# TODO: use get_option('b_ndebug'), but that doesn't work with Meson 0.37.1
-if get_option('buildtype') == 'debug'
-  debug = true
-else
-  debug = false
-endif
+debug = get_option('b_ndebug') != 'true'
 
 common_flags = [
   '-D_GNU_SOURCE',
