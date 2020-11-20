@@ -36,10 +36,7 @@
 #include <string>
 
 struct CommandLine {
-	std::string config_path;
+	std::string config_path = "/etc/cm4all/passage/config.lua";
 };
-
-CommandLine
-ParseCommandLine(int argc, char **argv);
 
 #endif

@@ -138,9 +138,9 @@ Run(const CommandLine &cmdline)
 }
 
 int
-main(int argc, char **argv)
+main(int, char **) noexcept
 try {
-	const auto cmdline = ParseCommandLine(argc, argv);
+	const CommandLine cmdline;
 
 	SetupProcess();
 

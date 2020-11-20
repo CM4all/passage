@@ -63,7 +63,6 @@ test_cxxflags = test_common_flags + [
 add_global_arguments(common_flags, language: 'cpp')
 add_global_arguments(compiler.get_supported_arguments(test_cxxflags), language: 'cpp')
 
-boost_program_options = dependency('boost', modules: ['program_options'], version: '>= 1.54')
 libsystemd = dependency('libsystemd')
 libbp = dependency('libcm4all-beng-proxy3', version: '>= 15.7')
 
@@ -110,7 +109,6 @@ spawn_dep = declare_dependency(link_with: spawn,
                                dependencies: [event_dep])
 
 executable('cm4all-passage',
-  'src/CommandLine.cxx',
   'src/system/SetupProcess.cxx',
   'src/LAction.cxx',
   'src/LAddress.cxx',
@@ -128,7 +126,7 @@ executable('cm4all-passage',
   include_directories: inc,
   dependencies: [
     libbp,
-    boost_program_options, libsystemd,
+    libsystemd,
     liblua,
     util_dep,
     lua_dep,
