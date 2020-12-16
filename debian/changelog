@@ -1,6 +1,6 @@
 cm4all-passage (0.8) unstable; urgency=low
 
-  * 
+  * eliminate runtime Boost dependency
 
  --   
 
