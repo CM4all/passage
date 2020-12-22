@@ -1,6 +1,6 @@
 cm4all-passage (0.9) unstable; urgency=low
 
-  * 
+  * debian: move postinst code to sysusers.d
 
  --   
 
