@@ -19,10 +19,6 @@ common_flags = [
   '-Wunused',
 ]
 
-if debug
-  common_flags += ['-DPOISON']
-endif
-
 test_common_flags = [
   '-fvisibility=hidden',
 ]
