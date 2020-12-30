@@ -18,7 +18,7 @@ Vcs-Git: git://github.com/CM4all/passage
 
 Package: cm4all-passage
 Architecture: any
-Depends: ${shlibs:Depends}, systemd-sysv, adduser
+Depends: ${shlibs:Depends}, systemd-sysv
 Description: Passage daemon
  Passage is a daemon which allows jailed/containerized processes to
  talk to the host to trigger certain actions.
