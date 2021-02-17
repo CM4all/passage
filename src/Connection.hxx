@@ -37,8 +37,7 @@
 #include "event/net/UdpListener.hxx"
 #include "event/net/UdpHandler.hxx"
 #include "io/Logger.hxx"
-
-#include <boost/intrusive/list_hook.hpp>
+#include "util/IntrusiveList.hxx"
 
 #include <sys/socket.h>
 
@@ -48,7 +47,7 @@ class UniqueSocketDescriptor;
 class FileDescriptor;
 
 class PassageConnection final
-	: public boost::intrusive::list_base_hook<boost::intrusive::link_mode<boost::intrusive::auto_unlink>>,
+	: public AutoUnlinkIntrusiveListHook,
 	UdpHandler {
 
 	Instance &instance;
