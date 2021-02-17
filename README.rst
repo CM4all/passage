@@ -10,7 +10,7 @@ Building Passage
 
 You need:
 
-- a C++14 compliant compiler (e.g. gcc or clang)
+- a C++20 compliant compiler (e.g. gcc or clang)
 - `LuaJIT <http://luajit.org/>`__
 - `Boost <http://www.boost.org/>`__
 - `systemd <https://www.freedesktop.org/wiki/Software/systemd/>`__
