@@ -99,7 +99,7 @@ try {
 	if (path.empty())
 		return 0;
 
-	Lua::Push(L, path.c_str());
+	Lua::Push(L, path);
 	return 1;
 } catch (...) {
 	Lua::Push(L, std::current_exception());
@@ -127,9 +127,9 @@ try {
 		return 0;
 
 	lua_newtable(L);
-	Lua::SetField(L, -2, "root", m.root.c_str());
-	Lua::SetField(L, -2, "filesystem", m.filesystem.c_str());
-	Lua::SetField(L, -2, "source", m.source.c_str());
+	Lua::SetField(L, -2, "root", m.root);
+	Lua::SetField(L, -2, "filesystem", m.filesystem);
+	Lua::SetField(L, -2, "source", m.source);
 	return 1;
 } catch (...) {
 	Lua::Push(L, std::current_exception());
@@ -222,7 +222,7 @@ LuaRequestIndex(lua_State *L)
 	}
 
 	if (StringIsEqual(name, "command")) {
-		Lua::Push(L, request.command.c_str());
+		Lua::Push(L, request.command);
 		return 1;
 	} else if (StringIsEqual(name, "args")) {
 		lua_newtable(L);
