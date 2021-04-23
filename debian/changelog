@@ -3,7 +3,7 @@ cm4all-passage (0.10) unstable; urgency=low
   * fix crash on Lua error
   * cgroup2 support for get_cgroup()
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Fri, 23 Apr 2021 18:14:19 +0200
 
 cm4all-passage (0.9) unstable; urgency=low
 
