@@ -30,13 +30,19 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
-#include <string>
-
-struct CommandLine {
-	std::string config_path = "/etc/cm4all/passage/config.lua";
-};
+#include "CommandLine.hxx"
+#include "util/StringAPI.hxx"
 
 CommandLine
-ParseCommandLine(int argc, char **argv);
+ParseCommandLine(int argc, char **argv)
+{
+	CommandLine cmdline;
+
+	if (argc == 3 && StringIsEqual(argv[1], "--config"))
+		cmdline.config_path = argv[2];
+	else if (argc != 1)
+		throw "Usage: cm4all-qrelay [--config PATH]";
+
+	return cmdline;
+}
+
