@@ -74,7 +74,8 @@ The following attributes can be queried:
 The following methods can access more data:
 
 * :samp:`get_cgroup('CONTROLLERNAME')`: Obtain the cgroup membership
-  path for the given controller.
+  path for the given controller.  On hosts with full cgroup2 support,
+  don't pass a controller name.
 
 * :samp:`get_mount_info('MOUNTPOINT')`: Obtain information about a
   mount point in the client's filesystem namespace.  The return value

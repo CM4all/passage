@@ -1,6 +1,7 @@
 cm4all-passage (0.10) unstable; urgency=low
 
   * fix crash on Lua error
+  * cgroup2 support for get_cgroup()
 
  --   
 
