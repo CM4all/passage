@@ -145,7 +145,7 @@ try {
 	SetupProcess();
 
 	return Run(cmdline);
-} catch (const std::exception &e) {
-	PrintException(e);
+} catch (...) {
+	PrintException(std::current_exception());
 	return EXIT_FAILURE;
 }
