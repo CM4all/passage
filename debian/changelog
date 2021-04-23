@@ -1,6 +1,6 @@
 cm4all-passage (0.10) unstable; urgency=low
 
-  * 
+  * fix crash on Lua error
 
  --   
 

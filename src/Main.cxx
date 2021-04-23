@@ -87,8 +87,7 @@ try {
 
 	return 0;
 } catch (...) {
-	Lua::Push(L, std::current_exception());
-	return lua_error(L);
+	Lua::RaiseCurrent(L);
 }
 
 static void

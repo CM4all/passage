@@ -102,8 +102,7 @@ try {
 	Lua::Push(L, path);
 	return 1;
 } catch (...) {
-	Lua::Push(L, std::current_exception());
-	return lua_error(L);
+	Lua::RaiseCurrent(L);
 }
 
 static int
@@ -132,8 +131,7 @@ try {
 	Lua::SetField(L, -2, "source", m.source);
 	return 1;
 } catch (...) {
-	Lua::Push(L, std::current_exception());
-	return lua_error(L);
+	Lua::RaiseCurrent(L);
 }
 
 static int

@@ -63,8 +63,7 @@ try {
 	NewLuaAddress(L, std::move(ai.GetBest()));
 	return 1;
 } catch (...) {
-	Lua::Push(L, std::current_exception());
-	return lua_error(L);
+	Lua::RaiseCurrent(L);
 }
 
 void
