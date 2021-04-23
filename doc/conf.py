@@ -30,7 +30,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Passage'
-copyright = '2017 Content Management AG'
+copyright = '2017-2021 CM4all GmbH'
 author = 'Max Kellermann'
 
 # The version info for the project you're documenting, acts as replacement for
