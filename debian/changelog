@@ -1,6 +1,6 @@
 cm4all-passage (0.11) unstable; urgency=low
 
-  * 
+  * fix use-after-free bug due to race condition
 
  --   
 

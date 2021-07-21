@@ -36,12 +36,23 @@
 #include "system/SetupProcess.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 
+static void
+ReadDummy(FileDescriptor fd) noexcept
+{
+	char dummy;
+	fd.Read(&dummy, sizeof(dummy));
+}
+
 UniqueFileDescriptor
 ExecPipe(ChildProcessRegistry &registry,
 	 const char *path, const char *const*args)
 {
 	UniqueFileDescriptor r, w;
 	if (!UniqueFileDescriptor::CreatePipe(r, w))
+		throw MakeErrno("pipe() failed");
+
+	UniqueFileDescriptor exec_wait_r, exec_wait_w;
+	if (!UniqueFileDescriptor::CreatePipe(exec_wait_r, exec_wait_w))
 		throw MakeErrno("pipe() failed");
 
 	const auto pid = fork();
@@ -57,6 +68,12 @@ ExecPipe(ChildProcessRegistry &registry,
 			path, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
+
+	/* wait for the execv() to complete, so all inherited file
+	   descriptors are closed (to avoid race condition inside
+	   EventLoop) */
+	exec_wait_w.Close();
+	ReadDummy(exec_wait_r);
 
 	registry.Add(pid, path, nullptr);
 
