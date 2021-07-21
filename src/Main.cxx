@@ -36,6 +36,7 @@
 #include "LResolver.hxx"
 #include "system/SetupProcess.hxx"
 #include "net/AllocatedSocketAddress.hxx"
+#include "lua/PushCClosure.hxx"
 #include "lua/Value.hxx"
 #include "lua/Util.hxx"
 #include "lua/Error.hxx"
