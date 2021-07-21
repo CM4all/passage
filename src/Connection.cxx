@@ -143,19 +143,20 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 }
 
 bool
-PassageConnection::OnUdpDatagram(const void *data, size_t length,
+PassageConnection::OnUdpDatagram(ConstBuffer<void> payload,
+				 WritableBuffer<UniqueFileDescriptor>,
 				 SocketAddress address, int)
 try {
 	assert(!pending_response);
 
-	if (length == 0) {
+	if (payload.empty()) {
 		delete this;
 		return false;
 	}
 
 	pending_response = true;
 
-	auto request = ParseEntity(StringView((const char *)data, length));
+	auto request = ParseEntity(StringView{ConstBuffer<char>::FromVoid(payload)});
 
 	handler->Push();
 
