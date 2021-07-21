@@ -111,6 +111,8 @@ try {
 static int
 GetMountInfo(lua_State *L)
 try {
+	using namespace Lua;
+
 	if (lua_gettop(L) != 2)
 		return luaL_error(L, "Invalid parameters");
 
@@ -129,9 +131,9 @@ try {
 		return 0;
 
 	lua_newtable(L);
-	Lua::SetField(L, -2, "root", m.root);
-	Lua::SetField(L, -2, "filesystem", m.filesystem);
-	Lua::SetField(L, -2, "source", m.source);
+	SetField(L, RelativeStackIndex{-1}, "root", m.root);
+	SetField(L, RelativeStackIndex{-1}, "filesystem", m.filesystem);
+	SetField(L, RelativeStackIndex{-1}, "source", m.source);
 	return 1;
 } catch (...) {
 	Lua::RaiseCurrent(L);
@@ -205,6 +207,8 @@ static constexpr struct luaL_Reg request_methods [] = {
 static int
 LuaRequestIndex(lua_State *L)
 {
+	using namespace Lua;
+
 	if (lua_gettop(L) != 2)
 		return luaL_error(L, "Invalid parameters");
 
@@ -230,14 +234,14 @@ LuaRequestIndex(lua_State *L)
 
 		int i = 1;
 		for (const auto &a : request.args)
-			Lua::SetTable(L, -3, i++, a);
+			SetTable(L, RelativeStackIndex{-1}, i++, a);
 
 		return 1;
 	} else if (StringIsEqual(name, "headers")) {
 		lua_newtable(L);
 
 		for (const auto &i : request.headers)
-			Lua::SetTable(L, -3, i.first, i.second);
+			SetTable(L, RelativeStackIndex{-1}, i.first, i.second);
 
 		return 1;
 	} else if (StringIsEqual(name, "pid")) {
@@ -266,8 +270,10 @@ LuaRequestIndex(lua_State *L)
 void
 RegisterLuaRequest(lua_State *L)
 {
+	using namespace Lua;
+
 	LuaRequest::Register(L);
-	Lua::SetTable(L, -3, "__index", LuaRequestIndex);
+	SetTable(L, RelativeStackIndex{-1}, "__index", LuaRequestIndex);
 	lua_pop(L, 1);
 }
 
