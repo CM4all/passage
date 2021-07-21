@@ -35,7 +35,6 @@
 #include "LAction.hxx"
 #include "Action.hxx"
 #include "LAddress.hxx"
-#include "lua/String.hxx"
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
 #include "CgroupProc.hxx"
