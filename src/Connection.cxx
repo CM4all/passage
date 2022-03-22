@@ -158,9 +158,10 @@ try {
 
 	auto request = ParseEntity(StringView{ConstBuffer<char>::FromVoid(payload)});
 
-	handler->Push();
-
 	const auto L = handler->GetState();
+
+	handler->Push(L);
+
 	NewLuaRequest(L, std::move(request), peer_cred);
 	if (lua_pcall(L, 1, 1, 0))
 		throw Lua::PopError(L);

@@ -78,5 +78,7 @@ void
 PushLuaActionRequest(const Action &_action)
 {
 	auto &action = (const LAction &)_action;
-	action.request.Push();
+
+	const auto L = action.request.GetState();
+	action.request.Push(L);
 }
