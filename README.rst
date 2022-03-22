@@ -15,6 +15,10 @@ You need:
 - `systemd <https://www.freedesktop.org/wiki/Software/systemd/>`__
 - `Meson 0.47 <http://mesonbuild.com/>`__ and `Ninja <https://ninja-build.org/>`__
 
+Get the source code::
+
+ git clone --recursive https://github.com/CM4all/passage.git
+
 Run ``meson``::
 
  meson . output
