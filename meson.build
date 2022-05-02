@@ -12,11 +12,19 @@ debug = get_option('b_ndebug') != 'true'
 
 common_flags = [
   '-D_GNU_SOURCE',
-  '-Wwrite-strings', '-Wcast-qual', '-Wcast-align', '-Wfloat-equal',
+  '-Wcast-align',
+  '-Wcast-qual',
+  '-Wfloat-equal',
+  '-Wmissing-declarations',
+  '-Wmissing-format-attribute',
+  '-Wmissing-noreturn',
+  '-Wredundant-decls',
   '-Wshadow',
-  '-Wmissing-declarations', '-Wmissing-noreturn', '-Wmissing-format-attribute',
-  '-Wredundant-decls', '-Wno-long-long', '-Wundef',
+  '-Wundef',
   '-Wunused',
+  '-Wwrite-strings',
+
+  '-Wno-long-long',
 ]
 
 test_common_flags = [
