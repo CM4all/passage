@@ -31,7 +31,6 @@
  */
 
 #include "ExecPipe.hxx"
-#include "spawn/Registry.hxx"
 #include "system/Error.hxx"
 #include "system/SetupProcess.hxx"
 #include "io/UniqueFileDescriptor.hxx"
@@ -44,8 +43,7 @@ ReadDummy(FileDescriptor fd) noexcept
 }
 
 UniqueFileDescriptor
-ExecPipe(ChildProcessRegistry &registry,
-	 const char *path, const char *const*args)
+ExecPipe(const char *path, const char *const*args)
 {
 	UniqueFileDescriptor r, w;
 	if (!UniqueFileDescriptor::CreatePipe(r, w))
@@ -74,8 +72,6 @@ ExecPipe(ChildProcessRegistry &registry,
 	   EventLoop) */
 	exec_wait_w.Close();
 	ReadDummy(exec_wait_r);
-
-	registry.Add(pid, path, nullptr);
 
 	return r;
 }

@@ -133,8 +133,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 			if (!args.checked_append(nullptr))
 				throw std::runtime_error("Too many EXEC_PIPE arguments");
 
-			SendResponse(address, "OK", ExecPipe(instance.GetChildProcessRegistry(),
-							     args.front(),
+			SendResponse(address, "OK", ExecPipe(args.front(),
 							     &args.front()));
 		}
 

@@ -113,7 +113,7 @@ subdir('libcommon/src/net')
 subdir('libcommon/src/event/net')
 
 spawn = static_library('spawn',
-  'libcommon/src/spawn/Registry.cxx',
+  'libcommon/src/spawn/ZombieReaper.cxx',
   include_directories: inc,
   dependencies: [
   ])

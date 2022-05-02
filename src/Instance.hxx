@@ -34,7 +34,7 @@
 #define INSTANCE_HXX
 
 #include "Listener.hxx"
-#include "spawn/Registry.hxx"
+#include "spawn/ZombieReaper.hxx"
 #include "io/Logger.hxx"
 #include "event/Loop.hxx"
 #include "event/ShutdownListener.hxx"
@@ -50,7 +50,7 @@ class Instance final {
 	EventLoop event_loop;
 	ShutdownListener shutdown_listener;
 
-	ChildProcessRegistry child_process_registry;
+	ZombieReaper zombie_reaper{event_loop};
 
 	Lua::State lua_state;
 
@@ -64,10 +64,6 @@ public:
 
 	EventLoop &GetEventLoop() {
 		return event_loop;
-	}
-
-	ChildProcessRegistry &GetChildProcessRegistry() {
-		return child_process_registry;
 	}
 
 	lua_State *GetLuaState() {
