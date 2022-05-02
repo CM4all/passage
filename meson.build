@@ -13,7 +13,7 @@ debug = get_option('b_ndebug') != 'true'
 common_flags = [
   '-D_GNU_SOURCE',
   '-Wwrite-strings', '-Wcast-qual', '-Wcast-align', '-Wfloat-equal',
-  '-Wshadow', '-Wpointer-arith', '-Wsign-compare',
+  '-Wshadow',
   '-Wmissing-declarations', '-Wmissing-noreturn', '-Wmissing-format-attribute',
   '-Wredundant-decls', '-Wno-long-long', '-Wundef',
   '-Wunused',
