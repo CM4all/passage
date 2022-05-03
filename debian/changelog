@@ -2,7 +2,7 @@ cm4all-passage (0.11) unstable; urgency=low
 
   * fix use-after-free bug due to race condition
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Tue, 03 May 2022 20:37:30 +0200
 
 cm4all-passage (0.10) unstable; urgency=low
 
