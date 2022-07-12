@@ -37,8 +37,7 @@
 #include "io/Iovec.hxx"
 #include "system/Error.hxx"
 #include "util/ByteOrder.hxx"
-#include "util/ConstBuffer.hxx"
-#include "util/StringView.hxx"
+#include "util/SpanCast.hxx"
 
 #include <beng-proxy/Control.hxx>
 
@@ -46,15 +45,15 @@ using namespace BengProxy;
 
 static void
 SendControl(SocketDescriptor fd, SocketAddress address,
-	    ControlCommand cmd, ConstBuffer<void> payload)
+	    ControlCommand cmd, std::span<const std::byte> payload)
 {
 	uint32_t magic = ToBE32(control_magic);
 	ControlHeader header{
-		.length = ToBE16(payload.size),
+		.length = ToBE16(payload.size()),
 		.command = ToBE16(uint16_t(cmd)),
 	};
 
-	const size_t padding = (0 - payload.size) & 0x3;
+	const size_t padding = (0 - payload.size()) & 0x3;
 
 	const struct iovec v[] = {
 		MakeIovecT(magic),
@@ -64,17 +63,17 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 	};
 
 	MessageHeader msg =
-		std::span{v}.first(2u + 2u * !payload.IsNull());
+		std::span{v}.first(2u + 2u * (payload.data() != nullptr));
 	msg.SetAddress(address);
 
 	auto nbytes = SendMessage(fd, msg, MSG_DONTWAIT|MSG_NOSIGNAL);
-	if (size_t(nbytes) != sizeof(magic) + sizeof(header) + payload.size + padding)
+	if (size_t(nbytes) != sizeof(magic) + sizeof(header) + payload.size() + padding)
 		throw std::runtime_error("Short control send");
 }
 
 static void
 SendControl(SocketAddress address, ControlCommand cmd,
-	    ConstBuffer<void> payload)
+	    std::span<const std::byte> payload)
 {
 	UniqueSocketDescriptor fd;
 	if (!fd.Create(address.GetFamily(), SOCK_DGRAM, 0))
@@ -87,5 +86,5 @@ void
 FadeChildren(SocketAddress address, const char *tag)
 {
 	SendControl(address, ControlCommand::FADE_CHILDREN,
-		    StringView(tag).ToVoid());
+		    AsBytes(std::string_view{tag}));
 }
