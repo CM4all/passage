@@ -99,7 +99,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 		MakeIovec(std::span{status}),
 	};
 
-	MessageHeader m = ConstBuffer<struct iovec>(vec);
+	MessageHeader m{vec};
 	m.SetAddress(address);
 
 	ScmRightsBuilder<1> rb(m);

@@ -64,7 +64,7 @@ SendControl(SocketDescriptor fd, SocketAddress address,
 	};
 
 	MessageHeader msg =
-		ConstBuffer<struct iovec>(v, 2u + 2u * !payload.IsNull());
+		std::span{v}.first(2u + 2u * !payload.IsNull());
 	msg.SetAddress(address);
 
 	auto nbytes = SendMessage(fd, msg, MSG_DONTWAIT|MSG_NOSIGNAL);
