@@ -79,16 +79,16 @@ PassageConnection::Register(lua_State *L)
 }
 
 void
-PassageConnection::SendResponse(SocketAddress address, StringView status)
+PassageConnection::SendResponse(SocketAddress address, std::string_view status)
 {
 	assert(pending_response);
 
 	pending_response = false;
-	listener.Reply(address, status.data, status.size);
+	listener.Reply(address, status.data(), status.size());
 }
 
 void
-PassageConnection::SendResponse(SocketAddress address, StringView status,
+PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 				FileDescriptor fd)
 {
 	assert(pending_response);
@@ -96,7 +96,7 @@ PassageConnection::SendResponse(SocketAddress address, StringView status,
 	pending_response = false;
 
 	const struct iovec vec[] = {
-		MakeIovec(status),
+		MakeIovec(StringView{status}),
 	};
 
 	MessageHeader m = ConstBuffer<struct iovec>(vec);

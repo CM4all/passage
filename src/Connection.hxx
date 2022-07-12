@@ -39,6 +39,8 @@
 #include "io/Logger.hxx"
 #include "util/IntrusiveList.hxx"
 
+#include <string_view>
+
 #include <sys/socket.h>
 
 struct Action;
@@ -72,8 +74,8 @@ public:
 private:
 	void Do(SocketAddress address, const Action &action);
 
-	void SendResponse(SocketAddress address, StringView status);
-	void SendResponse(SocketAddress address, StringView status,
+	void SendResponse(SocketAddress address, std::string_view status);
+	void SendResponse(SocketAddress address, std::string_view status,
 			  FileDescriptor fd);
 
 	/* virtual methods from class UdpHandler */
