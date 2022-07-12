@@ -34,6 +34,7 @@
 #include "system/Error.hxx"
 #include "util/ScopeExit.hxx"
 #include "util/IterableSplitString.hxx"
+#include "util/StringView.hxx"
 
 #include <stdio.h>
 
