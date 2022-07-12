@@ -33,6 +33,8 @@
 #include "Parser.hxx"
 #include "Entity.hxx"
 #include "Protocol.hxx"
+#include "util/StringSplit.hxx"
+#include "util/StringStrip.hxx"
 #include "util/StringView.hxx"
 
 #include <stdexcept>
@@ -40,16 +42,9 @@
 static StringView
 NextSplit(StringView &buffer, char separator) noexcept
 {
-	StringView result = buffer;
-	const char *newline = buffer.Find(separator);
-	if (newline == nullptr)
-		buffer = nullptr;
-	else {
-		buffer.MoveFront(newline + 1);
-		result.SetEnd(newline);
-	}
-
-	return result;
+	auto [line, rest] = Split(std::string_view{buffer}, separator);
+	buffer = rest;
+	return line;
 }
 
 static StringView
@@ -88,16 +83,13 @@ ParseEntity(StringView payload)
 	}
 
 	while (!(line = NextLine(payload)).empty()) {
-		const char *colon = line.Find(':');
-		if (colon == nullptr || colon == line.begin())
+		auto [name, value] = Split(std::string_view{line}, ':');
+		if (value.data() == nullptr || name.empty())
 			throw std::runtime_error("Bad header syntax");
 
-		StringView name(line.begin(), colon);
-		StringView value(colon + 1, line.end());
-		value.StripLeft();
+		value = StripLeft(value);
 
-		entity.headers.emplace(std::string(name.data, name.size),
-				       std::string(value.data, value.size));
+		entity.headers.emplace(name, value);
 	}
 
 	return entity;
