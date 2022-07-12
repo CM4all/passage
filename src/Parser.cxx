@@ -35,32 +35,31 @@
 #include "Protocol.hxx"
 #include "util/StringSplit.hxx"
 #include "util/StringStrip.hxx"
-#include "util/StringView.hxx"
 
 #include <stdexcept>
 
-static StringView
-NextSplit(StringView &buffer, char separator) noexcept
+static std::string_view
+NextSplit(std::string_view &buffer, char separator) noexcept
 {
-	auto [line, rest] = Split(std::string_view{buffer}, separator);
+	auto [line, rest] = Split(buffer, separator);
 	buffer = rest;
 	return line;
 }
 
-static StringView
-NextLine(StringView &buffer) noexcept
+static std::string_view
+NextLine(std::string_view &buffer) noexcept
 {
 	return NextSplit(buffer, '\n');
 }
 
-static StringView
-NextUnquoted(StringView &buffer) noexcept
+static std::string_view
+NextUnquoted(std::string_view &buffer) noexcept
 {
 	return NextSplit(buffer, ' ');
 }
 
 Entity
-ParseEntity(StringView payload)
+ParseEntity(std::string_view payload)
 {
 	Entity entity;
 
@@ -68,22 +67,21 @@ ParseEntity(StringView payload)
 
 	const auto command = NextUnquoted(line);
 	CheckCommand(command);
-	entity.command.assign(command.data, command.size);
+	entity.command = command;
 
 	auto args_tail = entity.args.before_begin();
 	while (true) {
-		line.StripLeft();
+		line = StripLeft(line);
 		if (line.empty())
 			break;
 
 		// TODO unquote
 		auto value = NextUnquoted(line);
-		args_tail = entity.args.emplace_after(args_tail,
-						      value.data, value.size);
+		args_tail = entity.args.emplace_after(args_tail, value);
 	}
 
 	while (!(line = NextLine(payload)).empty()) {
-		auto [name, value] = Split(std::string_view{line}, ':');
+		auto [name, value] = Split(line, ':');
 		if (value.data() == nullptr || name.empty())
 			throw std::runtime_error("Bad header syntax");
 

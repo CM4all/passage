@@ -4,7 +4,6 @@
 
 #include "Entity.hxx"
 #include "Parser.hxx"
-#include "util/StringView.hxx"
 
 #include <gtest/gtest.h>
 

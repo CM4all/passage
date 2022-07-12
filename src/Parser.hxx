@@ -32,13 +32,12 @@
 
 #pragma once
 
-#include <string>
+#include <string_view>
 
-struct StringView;
 struct Entity;
 
 /**
  * Throws on error.
  */
 Entity
-ParseEntity(StringView s);
+ParseEntity(std::string_view s);

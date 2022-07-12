@@ -45,7 +45,6 @@
 #include "net/ScmRightsBuilder.hxx"
 #include "net/SendMessage.hxx"
 #include "util/StaticVector.hxx"
-#include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
 #include "util/SpanCast.hxx"
 #include "util/Macros.hxx"
@@ -158,7 +157,7 @@ try {
 
 	pending_response = true;
 
-	auto request = ParseEntity(StringView{ConstBuffer<char>::FromVoid(payload)});
+	auto request = ParseEntity(ToStringView(payload));
 
 	const auto L = handler->GetState();
 
