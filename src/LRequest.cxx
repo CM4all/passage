@@ -232,7 +232,7 @@ LuaRequestIndex(lua_State *L)
 	} else if (StringIsEqual(name, "args")) {
 		lua_newtable(L);
 
-		int i = 1;
+		lua_Integer i = 1;
 		for (const auto &a : request.args)
 			SetTable(L, RelativeStackIndex{-1}, i++, a);
 
@@ -248,19 +248,19 @@ LuaRequestIndex(lua_State *L)
 		if (!request.HavePeerCred())
 			return 0;
 
-		Lua::Push(L, request.GetPid());
+		Lua::Push(L, static_cast<lua_Integer>(request.GetPid()));
 		return 1;
 	} else if (StringIsEqual(name, "uid")) {
 		if (!request.HavePeerCred())
 			return 0;
 
-		Lua::Push(L, request.GetUid());
+		Lua::Push(L, static_cast<lua_Integer>(request.GetUid()));
 		return 1;
 	} else if (StringIsEqual(name, "gid")) {
 		if (!request.HavePeerCred())
 			return 0;
 
-		Lua::Push(L, request.GetGid());
+		Lua::Push(L, static_cast<lua_Integer>(request.GetGid()));
 		return 1;
 	}
 
