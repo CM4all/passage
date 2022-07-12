@@ -44,7 +44,7 @@
 #include "net/SocketAddress.hxx"
 #include "net/ScmRightsBuilder.hxx"
 #include "net/SendMessage.hxx"
-#include "util/StaticArray.hxx"
+#include "util/StaticVector.hxx"
 #include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
 #include "util/Macros.hxx"
@@ -126,12 +126,14 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 	case Action::Type::EXEC_PIPE:
 		{
-			StaticArray<const char *, 64> args;
-			for (const auto &i : action.args)
-				if (!args.checked_append(i.c_str()))
+			StaticVector<const char *, 64> args;
+			for (const auto &i : action.args) {
+				args.emplace_back(i.c_str());
+				if (args.full())
 					throw std::runtime_error("Too many EXEC_PIPE arguments");
-			if (!args.checked_append(nullptr))
-				throw std::runtime_error("Too many EXEC_PIPE arguments");
+			}
+
+			args.emplace_back(nullptr);
 
 			SendResponse(address, "OK", ExecPipe(args.front(),
 							     &args.front()));
