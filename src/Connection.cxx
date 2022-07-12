@@ -142,8 +142,8 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 }
 
 bool
-PassageConnection::OnUdpDatagram(ConstBuffer<void> payload,
-				 WritableBuffer<UniqueFileDescriptor>,
+PassageConnection::OnUdpDatagram(std::span<const std::byte> payload,
+				 std::span<UniqueFileDescriptor>,
 				 SocketAddress address, int)
 try {
 	assert(!pending_response);
