@@ -39,7 +39,7 @@
 #include "system/Error.hxx"
 #include "util/PrintException.hxx"
 #include "util/StringCompare.hxx"
-#include "util/StringView.hxx"
+#include "util/SpanCast.hxx"
 
 #include <stdlib.h>
 #include <fcntl.h>
@@ -72,12 +72,12 @@ CreateConnect(const char *path)
 }
 
 static void
-SendOrThrow(SocketDescriptor fd, ConstBuffer<void> payload)
+SendOrThrow(SocketDescriptor fd, std::span<const std::byte> payload)
 {
-	ssize_t nbytes = send(fd.Get(), payload.data, payload.size, 0);
+	ssize_t nbytes = send(fd.Get(), payload.data(), payload.size(), 0);
 	if (nbytes < 0)
 		throw MakeErrno("Failed to send");
-	if (size_t(nbytes) < payload.size)
+	if (size_t(nbytes) < payload.size())
 		throw MakeErrno("Short send");
 }
 
@@ -85,7 +85,7 @@ static void
 SendRequest(SocketDescriptor fd, const Entity &request)
 {
 	const auto payload = request.Serialize();
-	SendOrThrow(fd, StringView(payload.data(), payload.size()).ToVoid());
+	SendOrThrow(fd, AsBytes(payload));
 }
 
 static UniqueFileDescriptor
@@ -96,10 +96,7 @@ ReceiveResponse(SocketDescriptor s)
 	if (result.payload.empty())
 		throw std::runtime_error("Server closed the connection prematurely");
 
-	StringView payload((const char *)result.payload.data(),
-			   result.payload.size());
-
-	const auto response = ParseEntity(payload);
+	const auto response = ParseEntity(ToStringView(result.payload));
 
 	if (response.command == "OK") {
 		return result.fds.empty()
@@ -170,9 +167,9 @@ try {
 	if (i >= argc)
 		throw Usage();
 
-	const StringView command(argv[i++]);
+	const std::string_view command(argv[i++]);
 	CheckCommand(command);
-	request.command.assign(command.data, command.size);
+	request.command = command;
 
 	for (auto args_tail = request.args.before_begin(); i < argc; ++i)
 		args_tail = request.args.emplace_after(args_tail, argv[i]);
