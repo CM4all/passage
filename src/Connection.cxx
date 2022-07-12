@@ -96,7 +96,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 	pending_response = false;
 
 	const struct iovec vec[] = {
-		MakeIovec(StringView{status}),
+		MakeIovec(std::span{status}),
 	};
 
 	MessageHeader m = ConstBuffer<struct iovec>(vec);

@@ -96,8 +96,8 @@ ReceiveResponse(SocketDescriptor s)
 	if (result.payload.empty())
 		throw std::runtime_error("Server closed the connection prematurely");
 
-	StringView payload((const char *)result.payload.data,
-			   result.payload.size);
+	StringView payload((const char *)result.payload.data(),
+			   result.payload.size());
 
 	const auto response = ParseEntity(payload);
 
