@@ -32,10 +32,10 @@
 
 #pragma once
 
-#include "util/StringView.hxx"
 #include "util/CharUtil.hxx"
 
 #include <stdexcept>
+#include <string_view>
 
 static constexpr bool
 IsValidCommandChar(char ch)
@@ -44,7 +44,7 @@ IsValidCommandChar(char ch)
 }
 
 static void
-CheckCommand(StringView s)
+CheckCommand(std::string_view s)
 {
 	if (s.empty())
 		throw std::runtime_error("Empty command");
