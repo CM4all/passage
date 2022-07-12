@@ -47,6 +47,7 @@
 #include "util/StaticVector.hxx"
 #include "util/StringView.hxx"
 #include "util/ScopeExit.hxx"
+#include "util/SpanCast.hxx"
 #include "util/Macros.hxx"
 
 static std::string
@@ -84,7 +85,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status)
 	assert(pending_response);
 
 	pending_response = false;
-	listener.Reply(address, std::as_bytes(std::span{status}));
+	listener.Reply(address, AsBytes(status));
 }
 
 void
@@ -96,7 +97,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 	pending_response = false;
 
 	const struct iovec vec[] = {
-		MakeIovec(std::span{status}),
+		MakeIovec(AsBytes(status)),
 	};
 
 	MessageHeader m{vec};
