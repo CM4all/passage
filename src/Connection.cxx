@@ -84,7 +84,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status)
 	assert(pending_response);
 
 	pending_response = false;
-	listener.Reply(address, status.data(), status.size());
+	listener.Reply(address, std::as_bytes(std::span{status}));
 }
 
 void
