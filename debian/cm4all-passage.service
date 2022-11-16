@@ -8,5 +8,9 @@ Type=notify
 User=cm4all-passage
 ExecStart=/usr/sbin/cm4all-passage
 
+# This allows the kernel to merge CPU wakeups, the default of 50ns is
+# too fine.
+TimerSlackNSec=10ms
+
 [Install]
 WantedBy=multi-user.target
