@@ -1,6 +1,6 @@
 cm4all-passage (0.12) unstable; urgency=low
 
-  * 
+  * flush "print" statements immediately
 
  --   
 
