@@ -32,7 +32,6 @@
 
 #include "CommandLine.hxx"
 #include "Instance.hxx"
-#include "LAddress.hxx"
 #include "LResolver.hxx"
 #include "system/SetupProcess.hxx"
 #include "net/AllocatedSocketAddress.hxx"
@@ -41,6 +40,7 @@
 #include "lua/Util.hxx"
 #include "lua/Error.hxx"
 #include "lua/RunFile.hxx"
+#include "lua/net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
 
 extern "C" {
@@ -97,7 +97,7 @@ SetupConfigState(lua_State *L, Instance &instance)
 {
 	luaL_openlibs(L);
 
-	RegisterLuaAddress(L);
+	Lua::InitSocketAddress(L);
 	RegisterLuaResolver(L);
 
 	Lua::SetGlobal(L, "systemd", Lua::LightUserData(&systemd_magic));

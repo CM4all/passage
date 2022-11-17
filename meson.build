@@ -140,6 +140,7 @@ subdir('libcommon/src/system')
 subdir('libcommon/src/event')
 subdir('libcommon/src/net')
 subdir('libcommon/src/event/net')
+subdir('libcommon/src/lua/net')
 
 spawn = static_library('spawn',
   'libcommon/src/spawn/ZombieReaper.cxx',
@@ -152,7 +153,6 @@ spawn_dep = declare_dependency(link_with: spawn,
 executable('cm4all-passage',
   'src/system/SetupProcess.cxx',
   'src/LAction.cxx',
-  'src/LAddress.cxx',
   'src/LResolver.cxx',
   'src/CgroupProc.cxx',
   'src/MountProc.cxx',
@@ -172,6 +172,7 @@ executable('cm4all-passage',
     liblua,
     util_dep,
     lua_dep,
+    lua_net_dep,
     event_net_dep,
     spawn_dep,
   ],

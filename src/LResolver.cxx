@@ -31,9 +31,9 @@
  */
 
 #include "LResolver.hxx"
-#include "LAddress.hxx"
 #include "lua/Util.hxx"
 #include "lua/Error.hxx"
+#include "lua/net/SocketAddress.hxx"
 #include "net/Resolver.hxx"
 #include "net/AddressInfo.hxx"
 
@@ -60,7 +60,7 @@ try {
 	hints.ai_socktype = SOCK_DGRAM;
 
 	const auto ai = Resolve(s, 5478, &hints);
-	NewLuaAddress(L, std::move(ai.GetBest()));
+	Lua::NewSocketAddress(L, std::move(ai.GetBest()));
 	return 1;
 } catch (...) {
 	Lua::RaiseCurrent(L);
