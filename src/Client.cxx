@@ -41,6 +41,8 @@
 #include "util/StringCompare.hxx"
 #include "util/SpanCast.hxx"
 
+#include <fmt/format.h>
+
 #include <stdlib.h>
 #include <fcntl.h>
 
@@ -150,7 +152,7 @@ try {
 		} else if (auto h = StringAfterPrefix(argv[i], "--header=")) {
 			const char *colon = strchr(h, ':');
 			if (colon == nullptr || colon == h) {
-				fprintf(stderr, "Malformed header: %s\n", h);
+				fmt::print(stderr, "Malformed header: {}\n", h);
 				throw Usage();
 			}
 
@@ -159,7 +161,7 @@ try {
 						std::forward_as_tuple(h, colon),
 						std::forward_as_tuple(colon + 1));
 		} else {
-			fprintf(stderr, "Unknown option: %s\n", argv[i]);
+			fmt::print(stderr, "Unknown option: {}\n", argv[i]);
 			throw Usage();
 		}
 	}
@@ -187,8 +189,8 @@ try {
 
 	return EXIT_SUCCESS;
 } catch (Usage) {
-	fprintf(stderr, "Usage: %s [--server=PATH] [--header=NAME:VALUE ...] COMMAND [ARGS...]\n",
-		argv[0]);
+	fmt::print(stderr, "Usage: {} [--server=PATH] [--header=NAME:VALUE ...] COMMAND [ARGS...]\n",
+		   argv[0]);
 	return EXIT_FAILURE;
 } catch (const std::exception &e) {
 	PrintException(e);

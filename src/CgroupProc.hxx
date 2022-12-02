@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 CM4all GmbH
+ * Copyright 2014-2021 CM4all GmbH
  * All rights reserved.
  *
  * author: Max Kellermann <mk@cm4all.com>
@@ -30,7 +30,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#ifndef CGROUP_PROC_HXX
+#define CGROUP_PROC_HXX
 
 #include <string>
 
@@ -45,3 +46,5 @@
  */
 std::string
 ReadProcessCgroup(unsigned pid, const char *controller);
+
+#endif

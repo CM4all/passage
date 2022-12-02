@@ -35,6 +35,8 @@
 #include "system/SetupProcess.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 
+#include <fmt/format.h>
+
 static void
 ReadDummy(FileDescriptor fd) noexcept
 {
@@ -62,8 +64,8 @@ ExecPipe(const char *path, const char *const*args)
 
 		w.CheckDuplicate(FileDescriptor(STDOUT_FILENO));
 		execv(path, const_cast<char*const*>(args));
-		fprintf(stderr, "Failed to execute '%s': %s\n",
-			path, strerror(errno));
+		fmt::print(stderr, "Failed to execute '{}': {}\n",
+			   path, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 

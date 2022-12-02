@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 CM4all GmbH
+ * Copyright 2014-2021 CM4all GmbH
  * All rights reserved.
  *
  * author: Max Kellermann <mk@cm4all.com>
@@ -30,7 +30,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#ifndef MOUNT_PROC_HXX
+#define MOUNT_PROC_HXX
 
 #include <string>
 
@@ -64,3 +65,5 @@ struct MountInfo {
  */
 MountInfo
 ReadProcessMount(unsigned pid, const char *mountpoint);
+
+#endif

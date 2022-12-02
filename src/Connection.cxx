@@ -49,16 +49,15 @@
 #include "util/SpanCast.hxx"
 #include "util/Macros.hxx"
 
+#include <fmt/format.h>
+
 static std::string
 MakeLoggerDomain(const struct ucred &cred, SocketAddress)
 {
 	if (cred.pid < 0)
 		return "connection";
 
-	char buffer[128];
-	snprintf(buffer, sizeof(buffer), "pid=%d uid=%d",
-		 int(cred.pid), int(cred.uid));
-	return buffer;
+	return fmt::format("pid={} uid={}", cred.pid, cred.uid);
 }
 
 PassageConnection::PassageConnection(Instance &_instance,

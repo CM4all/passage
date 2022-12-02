@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 CM4all GmbH
+ * Copyright 2014-2021 CM4all GmbH
  * All rights reserved.
  *
  * author: Max Kellermann <mk@cm4all.com>
@@ -31,17 +31,16 @@
  */
 
 #include "CgroupProc.hxx"
-#include "system/Error.hxx"
+#include "lib/fmt/ToBuffer.hxx"
+#include "lib/fmt/SystemError.hxx"
 #include "util/ScopeExit.hxx"
 #include "util/IterableSplitString.hxx"
 #include "util/StringSplit.hxx"
 
-#include <stdio.h>
-
 static bool
 ListContains(std::string_view haystack, char separator, std::string_view needle)
 {
-	for (const std::string_view value : IterableSplitString(haystack, separator))
+	for (const auto value : IterableSplitString(haystack, separator))
 		if (value == needle)
 			return true;
 
@@ -57,11 +56,10 @@ StripTrailingNewline(std::string_view s)
 std::string
 ReadProcessCgroup(unsigned pid, const char *_controller)
 {
-	char path[64];
-	sprintf(path, "/proc/%u/cgroup", pid);
+	const auto path = FmtBuffer<64>("/proc/{}/cgroup", pid);
 	FILE *file = fopen(path, "r");
 	if (file == nullptr)
-		throw FormatErrno("Failed to open %s", path);
+		throw FmtErrno("Failed to open {}", path);
 
 	AtScopeExit(file) { fclose(file); };
 

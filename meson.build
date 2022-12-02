@@ -114,6 +114,7 @@ libcommon_enable_DefaultFifoBuffer = false
 libcommon_enable_net_log = false
 
 subdir('libcommon/src/util')
+subdir('libcommon/src/lib/fmt')
 subdir('libcommon/src/lua')
 subdir('libcommon/src/io')
 subdir('libcommon/src/system')
@@ -155,6 +156,7 @@ executable('cm4all-passage',
     lua_net_dep,
     event_net_dep,
     spawn_dep,
+    fmt_dep,
   ],
   install: true,
   install_dir: 'sbin',
@@ -168,6 +170,7 @@ executable('cm4all-passage-client',
   dependencies: [
     net_dep,
     util_dep,
+    fmt_dep,
   ],
   install: true,
 )
