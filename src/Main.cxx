@@ -132,7 +132,7 @@ Run(const CommandLine &cmdline)
 	/* tell systemd we're ready */
 	sd_notify(0, "READY=1");
 
-	instance.GetEventLoop().Dispatch();
+	instance.GetEventLoop().Run();
 
 	instance.logger(3, "exiting");
 	return EXIT_SUCCESS;
