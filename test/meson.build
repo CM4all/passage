@@ -10,18 +10,23 @@ if compiler.get_id() == 'gcc'
   ]
 endif
 
+gtest_main_dep = dependency('gtest', main: true)
 gtest = declare_dependency(
-  dependencies: [dependency('gtest', main: true)],
+  dependencies: [gtest_main_dep],
   compile_args: gtest_compile_args,
 )
 
-test('TestParser', executable('TestParser',
-  'TestParser.cxx',
-  '../src/Parser.cxx',
-  include_directories: inc,
-  install: false,
-  dependencies: [
-    util_dep,
-    gtest,
-  ],
-))
+test(
+  'TestParser',
+  executable(
+    'TestParser',
+    'TestParser.cxx',
+    '../src/Parser.cxx',
+    include_directories: inc,
+    install: false,
+    dependencies: [
+      util_dep,
+      gtest,
+    ],
+  ),
+)
