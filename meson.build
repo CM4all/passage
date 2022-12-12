@@ -104,7 +104,6 @@ add_global_arguments(compiler.get_supported_arguments(test_global_cxxflags), lan
 add_project_arguments(compiler.get_supported_arguments(test_cxxflags), language: 'cpp')
 
 libsystemd = dependency('libsystemd')
-libbp = dependency('libcm4all-beng-proxy3', version: '>= 15.7')
 
 inc = include_directories('src', 'libcommon/src')
 
@@ -147,7 +146,6 @@ executable('cm4all-passage',
   'src/Main.cxx',
   include_directories: inc,
   dependencies: [
-    libbp,
     libsystemd,
     liblua,
     util_dep,

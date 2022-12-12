@@ -1,6 +1,7 @@
 cm4all-passage (0.12) unstable; urgency=low
 
   * flush "print" statements immediately
+  * debian: eliminate build-dependency on libcm4all-beng-proxy3-dev
 
  --   
 

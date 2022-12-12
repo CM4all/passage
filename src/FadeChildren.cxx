@@ -34,12 +34,11 @@
 #include "net/SocketAddress.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "net/SendMessage.hxx"
+#include "net/control/Protocol.hxx"
 #include "io/Iovec.hxx"
 #include "system/Error.hxx"
 #include "util/ByteOrder.hxx"
 #include "util/SpanCast.hxx"
-
-#include <beng-proxy/Control.hxx>
 
 using namespace BengProxy;
 
