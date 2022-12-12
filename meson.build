@@ -115,6 +115,7 @@ subdir('libcommon/src/util')
 subdir('libcommon/src/lib/fmt')
 subdir('libcommon/src/lua')
 subdir('libcommon/src/io')
+subdir('libcommon/src/io/linux')
 subdir('libcommon/src/system')
 subdir('libcommon/src/event')
 subdir('libcommon/src/net')
@@ -135,7 +136,6 @@ executable('cm4all-passage',
   'src/LAction.cxx',
   'src/LResolver.cxx',
   'src/CgroupProc.cxx',
-  'src/MountProc.cxx',
   'src/Instance.cxx',
   'src/Connection.cxx',
   'src/Parser.cxx',
@@ -149,6 +149,7 @@ executable('cm4all-passage',
   dependencies: [
     libsystemd,
     liblua,
+    io_linux_dep,
     util_dep,
     lua_dep,
     lua_net_dep,

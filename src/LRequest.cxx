@@ -37,8 +37,8 @@
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
 #include "lua/net/SocketAddress.hxx"
+#include "io/linux/MountInfo.hxx"
 #include "CgroupProc.hxx"
-#include "MountProc.hxx"
 #include "util/StringAPI.hxx"
 
 #include <assert.h>
