@@ -3,7 +3,7 @@ cm4all-passage (0.12) unstable; urgency=low
   * flush "print" statements immediately
   * debian: eliminate build-dependency on libcm4all-beng-proxy3-dev
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Thu, 02 Mar 2023 18:38:49 +0100
 
 cm4all-passage (0.11) unstable; urgency=low
 
