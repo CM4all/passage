@@ -1,5 +1,5 @@
 project('CM4all Passage', 'cpp', version: '0.13',
-  meson_version: '>= 0.47',
+  meson_version: '>= 0.56',
   default_options : [
     'cpp_std=c++2a',
     'warning_level=3',
