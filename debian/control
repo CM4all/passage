@@ -17,14 +17,14 @@ Vcs-Git: git://github.com/CM4all/passage
 
 Package: cm4all-passage
 Architecture: any
-Depends: ${shlibs:Depends}, systemd-sysv
+Depends: ${misc:Depends}, ${shlibs:Depends}, systemd-sysv
 Description: Passage daemon
  Passage is a daemon which allows jailed/containerized processes to
  talk to the host to trigger certain actions.
 
 Package: cm4all-passage-client
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Passage client
  Passage is a daemon which allows jailed/containerized processes to
  talk to the host to trigger certain actions.
@@ -34,6 +34,7 @@ Description: Passage client
 Package: cm4all-passage-doc
 Section: non-free/doc
 Architecture: all
+Built-Using: ${sphinxdoc:Built-Using}
 Depends: ${misc:Depends}, ${sphinxdoc:Depends}
 Description: Documentation for cm4all-passage
  Passage is a daemon which allows jailed/containerized processes to
