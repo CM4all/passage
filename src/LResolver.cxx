@@ -26,10 +26,7 @@ try {
 
 	const char *s = lua_tostring(L, 1);
 
-	struct addrinfo hints;
-	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_DGRAM;
+	static constexpr auto hints = MakeAddrInfo(0, AF_UNSPEC, SOCK_DGRAM);
 
 	const auto ai = Resolve(s, 5478, &hints);
 	Lua::NewSocketAddress(L, std::move(ai.GetBest()));
