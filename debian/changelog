@@ -1,6 +1,6 @@
 cm4all-passage (0.13) unstable; urgency=low
 
-  * 
+  * lua: eliminate manual GC on cancellation
 
  --   
 
