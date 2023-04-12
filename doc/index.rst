@@ -71,11 +71,11 @@ The following attributes can be queried:
 
 * :samp:`gid`: The client's group id.
 
-The following methods can access more data:
+* :samp:`cgroup`: The control group path of the client process as
+  noted in :file:`/proc/self/cgroup`,
+  e.g. :file:`/user.slice/user-1000.slice/session-42.scope`
 
-* :samp:`get_cgroup('CONTROLLERNAME')`: Obtain the cgroup membership
-  path for the given controller.  On hosts with full cgroup2 support,
-  don't pass a controller name.
+The following methods can access more data:
 
 * :samp:`get_mount_info('MOUNTPOINT')`: Obtain information about a
   mount point in the client's filesystem namespace.  The return value
