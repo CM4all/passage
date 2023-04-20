@@ -3,7 +3,7 @@ cm4all-passage (0.13) unstable; urgency=low
   * lua: eliminate manual GC on cancellation
   * add "mail.cgroup", deprecate "mail:get_cgroup()"
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Thu, 20 Apr 2023 09:49:07 +0200
 
 cm4all-passage (0.12) unstable; urgency=low
 
