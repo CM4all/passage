@@ -1,6 +1,5 @@
 cm4all-passage (0.14) unstable; urgency=low
 
-  * lua: support PostgreSQL arrays
   * debian: restart after upgrade
 
  --   
