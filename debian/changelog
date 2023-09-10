@@ -1,5 +1,6 @@
 cm4all-passage (0.14) unstable; urgency=low
 
+  * fix file descriptor leak bug
   * debian: restart after upgrade
 
  --   
