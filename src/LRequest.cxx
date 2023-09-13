@@ -12,6 +12,7 @@
 #include "io/linux/MountInfo.hxx"
 #include "io/linux/ProcCgroup.hxx"
 #include "util/StringAPI.hxx"
+#include "util/StringCompare.hxx"
 
 #include <assert.h>
 #include <sys/socket.h>
@@ -59,18 +60,15 @@ try {
 
 	auto &request = (RichRequest &)CastLuaRequest(L, 1);
 
-	const char *controller = "";
-	if (top >= 2) {
-		if (!lua_isstring(L, 2))
-			luaL_argerror(L, 2, "string expected");
-		controller = lua_tostring(L, 2);
-	}
+	const char *controller = luaL_optstring(L, 2, "");
+	if (controller != nullptr && !StringIsEmpty(controller))
+		luaL_argerror(L, 2, "cgroup1 not supported anymore");
 
 	const int pid = request.GetPid();
 	if (pid < 0)
 		return 0;
 
-	const auto path = ReadProcessCgroup(pid, controller);
+	const auto path = ReadProcessCgroup(pid);
 	if (path.empty())
 		return 0;
 
@@ -238,7 +236,7 @@ LuaRequestIndex(lua_State *L)
 		if (!request.HavePeerCred())
 			return 0;
 
-		const auto path = ReadProcessCgroup(request.GetPid(), "");
+		const auto path = ReadProcessCgroup(request.GetPid());
 		if (path.empty())
 			return 0;
 
