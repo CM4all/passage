@@ -12,9 +12,6 @@ debug = get_option('b_ndebug') != 'true'
 
 common_flags = [
   '-D_GNU_SOURCE',
-
-  # disable boost specific code in libcommon
-  '-DNO_BOOST',
 ]
 
 test_common_flags = [
@@ -101,7 +98,6 @@ libsystemd = dependency('libsystemd')
 
 inc = include_directories('src', 'libcommon/src')
 
-libcommon_enable_boost = false
 libcommon_enable_DefaultFifoBuffer = false
 
 subdir('libcommon/src/util')
