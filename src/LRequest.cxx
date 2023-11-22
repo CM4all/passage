@@ -46,6 +46,8 @@ public:
 
 		return cred.gid;
 	}
+
+	int Index(lua_State *L, const char *name);
 };
 
 static constexpr char lua_request_class[] = "passage.request";
@@ -174,11 +176,71 @@ static constexpr struct luaL_Reg request_methods [] = {
 	{nullptr, nullptr}
 };
 
-static int
-LuaRequestIndex(lua_State *L)
+inline int
+RichRequest::Index(lua_State *L, const char *name)
 {
 	using namespace Lua;
 
+	for (const auto *i = request_methods; i->name != nullptr; ++i) {
+		if (StringIsEqual(i->name, name)) {
+			Lua::Push(L, i->func);
+			return 1;
+		}
+	}
+
+	if (StringIsEqual(name, "command")) {
+		Lua::Push(L, command);
+		return 1;
+	} else if (StringIsEqual(name, "args")) {
+		lua_newtable(L);
+
+		lua_Integer i = 1;
+		for (const auto &a : args)
+			SetTable(L, RelativeStackIndex{-1}, i++, a);
+
+		return 1;
+	} else if (StringIsEqual(name, "headers")) {
+		lua_newtable(L);
+
+		for (const auto &i : headers)
+			SetTable(L, RelativeStackIndex{-1}, i.first, i.second);
+
+		return 1;
+	} else if (StringIsEqual(name, "pid")) {
+		if (!HavePeerCred())
+			return 0;
+
+		Lua::Push(L, static_cast<lua_Integer>(GetPid()));
+		return 1;
+	} else if (StringIsEqual(name, "uid")) {
+		if (!HavePeerCred())
+			return 0;
+
+		Lua::Push(L, static_cast<lua_Integer>(GetUid()));
+		return 1;
+	} else if (StringIsEqual(name, "gid")) {
+		if (!HavePeerCred())
+			return 0;
+
+		Lua::Push(L, static_cast<lua_Integer>(GetGid()));
+		return 1;
+	} else if (StringIsEqual(name, "cgroup")) {
+		if (!HavePeerCred())
+			return 0;
+
+		const auto path = ReadProcessCgroup(GetPid());
+		if (path.empty())
+			return 0;
+
+		Lua::Push(L, path);
+		return 1;
+	} else
+		return luaL_error(L, "Unknown attribute");
+}
+
+static int
+LuaRequestIndex(lua_State *L)
+{
 	if (lua_gettop(L) != 2)
 		return luaL_error(L, "Invalid parameters");
 
@@ -189,62 +251,7 @@ LuaRequestIndex(lua_State *L)
 
 	const char *name = lua_tostring(L, 2);
 
-	for (const auto *i = request_methods; i->name != nullptr; ++i) {
-		if (StringIsEqual(i->name, name)) {
-			Lua::Push(L, i->func);
-			return 1;
-		}
-	}
-
-	if (StringIsEqual(name, "command")) {
-		Lua::Push(L, request.command);
-		return 1;
-	} else if (StringIsEqual(name, "args")) {
-		lua_newtable(L);
-
-		lua_Integer i = 1;
-		for (const auto &a : request.args)
-			SetTable(L, RelativeStackIndex{-1}, i++, a);
-
-		return 1;
-	} else if (StringIsEqual(name, "headers")) {
-		lua_newtable(L);
-
-		for (const auto &i : request.headers)
-			SetTable(L, RelativeStackIndex{-1}, i.first, i.second);
-
-		return 1;
-	} else if (StringIsEqual(name, "pid")) {
-		if (!request.HavePeerCred())
-			return 0;
-
-		Lua::Push(L, static_cast<lua_Integer>(request.GetPid()));
-		return 1;
-	} else if (StringIsEqual(name, "uid")) {
-		if (!request.HavePeerCred())
-			return 0;
-
-		Lua::Push(L, static_cast<lua_Integer>(request.GetUid()));
-		return 1;
-	} else if (StringIsEqual(name, "gid")) {
-		if (!request.HavePeerCred())
-			return 0;
-
-		Lua::Push(L, static_cast<lua_Integer>(request.GetGid()));
-		return 1;
-	} else if (StringIsEqual(name, "cgroup")) {
-		if (!request.HavePeerCred())
-			return 0;
-
-		const auto path = ReadProcessCgroup(request.GetPid());
-		if (path.empty())
-			return 0;
-
-		Lua::Push(L, path);
-		return 1;
-	}
-
-	return luaL_error(L, "Unknown attribute");
+	return request.Index(L, name);
 }
 
 void
