@@ -89,10 +89,7 @@ try {
 		return luaL_error(L, "Invalid parameters");
 
 	auto &request = (RichRequest &)CastLuaRequest(L, 1);
-
-	if (!lua_isstring(L, 2))
-		luaL_argerror(L, 2, "string expected");
-	const char *mountpoint = lua_tostring(L, 2);
+	const char *const mountpoint = luaL_checkstring(L, 2);
 
 	const int pid = request.GetPid();
 	if (pid < 0)
@@ -128,10 +125,7 @@ NewFadeChildrenAction(lua_State *L)
 
 	const char *child_tag = nullptr;
 	if (top >= 3) {
-		if (!lua_isstring(L, 3))
-			luaL_argerror(L, 3, "string expected");
-
-		child_tag = lua_tostring(L, 3);
+		child_tag = luaL_checkstring(L, 3);
 	}
 
 	auto &action = *NewLuaAction(L, 1);
@@ -246,12 +240,7 @@ LuaRequestIndex(lua_State *L)
 
 	auto &request = (RichRequest &)CastLuaRequest(L, 1);
 
-	if (!lua_isstring(L, 2))
-		luaL_argerror(L, 2, "string expected");
-
-	const char *name = lua_tostring(L, 2);
-
-	return request.Index(L, name);
+	return request.Index(L, luaL_checkstring(L, 2));
 }
 
 void
