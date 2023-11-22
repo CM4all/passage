@@ -8,9 +8,15 @@
 #include "Action.hxx"
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
+#include "lua/Value.hxx"
+#include "lua/io/XattrTable.hxx"
 #include "lua/net/SocketAddress.hxx"
+#include "io/Beneath.hxx"
+#include "io/FileAt.hxx"
+#include "io/Open.hxx"
 #include "io/linux/MountInfo.hxx"
 #include "io/linux/ProcCgroup.hxx"
+#include "io/UniqueFileDescriptor.hxx"
 #include "util/StringAPI.hxx"
 #include "util/StringCompare.hxx"
 
@@ -19,11 +25,17 @@
 #include <string.h>
 
 class RichRequest : public Entity {
+	/**
+	 * An #XattrTable instance.
+	 */
+	Lua::Value cgroup_xattr;
+
 	const struct ucred cred;
 
 public:
-	RichRequest(Entity &&src, const struct ucred &_peer_cred)
-		:Entity(std::move(src)), cred(_peer_cred) {}
+	RichRequest(lua_State *L, Entity &&src, const struct ucred &_peer_cred)
+		:Entity(std::move(src)), cgroup_xattr(L),
+		 cred(_peer_cred) {}
 
 	bool HavePeerCred() const noexcept {
 		return cred.pid >= 0;
@@ -228,6 +240,29 @@ RichRequest::Index(lua_State *L, const char *name)
 
 		Lua::Push(L, path);
 		return 1;
+	} else if (StringIsEqual(name, "cgroup_xattr")) {
+		cgroup_xattr.Push(L);
+		if (!lua_isnil(L, -1))
+			return 1;
+
+		lua_pop(L, 1);
+
+		if (!HavePeerCred())
+			return 0;
+
+		const auto path = ReadProcessCgroup(GetPid());
+		if (path.empty())
+			return 0;
+
+		try {
+			const auto sys_fs_cgroup = OpenPath("/sys/fs/cgroup");
+			auto fd = OpenReadOnlyBeneath({sys_fs_cgroup, path.c_str() + 1});
+			Lua::NewXattrTable(L, std::move(fd));
+			cgroup_xattr.Set(L, Lua::RelativeStackIndex{-1});
+			return 1;
+		} catch (...) {
+			Lua::RaiseCurrent(L);
+		}
 	} else
 		return luaL_error(L, "Unknown attribute");
 }
@@ -256,7 +291,7 @@ RegisterLuaRequest(lua_State *L)
 Entity *
 NewLuaRequest(lua_State *L, Entity &&src, const struct ucred &peer_cred)
 {
-	return LuaRequest::New(L, std::move(src), peer_cred);
+	return LuaRequest::New(L, L, std::move(src), peer_cred);
 }
 
 Entity &

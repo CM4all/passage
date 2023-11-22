@@ -12,6 +12,7 @@
 #include "lua/Util.hxx"
 #include "lua/Error.hxx"
 #include "lua/RunFile.hxx"
+#include "lua/io/XattrTable.hxx"
 #include "lua/net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
 
@@ -83,6 +84,8 @@ static void
 SetupRuntimeState(lua_State *L)
 {
 	Lua::SetGlobal(L, "passage_listen", nullptr);
+
+	Lua::InitXattrTable(L);
 
 	PassageConnection::Register(L);
 

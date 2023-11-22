@@ -1,6 +1,6 @@
 cm4all-passage (0.15) unstable; urgency=low
 
-  * 
+  * support cgroup xattr
 
  --   
 

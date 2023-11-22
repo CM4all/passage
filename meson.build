@@ -110,6 +110,7 @@ subdir('libcommon/src/event')
 subdir('libcommon/src/net')
 subdir('libcommon/src/net/control')
 subdir('libcommon/src/event/net')
+subdir('libcommon/src/lua/io')
 subdir('libcommon/src/lua/net')
 
 spawn = static_library('spawn',
@@ -140,6 +141,7 @@ executable('cm4all-passage',
     io_linux_dep,
     util_dep,
     lua_dep,
+    lua_io_dep,
     lua_net_dep,
     control_client_dep,
     event_net_dep,
