@@ -5,6 +5,7 @@
 #include "ExecPipe.hxx"
 #include "system/Error.hxx"
 #include "system/SetupProcess.hxx"
+#include "io/Pipe.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 
 #include <fmt/format.h>
@@ -19,13 +20,8 @@ ReadDummy(FileDescriptor fd) noexcept
 UniqueFileDescriptor
 ExecPipe(const char *path, const char *const*args)
 {
-	UniqueFileDescriptor r, w;
-	if (!UniqueFileDescriptor::CreatePipe(r, w))
-		throw MakeErrno("pipe() failed");
-
-	UniqueFileDescriptor exec_wait_r, exec_wait_w;
-	if (!UniqueFileDescriptor::CreatePipe(exec_wait_r, exec_wait_w))
-		throw MakeErrno("pipe() failed");
+	auto [r, w] = CreatePipe();
+	auto [exec_wait_r, exec_wait_w] = CreatePipe();
 
 	const auto pid = fork();
 	if (pid < 0)
