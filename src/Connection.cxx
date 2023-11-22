@@ -20,6 +20,7 @@
 #include "util/ScopeExit.hxx"
 #include "util/SpanCast.hxx"
 #include "util/Macros.hxx"
+#include "util/Compiler.h"
 
 #include <fmt/format.h>
 
