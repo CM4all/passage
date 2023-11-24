@@ -1,6 +1,6 @@
 cm4all-passage (0.16) unstable; urgency=low
 
-  * 
+  * fix use-after-free crash bug
 
  --   
 

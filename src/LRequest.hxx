@@ -11,8 +11,14 @@ struct Entity;
 void
 RegisterLuaRequest(lua_State *L);
 
+/**
+ * @param L the lua_State on whose stack the new object will be pushed
+ * @param main_L the lua_State which is used to destruct Lua values
+ * owned by the new object
+ */
 Entity *
-NewLuaRequest(lua_State *L, Entity &&src, const struct ucred &peer_cred);
+NewLuaRequest(lua_State *L, lua_State *main_L,
+	      Entity &&src, const struct ucred &peer_cred);
 
 Entity &
 CastLuaRequest(lua_State *L, int idx);
