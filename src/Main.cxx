@@ -5,6 +5,7 @@
 #include "CommandLine.hxx"
 #include "Instance.hxx"
 #include "LResolver.hxx"
+#include "lib/fmt/SystemError.hxx"
 #include "system/SetupProcess.hxx"
 #include "net/AllocatedSocketAddress.hxx"
 #include "lua/PushCClosure.hxx"
@@ -25,6 +26,7 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h> // for chdir()
 
 static int systemd_magic = 42;
 
@@ -81,6 +83,28 @@ SetupConfigState(lua_State *L, Instance &instance)
 }
 
 static void
+ChdirContainingDirectory(const char *path)
+{
+	const char *slash = strrchr(path, '/');
+	if (slash == nullptr || slash == path)
+		return;
+
+	const std::string parent{path, slash};
+	if (chdir(parent.c_str()) < 0)
+		throw FmtErrno("Failed to change to {}", parent);
+}
+
+static void
+LoadConfigFile(lua_State *L, const char *path)
+{
+	ChdirContainingDirectory(path);
+	Lua::RunFile(L, path);
+
+	if (chdir("/") < 0)
+		throw FmtErrno("Failed to change to {}", "/");
+}
+
+static void
 SetupRuntimeState(lua_State *L)
 {
 	Lua::SetGlobal(L, "passage_listen", nullptr);
@@ -98,7 +122,7 @@ Run(const CommandLine &cmdline)
 	Instance instance;
 	SetupConfigState(instance.GetLuaState(), instance);
 
-	Lua::RunFile(instance.GetLuaState(), cmdline.config_path.c_str());
+	LoadConfigFile(instance.GetLuaState(), cmdline.config_path.c_str());
 
 	instance.Check();
 
