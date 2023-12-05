@@ -37,8 +37,14 @@ public:
 		 auto_close(&_auto_close),
 		 cred(_peer_cred)
 	{
+		auto_close->Add(L, Lua::RelativeStackIndex{-1});
+
 		lua_newtable(L);
 		lua_setfenv(L, -2);
+	}
+
+	bool IsStale() const noexcept {
+		return auto_close == nullptr;
 	}
 
 	bool HavePeerCred() const noexcept {
@@ -61,6 +67,11 @@ public:
 		assert(HavePeerCred());
 
 		return cred.gid;
+	}
+
+	int Close(lua_State *) {
+		auto_close = nullptr;
+		return 0;
 	}
 
 	int Index(lua_State *L);
@@ -168,6 +179,9 @@ RichRequest::Index(lua_State *L)
 
 	const char *const name = luaL_checkstring(L, 2);
 
+	if (IsStale())
+		return luaL_error(L, "Stale object");
+
 	for (const auto *i = request_methods; i->name != nullptr; ++i) {
 		if (StringIsEqual(i->name, name)) {
 			Lua::Push(L, i->func);
@@ -258,6 +272,7 @@ RegisterLuaRequest(lua_State *L)
 	using namespace Lua;
 
 	LuaRequest::Register(L);
+	SetField(L, RelativeStackIndex{-1}, "__close", LuaRequest::WrapMethod<&RichRequest::Close>());
 	SetField(L, RelativeStackIndex{-1}, "__index", LuaRequest::WrapMethod<&RichRequest::Index>());
 	lua_pop(L, 1);
 }
