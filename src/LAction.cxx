@@ -47,10 +47,9 @@ CheckLuaAction(lua_State *L, int idx)
 }
 
 void
-PushLuaActionRequest(const Action &_action)
+PushLuaActionRequest(lua_State *L, const Action &_action)
 {
 	auto &action = (const LAction &)_action;
 
-	const auto L = action.request.GetState();
 	action.request.Push(L);
 }
