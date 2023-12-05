@@ -255,10 +255,10 @@ RegisterLuaRequest(lua_State *L)
 }
 
 Entity *
-NewLuaRequest(lua_State *L, lua_State *main_L,
+NewLuaRequest(lua_State *L,
 	      Entity &&src, const struct ucred &peer_cred)
 {
-	return LuaRequest::New(L, main_L, std::move(src), peer_cred);
+	return LuaRequest::New(L, L, std::move(src), peer_cred);
 }
 
 Entity &

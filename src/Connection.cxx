@@ -135,7 +135,7 @@ try {
 
 	handler->Push(L);
 
-	NewLuaRequest(L, instance.GetLuaState(),
+	NewLuaRequest(L,
 		      std::move(request), peer_cred);
 	if (lua_pcall(L, 1, 1, 0))
 		throw Lua::PopError(L);
