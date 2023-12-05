@@ -1,6 +1,7 @@
 cm4all-passage (0.17) unstable; urgency=low
 
   * lua: refactor the cgroup API
+  * lua: add attribute for inspecting a cgroup's parent
   * lua: fix broken cgroup xattr access
   * lua: close Lua file descriptors when connection is closed
 
