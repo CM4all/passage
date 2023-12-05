@@ -27,4 +27,4 @@ CheckLuaAction(lua_State *L, int idx);
  * Push the associated request object on the Lua stack.
  */
 void
-PushLuaActionRequest(lua_State *L, const Action &action);
+PushLuaActionRequest(lua_State *L, int action_idx);

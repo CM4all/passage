@@ -5,16 +5,31 @@
 #include "LAction.hxx"
 #include "Action.hxx"
 #include "lua/Class.hxx"
-#include "lua/Value.hxx"
+#include "lua/Util.hxx"
 
 struct LAction : Action {
-	Lua::Value request;
-
-	LAction(lua_State *L, Lua::StackIndex request_idx)
-		:request(L, request_idx) {}
+	LAction(lua_State *L, Lua::StackIndex request_idx) {
+		// fenv.request = request
+		lua_newtable(L);
+		Lua::SetTable(L, Lua::RelativeStackIndex{-1},
+			      "request", request_idx);
+		lua_setfenv(L, -2);
+	}
 
 	LAction(lua_State *L, Lua::StackIndex request_idx, Action &&_action)
-		:Action(std::move(_action)), request(L, request_idx) {}
+		:Action(std::move(_action)) {
+		// fenv.request = request
+		lua_newtable(L);
+		Lua::SetTable(L, Lua::RelativeStackIndex{-1},
+			      "request", request_idx);
+		lua_setfenv(L, -2);
+	}
+
+	static void PushRequest(lua_State *L, int action_idx) {
+		lua_getfenv(L, action_idx);
+		lua_getfield(L, -1, "request");
+		lua_replace(L, -2);
+	}
 };
 
 static constexpr char lua_action_class[] = "passage.action";
@@ -47,9 +62,7 @@ CheckLuaAction(lua_State *L, int idx)
 }
 
 void
-PushLuaActionRequest(lua_State *L, const Action &_action)
+PushLuaActionRequest(lua_State *L, int action_idx)
 {
-	auto &action = (const LAction &)_action;
-
-	action.request.Push(L);
+	LAction::PushRequest(L, action_idx);
 }
