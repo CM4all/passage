@@ -58,7 +58,7 @@ public:
 		return cred.gid;
 	}
 
-	int Index(lua_State *L, const char *name);
+	int Index(lua_State *L);
 };
 
 static constexpr char lua_request_class[] = "passage.request";
@@ -154,9 +154,14 @@ static constexpr struct luaL_Reg request_methods [] = {
 };
 
 inline int
-RichRequest::Index(lua_State *L, const char *name)
+RichRequest::Index(lua_State *L)
 {
 	using namespace Lua;
+
+	if (lua_gettop(L) != 2)
+		return luaL_error(L, "Invalid parameters");
+
+	const char *const name = luaL_checkstring(L, 2);
 
 	for (const auto *i = request_methods; i->name != nullptr; ++i) {
 		if (StringIsEqual(i->name, name)) {
@@ -239,24 +244,13 @@ RichRequest::Index(lua_State *L, const char *name)
 		return luaL_error(L, "Unknown attribute");
 }
 
-static int
-LuaRequestIndex(lua_State *L)
-{
-	if (lua_gettop(L) != 2)
-		return luaL_error(L, "Invalid parameters");
-
-	auto &request = (RichRequest &)CastLuaRequest(L, 1);
-
-	return request.Index(L, luaL_checkstring(L, 2));
-}
-
 void
 RegisterLuaRequest(lua_State *L)
 {
 	using namespace Lua;
 
 	LuaRequest::Register(L);
-	SetTable(L, RelativeStackIndex{-1}, "__index", LuaRequestIndex);
+	SetField(L, RelativeStackIndex{-1}, "__index", LuaRequest::WrapMethod<&RichRequest::Index>());
 	lua_pop(L, 1);
 }
 
