@@ -6,6 +6,7 @@
 #include "Entity.hxx"
 #include "LAction.hxx"
 #include "Action.hxx"
+#include "lua/AutoCloseList.hxx"
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
 #include "lua/FenvCache.hxx"
@@ -25,11 +26,15 @@
 #include <string.h>
 
 class RichRequest : public Entity {
+	Lua::AutoCloseList *auto_close;
+
 	const struct ucred cred;
 
 public:
-	RichRequest(lua_State *L, Entity &&src, const struct ucred &_peer_cred)
+	RichRequest(lua_State *L, Lua::AutoCloseList &_auto_close,
+		    Entity &&src, const struct ucred &_peer_cred)
 		:Entity(std::move(src)),
+		 auto_close(&_auto_close),
 		 cred(_peer_cred)
 	{
 		lua_newtable(L);
@@ -236,6 +241,9 @@ RichRequest::Index(lua_State *L)
 			Lua::RaiseCurrent(L);
 		}
 
+		// auto-close the file descriptor when the connection is closed
+		auto_close->Add(L, Lua::RelativeStackIndex{-1});
+
 		// copy a reference to the fenv (our cache)
 		Lua::SetFenvCache(L, 1, name, Lua::RelativeStackIndex{-1});
 
@@ -255,10 +263,11 @@ RegisterLuaRequest(lua_State *L)
 }
 
 Entity *
-NewLuaRequest(lua_State *L,
+NewLuaRequest(lua_State *L, Lua::AutoCloseList &auto_close,
 	      Entity &&src, const struct ucred &peer_cred)
 {
-	return LuaRequest::New(L, L, std::move(src), peer_cred);
+	return LuaRequest::New(L, L, auto_close,
+			       std::move(src), peer_cred);
 }
 
 Entity &

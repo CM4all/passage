@@ -7,12 +7,13 @@
 struct ucred;
 struct lua_State;
 struct Entity;
+namespace Lua { class AutoCloseList; }
 
 void
 RegisterLuaRequest(lua_State *L);
 
 Entity *
-NewLuaRequest(lua_State *L,
+NewLuaRequest(lua_State *L, Lua::AutoCloseList &auto_close,
 	      Entity &&src, const struct ucred &peer_cred);
 
 Entity &

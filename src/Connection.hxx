@@ -2,9 +2,9 @@
 // Copyright CM4all GmbH
 // author: Max Kellermann <mk@cm4all.com>
 
-#ifndef CONNECTION_HXX
-#define CONNECTION_HXX
+#pragma once
 
+#include "lua/AutoCloseList.hxx"
 #include "lua/ValuePtr.hxx"
 #include "event/net/UdpListener.hxx"
 #include "event/net/UdpHandler.hxx"
@@ -31,6 +31,8 @@ class PassageConnection final
 	const struct ucred peer_cred;
 	ChildLogger logger;
 
+	Lua::AutoCloseList auto_close;
+
 	UdpListener listener;
 
 	bool pending_response = false;
@@ -56,5 +58,3 @@ private:
 			   SocketAddress address, int uid) override;
 	void OnUdpError(std::exception_ptr ep) noexcept override;
 };
-
-#endif

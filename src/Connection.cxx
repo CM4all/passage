@@ -41,6 +41,7 @@ PassageConnection::PassageConnection(Instance &_instance,
 	:instance(_instance), handler(std::move(_handler)),
 	 peer_cred(_fd.GetPeerCredentials()),
 	 logger(parent_logger, MakeLoggerDomain(peer_cred, address).c_str()),
+	 auto_close(handler->GetState()),
 	 listener(instance.GetEventLoop(), std::move(_fd), *this) {}
 
 void
@@ -135,7 +136,7 @@ try {
 
 	handler->Push(L);
 
-	NewLuaRequest(L,
+	NewLuaRequest(L, auto_close,
 		      std::move(request), peer_cred);
 	if (lua_pcall(L, 1, 1, 0))
 		throw Lua::PopError(L);
