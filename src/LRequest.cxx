@@ -65,33 +65,6 @@ static constexpr char lua_request_class[] = "passage.request";
 typedef Lua::Class<RichRequest, lua_request_class> LuaRequest;
 
 static int
-GetCgroup(lua_State *L)
-try {
-	const auto top = lua_gettop(L);
-	if (top < 1 || top > 2)
-		return luaL_error(L, "Invalid parameters");
-
-	auto &request = (RichRequest &)CastLuaRequest(L, 1);
-
-	const char *controller = luaL_optstring(L, 2, "");
-	if (controller != nullptr && !StringIsEmpty(controller))
-		luaL_argerror(L, 2, "cgroup1 not supported anymore");
-
-	const int pid = request.GetPid();
-	if (pid < 0)
-		return 0;
-
-	const auto path = ReadProcessCgroup(pid);
-	if (path.empty())
-		return 0;
-
-	Lua::Push(L, path);
-	return 1;
-} catch (...) {
-	Lua::RaiseCurrent(L);
-}
-
-static int
 GetMountInfo(lua_State *L)
 try {
 	using namespace Lua;
@@ -174,7 +147,6 @@ NewExecPipeAction(lua_State *L)
 }
 
 static constexpr struct luaL_Reg request_methods [] = {
-	{"get_cgroup", GetCgroup},
 	{"get_mount_info", GetMountInfo},
 	{"fade_children", NewFadeChildrenAction},
 	{"exec_pipe", NewExecPipeAction},
