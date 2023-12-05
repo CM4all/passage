@@ -14,6 +14,7 @@
 #include "lua/Error.hxx"
 #include "lua/RunFile.hxx"
 #include "lua/io/XattrTable.hxx"
+#include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
 
@@ -110,6 +111,7 @@ SetupRuntimeState(lua_State *L)
 	Lua::SetGlobal(L, "passage_listen", nullptr);
 
 	Lua::InitXattrTable(L);
+	Lua::RegisterCgroupInfo(L);
 
 	PassageConnection::Register(L);
 
