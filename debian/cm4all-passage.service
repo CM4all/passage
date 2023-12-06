@@ -14,3 +14,8 @@ WatchdogSec=2m
 # This allows the kernel to merge CPU wakeups, the default of 50ns is
 # too fine.
 TimerSlackNSec=10ms
+
+# Resource limits
+MemoryMax=4G
+TasksMax=4096
+LimitNOFILE=16384
