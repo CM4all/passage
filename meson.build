@@ -110,6 +110,7 @@ subdir('libcommon/src/event')
 subdir('libcommon/src/net')
 subdir('libcommon/src/net/control')
 subdir('libcommon/src/event/net')
+subdir('libcommon/src/event/systemd')
 subdir('libcommon/src/lua/io')
 subdir('libcommon/src/lua/net')
 
@@ -145,6 +146,7 @@ executable('cm4all-passage',
     lua_net_dep,
     control_client_dep,
     event_net_dep,
+    event_systemd_dep,
     spawn_dep,
     fmt_dep,
   ],

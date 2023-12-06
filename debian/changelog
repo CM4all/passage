@@ -6,6 +6,7 @@ cm4all-passage (0.17) unstable; urgency=low
   * lua: remove obsolete method get_mount_info()
   * lua: close Lua file descriptors when connection is closed
   * lua: SIGHUP calls Lua function "reload"
+  * systemd: enable the watchdog
 
  --   
 

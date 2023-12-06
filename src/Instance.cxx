@@ -83,6 +83,8 @@ Instance::OnShutdown() noexcept
 	shutdown_listener.Disable();
 	sighup_event.Disable();
 
+	systemd_watchdog.Disable();
+
 	event_loop.Break();
 }
 

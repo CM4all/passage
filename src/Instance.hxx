@@ -13,6 +13,7 @@
 #include "event/Loop.hxx"
 #include "event/ShutdownListener.hxx"
 #include "event/SignalEvent.hxx"
+#include "event/systemd/Watchdog.hxx"
 
 #include <forward_list>
 
@@ -23,6 +24,8 @@ class Instance final {
 	EventLoop event_loop;
 	ShutdownListener shutdown_listener{event_loop, BIND_THIS_METHOD(OnShutdown)};
 	SignalEvent sighup_event;
+
+	Systemd::Watchdog systemd_watchdog{event_loop};
 
 	ZombieReaper zombie_reaper{event_loop};
 
