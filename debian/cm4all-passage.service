@@ -12,6 +12,3 @@ ExecReload=/bin/kill -HUP $MAINPID
 # This allows the kernel to merge CPU wakeups, the default of 50ns is
 # too fine.
 TimerSlackNSec=10ms
-
-[Install]
-WantedBy=multi-user.target
