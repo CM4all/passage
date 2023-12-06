@@ -11,7 +11,7 @@ cm4all-passage (0.17) unstable; urgency=low
   * systemd: configure security settings
   * systemd: remove dependency on "network-online.target"
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Wed, 06 Dec 2023 13:22:51 +0100
 
 cm4all-passage (0.16) unstable; urgency=low
 
