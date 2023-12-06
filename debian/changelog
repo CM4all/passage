@@ -8,6 +8,7 @@ cm4all-passage (0.17) unstable; urgency=low
   * lua: SIGHUP calls Lua function "reload"
   * systemd: enable the watchdog
   * systemd: configure resource limits
+  * systemd: configure security settings
 
  --   
 

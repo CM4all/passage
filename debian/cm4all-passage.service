@@ -19,3 +19,17 @@ TimerSlackNSec=10ms
 MemoryMax=4G
 TasksMax=4096
 LimitNOFILE=16384
+
+# Security settings
+ProtectSystem=full
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectHostname=yes
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
