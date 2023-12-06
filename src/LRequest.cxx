@@ -15,7 +15,6 @@
 #include "io/Beneath.hxx"
 #include "io/FileAt.hxx"
 #include "io/Open.hxx"
-#include "io/linux/MountInfo.hxx"
 #include "io/linux/ProcCgroup.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "util/StringAPI.hxx"
@@ -81,34 +80,6 @@ static constexpr char lua_request_class[] = "passage.request";
 typedef Lua::Class<RichRequest, lua_request_class> LuaRequest;
 
 static int
-GetMountInfo(lua_State *L)
-try {
-	using namespace Lua;
-
-	if (lua_gettop(L) != 2)
-		return luaL_error(L, "Invalid parameters");
-
-	auto &request = (RichRequest &)CastLuaRequest(L, 1);
-	const char *const mountpoint = luaL_checkstring(L, 2);
-
-	const int pid = request.GetPid();
-	if (pid < 0)
-		return 0;
-
-	const auto m = ReadProcessMount(pid, mountpoint);
-	if (!m.IsDefined())
-		return 0;
-
-	lua_newtable(L);
-	SetField(L, RelativeStackIndex{-1}, "root", m.root);
-	SetField(L, RelativeStackIndex{-1}, "filesystem", m.filesystem);
-	SetField(L, RelativeStackIndex{-1}, "source", m.source);
-	return 1;
-} catch (...) {
-	Lua::RaiseCurrent(L);
-}
-
-static int
 NewFadeChildrenAction(lua_State *L)
 {
 	const auto top = lua_gettop(L);
@@ -163,7 +134,6 @@ NewExecPipeAction(lua_State *L)
 }
 
 static constexpr struct luaL_Reg request_methods [] = {
-	{"get_mount_info", GetMountInfo},
 	{"fade_children", NewFadeChildrenAction},
 	{"exec_pipe", NewExecPipeAction},
 	{nullptr, nullptr}
