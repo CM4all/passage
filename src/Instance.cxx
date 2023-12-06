@@ -4,7 +4,6 @@
 
 #include "Instance.hxx"
 #include "Listener.hxx"
-#include "event/net/UdpListener.hxx"
 #include "net/SocketConfig.hxx"
 #include "system/Error.hxx"
 
@@ -17,10 +16,11 @@ extern "C" {
 #include <stdexcept>
 
 Instance::Instance()
-	:shutdown_listener(event_loop, BIND_THIS_METHOD(ShutdownCallback)),
+	:sighup_event(event_loop, SIGHUP, BIND_THIS_METHOD(OnReload)),
 	 lua_state(luaL_newstate())
 {
 	shutdown_listener.Enable();
+	sighup_event.Enable();
 }
 
 Instance::~Instance() noexcept = default;
@@ -78,8 +78,16 @@ Instance::Check()
 }
 
 void
-Instance::ShutdownCallback() noexcept
+Instance::OnShutdown() noexcept
 {
-	logger(3, "quit");
+	shutdown_listener.Disable();
+	sighup_event.Disable();
+
 	event_loop.Break();
+}
+
+void
+Instance::OnReload(int) noexcept
+{
+	reload.Start();
 }

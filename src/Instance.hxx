@@ -2,16 +2,17 @@
 // Copyright CM4all GmbH
 // author: Max Kellermann <mk@cm4all.com>
 
-#ifndef INSTANCE_HXX
-#define INSTANCE_HXX
+#pragma once
 
 #include "Listener.hxx"
+#include "lua/ReloadRunner.hxx"
+#include "lua/State.hxx"
+#include "lua/ValuePtr.hxx"
 #include "spawn/ZombieReaper.hxx"
 #include "io/Logger.hxx"
 #include "event/Loop.hxx"
 #include "event/ShutdownListener.hxx"
-#include "lua/State.hxx"
-#include "lua/ValuePtr.hxx"
+#include "event/SignalEvent.hxx"
 
 #include <forward_list>
 
@@ -20,11 +21,14 @@ class UniqueSocketDescriptor;
 
 class Instance final {
 	EventLoop event_loop;
-	ShutdownListener shutdown_listener;
+	ShutdownListener shutdown_listener{event_loop, BIND_THIS_METHOD(OnShutdown)};
+	SignalEvent sighup_event;
 
 	ZombieReaper zombie_reaper{event_loop};
 
 	Lua::State lua_state;
+
+	Lua::ReloadRunner reload{lua_state.get()};
 
 	std::forward_list<PassageListener> listeners;
 
@@ -57,7 +61,6 @@ public:
 	void Check();
 
 private:
-	void ShutdownCallback() noexcept;
+	void OnShutdown() noexcept;
+	void OnReload(int) noexcept;
 };
-
-#endif

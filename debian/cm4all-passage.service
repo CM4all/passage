@@ -7,6 +7,7 @@ After=network-online.target
 Type=notify
 User=cm4all-passage
 ExecStart=/usr/sbin/cm4all-passage
+ExecReload=/bin/kill -HUP $MAINPID
 
 # This allows the kernel to merge CPU wakeups, the default of 50ns is
 # too fine.
