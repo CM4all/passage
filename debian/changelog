@@ -9,6 +9,7 @@ cm4all-passage (0.17) unstable; urgency=low
   * systemd: enable the watchdog
   * systemd: configure resource limits
   * systemd: configure security settings
+  * systemd: remove dependency on "network-online.target"
 
  --   
 
