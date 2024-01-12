@@ -107,7 +107,7 @@ Copy(FileDescriptor in, FileDescriptor out)
 		if (nbytes <= 0)
 			break;
 
-		out.Write(std::span{buffer}.first(nbytes));
+		out.FullWrite(std::span{buffer}.first(nbytes));
 	}
 }
 
