@@ -14,7 +14,7 @@ static void
 ReadDummy(FileDescriptor fd) noexcept
 {
 	char dummy;
-	fd.Read(&dummy, sizeof(dummy));
+	(void)fd.Read(&dummy, sizeof(dummy));
 }
 
 UniqueFileDescriptor
