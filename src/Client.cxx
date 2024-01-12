@@ -102,12 +102,12 @@ Copy(FileDescriptor in, FileDescriptor out)
 	}
 
 	while (true) {
-		char buffer[8192];
-		auto nbytes = in.Read(buffer, sizeof(buffer));
+		std::byte buffer[8192];
+		auto nbytes = in.Read(buffer);
 		if (nbytes <= 0)
 			break;
 
-		out.Write(buffer, nbytes);
+		out.Write(std::span{buffer}.first(nbytes));
 	}
 }
 
