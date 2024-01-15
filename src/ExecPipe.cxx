@@ -43,5 +43,5 @@ ExecPipe(const char *path, const char *const*args)
 	exec_wait_w.Close();
 	ReadDummy(exec_wait_r);
 
-	return r;
+	return std::move(r);
 }
