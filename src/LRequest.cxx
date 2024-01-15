@@ -12,6 +12,7 @@
 #include "lua/FenvCache.hxx"
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
+#include "net/control/Protocol.hxx"
 #include "io/Beneath.hxx"
 #include "io/FileAt.hxx"
 #include "io/Open.hxx"
@@ -89,7 +90,7 @@ NewFadeChildrenAction(lua_State *L)
 	AllocatedSocketAddress address;
 
 	try {
-		address = Lua::ToSocketAddress(L, 2, 5478);
+		address = Lua::ToSocketAddress(L, 2, BengProxy::CONTROL_PORT);
 	} catch (const std::exception &e) {
 		return luaL_error(L, e.what());
 	}

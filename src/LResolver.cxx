@@ -8,6 +8,7 @@
 #include "lua/net/SocketAddress.hxx"
 #include "net/Resolver.hxx"
 #include "net/AddressInfo.hxx"
+#include "net/control/Protocol.hxx"
 
 extern "C" {
 #include <lauxlib.h>
@@ -25,7 +26,7 @@ try {
 
 	static constexpr auto hints = MakeAddrInfo(0, AF_UNSPEC, SOCK_DGRAM);
 
-	const auto ai = Resolve(s, 5478, &hints);
+	const auto ai = Resolve(s, BengProxy::CONTROL_PORT, &hints);
 	Lua::NewSocketAddress(L, std::move(ai.GetBest()));
 	return 1;
 } catch (...) {
