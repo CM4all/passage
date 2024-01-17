@@ -90,7 +90,7 @@ NewFadeChildrenAction(lua_State *L)
 	AllocatedSocketAddress address;
 
 	try {
-		address = Lua::ToSocketAddress(L, 2, BengProxy::CONTROL_PORT);
+		address = Lua::ToSocketAddress(L, 2, BengControl::DEFAULT_PORT);
 	} catch (const std::exception &e) {
 		return luaL_error(L, e.what());
 	}

@@ -26,7 +26,7 @@ try {
 
 	static constexpr auto hints = MakeAddrInfo(0, AF_UNSPEC, SOCK_DGRAM);
 
-	const auto ai = Resolve(s, BengProxy::CONTROL_PORT, &hints);
+	const auto ai = Resolve(s, BengControl::DEFAULT_PORT, &hints);
 	Lua::NewSocketAddress(L, std::move(ai.GetBest()));
 	return 1;
 } catch (...) {

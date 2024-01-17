@@ -11,6 +11,7 @@
 void
 FadeChildren(SocketAddress address, const char *tag)
 {
-	BengControlClient client{CreateConnectDatagramSocket(address)};
-	client.Send(BengProxy::ControlCommand::FADE_CHILDREN, std::string_view{tag});
+	using namespace BengControl;
+	Client client{CreateConnectDatagramSocket(address)};
+	client.Send(Command::FADE_CHILDREN, std::string_view{tag});
 }
