@@ -2,7 +2,7 @@ cm4all-passage (0.18) unstable; urgency=low
 
   * request: add action "flush_http_cache"
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Tue, 20 Feb 2024 12:28:02 +0100
 
 cm4all-passage (0.17) unstable; urgency=low
 
