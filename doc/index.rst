@@ -102,10 +102,11 @@ such action objects; they do not actually perform the action.
 
 The following actions are possible:
 
-* :samp:`fade_children(ADDRESS)`: send a :samp:`FADE_CHILDREN` control
-  packet to the given address.  The address is either a string
+* :samp:`fade_children(ADDRESS, TAG)`: send a :samp:`FADE_CHILDREN`
+  control packet to the given address.  The address is either a string
   containing a (numeric) IP address, or an `address` object created by
-  :samp:`control_resolve()`.
+  :samp:`control_resolve()`.  If a tag is specified, then only
+  children with this tag are addressed.
 
 * :samp:`exec_pipe({PATH, ARG, ...})`: execute the given program
   (should be an absolute path because there is no :envvar:`$PATH`
