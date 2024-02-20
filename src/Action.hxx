@@ -13,6 +13,7 @@ struct Action {
 	enum class Type {
 		UNDEFINED,
 		FADE_CHILDREN,
+		FLUSH_HTTP_CACHE,
 		EXEC_PIPE,
 	};
 

@@ -97,6 +97,10 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 			     action.param.empty() ? nullptr : action.param.c_str());
 		break;
 
+	case Action::Type::FLUSH_HTTP_CACHE:
+		FlushHttpCache(action.address, action.param.c_str());
+		break;
+
 	case Action::Type::EXEC_PIPE:
 		{
 			StaticVector<const char *, 64> args;

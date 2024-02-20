@@ -15,3 +15,11 @@ FadeChildren(SocketAddress address, const char *tag)
 	Client client{CreateConnectDatagramSocket(address)};
 	client.Send(Command::FADE_CHILDREN, std::string_view{tag});
 }
+
+void
+FlushHttpCache(SocketAddress address, const char *tag)
+{
+	using namespace BengControl;
+	Client client{CreateConnectDatagramSocket(address)};
+	client.Send(Command::FLUSH_HTTP_CACHE, std::string_view{tag});
+}

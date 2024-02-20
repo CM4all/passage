@@ -1,6 +1,6 @@
 cm4all-passage (0.18) unstable; urgency=low
 
-  * 
+  * request: add action "flush_http_cache"
 
  --   
 

@@ -109,6 +109,30 @@ NewFadeChildrenAction(lua_State *L)
 }
 
 static int
+NewFlushHttpCacheAction(lua_State *L)
+{
+	const auto top = lua_gettop(L);
+	if (top != 3)
+		return luaL_error(L, "Invalid parameters");
+
+	AllocatedSocketAddress address;
+
+	try {
+		address = Lua::ToSocketAddress(L, 2, BengControl::DEFAULT_PORT);
+	} catch (const std::exception &e) {
+		return luaL_error(L, e.what());
+	}
+
+	const char *child_tag = luaL_checkstring(L, 3);
+
+	auto &action = *NewLuaAction(L, 1);
+	action.type = Action::Type::FLUSH_HTTP_CACHE;
+	action.address = std::move(address);
+	action.param = child_tag;
+	return 1;
+}
+
+static int
 NewExecPipeAction(lua_State *L)
 {
 	const auto top = lua_gettop(L);
@@ -136,6 +160,7 @@ NewExecPipeAction(lua_State *L)
 
 static constexpr struct luaL_Reg request_methods [] = {
 	{"fade_children", NewFadeChildrenAction},
+	{"flush_http_cache", NewFlushHttpCacheAction},
 	{"exec_pipe", NewExecPipeAction},
 	{nullptr, nullptr}
 };

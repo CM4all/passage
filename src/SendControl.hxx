@@ -8,3 +8,6 @@ class SocketAddress;
 
 void
 FadeChildren(SocketAddress address, const char *tag);
+
+void
+FlushHttpCache(SocketAddress address, const char *tag);
