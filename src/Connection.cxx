@@ -8,7 +8,7 @@
 #include "LRequest.hxx"
 #include "LAction.hxx"
 #include "Action.hxx"
-#include "FadeChildren.hxx"
+#include "SendControl.hxx"
 #include "ExecPipe.hxx"
 #include "lua/Error.hxx"
 #include "io/Iovec.hxx"

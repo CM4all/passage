@@ -2,7 +2,7 @@
 // Copyright CM4all GmbH
 // author: Max Kellermann <mk@cm4all.com>
 
-#include "FadeChildren.hxx"
+#include "SendControl.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/ConnectSocket.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
