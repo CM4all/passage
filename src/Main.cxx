@@ -17,6 +17,7 @@
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
+#include "config.h"
 
 #ifdef HAVE_LIBSODIUM
 #include "lua/sodium/Init.hxx"
