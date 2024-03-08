@@ -1,4 +1,5 @@
 option('sodium', type: 'feature', description: 'libsodium support')
+option('systemd', type: 'feature', description: 'systemd support (using libsystemd)')
 
 option('documentation', type: 'feature',
   description: 'Build documentation')

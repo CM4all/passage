@@ -96,7 +96,7 @@ add_global_arguments(common_flags, language: 'cpp')
 add_global_arguments(compiler.get_supported_arguments(test_global_cxxflags), language: 'cpp')
 add_project_arguments(compiler.get_supported_arguments(test_cxxflags), language: 'cpp')
 
-libsystemd = dependency('libsystemd')
+libsystemd = dependency('libsystemd', required: get_option('systemd'))
 
 inc = include_directories('src', 'libcommon/src')
 
@@ -114,9 +114,13 @@ subdir('libcommon/src/event')
 subdir('libcommon/src/net')
 subdir('libcommon/src/net/control')
 subdir('libcommon/src/event/net')
-subdir('libcommon/src/event/systemd')
 subdir('libcommon/src/lua/io')
 subdir('libcommon/src/lua/net')
+
+if libsystemd.found()
+  subdir('libcommon/src/event/systemd')
+  libsystemd = event_systemd_dep
+endif
 
 if sodium_dep.found()
   subdir('libcommon/src/lua/sodium')
@@ -133,6 +137,7 @@ spawn_dep = declare_dependency(link_with: spawn,
                                dependencies: [event_dep])
 
 conf.set('HAVE_LIBSODIUM', sodium_dep.found())
+conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
 configure_file(output: 'config.h', configuration: conf)
 
 executable('cm4all-passage',
@@ -160,7 +165,7 @@ executable('cm4all-passage',
     lua_sodium_dep,
     control_client_dep,
     event_net_dep,
-    event_systemd_dep,
+    libsystemd,
     spawn_dep,
     fmt_dep,
   ],

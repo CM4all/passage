@@ -13,7 +13,11 @@
 #include "event/Loop.hxx"
 #include "event/ShutdownListener.hxx"
 #include "event/SignalEvent.hxx"
+#include "config.h"
+
+#ifdef HAVE_LIBSYSTEMD
 #include "event/systemd/Watchdog.hxx"
+#endif
 
 #include <forward_list>
 
@@ -25,7 +29,9 @@ class Instance final {
 	ShutdownListener shutdown_listener{event_loop, BIND_THIS_METHOD(OnShutdown)};
 	SignalEvent sighup_event;
 
+#ifdef HAVE_LIBSYSTEMD
 	Systemd::Watchdog systemd_watchdog{event_loop};
+#endif
 
 	ZombieReaper zombie_reaper{event_loop};
 
@@ -55,11 +61,13 @@ public:
 	void AddListener(SocketAddress address,
 			 Lua::ValuePtr &&handler);
 
+#ifdef HAVE_LIBSYSTEMD
 	/**
 	 * Listen for incoming connections on sockets passed by systemd
 	 * (systemd socket activation).
 	 */
 	void AddSystemdListener(Lua::ValuePtr &&handler);
+#endif // HAVE_LIBSYSTEMD
 
 	void Check();
 
