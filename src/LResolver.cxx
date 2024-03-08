@@ -4,39 +4,20 @@
 
 #include "LResolver.hxx"
 #include "lua/Util.hxx"
-#include "lua/Error.hxx"
-#include "lua/net/SocketAddress.hxx"
-#include "net/Resolver.hxx"
+#include "lua/net/Resolver.hxx"
 #include "net/AddressInfo.hxx"
 #include "net/control/Protocol.hxx"
 
 extern "C" {
-#include <lauxlib.h>
-}
-
-#include <string.h>
-
-static int
-l_control_resolve(lua_State *L)
-try {
-	if (lua_gettop(L) != 1)
-		return luaL_error(L, "Invalid parameter count");
-
-	const char *s = luaL_checkstring(L, 1);
-
-	static constexpr auto hints = MakeAddrInfo(0, AF_UNSPEC, SOCK_DGRAM);
-
-	const auto ai = Resolve(s, BengControl::DEFAULT_PORT, &hints);
-	Lua::NewSocketAddress(L, std::move(ai.GetBest()));
-	return 1;
-} catch (...) {
-	Lua::RaiseCurrent(L);
+#include <lua.h>
 }
 
 void
 RegisterLuaResolver(lua_State *L)
 {
-	Lua::SetGlobal(L, "control_resolve", l_control_resolve);
+	static constexpr auto hints = MakeAddrInfo(0, AF_UNSPEC, SOCK_STREAM);
+	Lua::PushResolveFunction(L, hints, BengControl::DEFAULT_PORT);
+	lua_setglobal(L, "control_resolve");
 }
 
 void
