@@ -1,2 +1,4 @@
+option('sodium', type: 'feature', description: 'libsodium support')
+
 option('documentation', type: 'feature',
   description: 'Build documentation')

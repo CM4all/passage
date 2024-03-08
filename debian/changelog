@@ -1,6 +1,6 @@
 cm4all-passage (0.19) unstable; urgency=low
 
-  * 
+  * lua: add libsodium bindings
 
  --   
 

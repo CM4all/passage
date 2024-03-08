@@ -18,6 +18,10 @@
 #include "lua/net/SocketAddress.hxx"
 #include "util/PrintException.hxx"
 
+#ifdef HAVE_LIBSODIUM
+#include "lua/sodium/Init.hxx"
+#endif
+
 extern "C" {
 #include <lauxlib.h>
 #include <lualib.h>
@@ -72,6 +76,10 @@ static void
 SetupConfigState(lua_State *L, Instance &instance)
 {
 	luaL_openlibs(L);
+
+#ifdef HAVE_LIBSODIUM
+	Lua::InitSodium(L);
+#endif
 
 	Lua::InitSocketAddress(L);
 	RegisterLuaResolver(L);

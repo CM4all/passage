@@ -10,6 +10,8 @@ compiler = meson.get_compiler('cpp')
 
 debug = get_option('b_ndebug') != 'true'
 
+conf = configuration_data()
+
 common_flags = [
   '-D_GNU_SOURCE',
 ]
@@ -99,9 +101,11 @@ libsystemd = dependency('libsystemd')
 inc = include_directories('src', 'libcommon/src')
 
 libcommon_enable_DefaultFifoBuffer = false
+libcommon_require_sodium = get_option('sodium')
 
 subdir('libcommon/src/util')
 subdir('libcommon/src/lib/fmt')
+subdir('libcommon/src/lib/sodium')
 subdir('libcommon/src/lua')
 subdir('libcommon/src/io')
 subdir('libcommon/src/io/linux')
@@ -114,6 +118,12 @@ subdir('libcommon/src/event/systemd')
 subdir('libcommon/src/lua/io')
 subdir('libcommon/src/lua/net')
 
+if sodium_dep.found()
+  subdir('libcommon/src/lua/sodium')
+else
+  lua_sodium_dep = sodium_dep
+endif
+
 spawn = static_library('spawn',
   'libcommon/src/spawn/ZombieReaper.cxx',
   include_directories: inc,
@@ -121,6 +131,9 @@ spawn = static_library('spawn',
   ])
 spawn_dep = declare_dependency(link_with: spawn,
                                dependencies: [event_dep])
+
+conf.set('HAVE_LIBSODIUM', sodium_dep.found())
+configure_file(output: 'config.h', configuration: conf)
 
 executable('cm4all-passage',
   'src/system/SetupProcess.cxx',
