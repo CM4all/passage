@@ -3,6 +3,8 @@ project('CM4all Passage', 'cpp', version: '0.19',
   default_options : [
     'cpp_std=c++2a',
     'warning_level=3',
+
+    'fmt:cpp_std=c++2a',
   ],
 )
 
