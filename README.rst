@@ -4,6 +4,10 @@ Passage
 *Passage* is a daemon which allows jailed/containerized processes to
 talk to the host to trigger certain actions.
 
+For more information, `read the manual
+<https://passage.readthedocs.io/en/latest/>`__ in the ``doc``
+directory.
+
 
 Building Passage
 ----------------
