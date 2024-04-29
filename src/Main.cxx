@@ -7,12 +7,13 @@
 #include "LResolver.hxx"
 #include "lib/fmt/SystemError.hxx"
 #include "system/SetupProcess.hxx"
-#include "net/AllocatedSocketAddress.hxx"
+#include "net/LocalSocketAddress.hxx"
 #include "lua/PushCClosure.hxx"
 #include "lua/Value.hxx"
 #include "lua/Util.hxx"
 #include "lua/Error.hxx"
 #include "lua/RunFile.hxx"
+#include "lua/StringView.hxx"
 #include "lua/io/XattrTable.hxx"
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
@@ -63,12 +64,9 @@ try {
 	auto handler = std::make_shared<Lua::Value>(L, Lua::StackIndex(2));
 
 	if (lua_isstring(L, 1)) {
-		const char *address_string = lua_tostring(L, 1);
+		const auto address_string = Lua::ToStringView(L, 1);
 
-		AllocatedSocketAddress address;
-		address.SetLocal(address_string);
-
-		instance.AddListener(address, std::move(handler));
+		instance.AddListener(LocalSocketAddress{address_string}, std::move(handler));
 #ifdef HAVE_LIBSYSTEMD
 	} if (IsSystemdMagic(L, 1)) {
 		instance.AddSystemdListener(std::move(handler));
