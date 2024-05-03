@@ -8,6 +8,7 @@
 #include "lib/fmt/RuntimeError.hxx"
 #include "net/ReceiveMessage.hxx"
 #include "net/AllocatedSocketAddress.hxx"
+#include "net/SocketProtocolError.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "system/Error.hxx"
 #include "util/PrintException.hxx"
@@ -85,7 +86,7 @@ ReceiveResponse(SocketDescriptor s)
 			throw FmtRuntimeError("Server error: {:?}",
 					      response.args.front());
 	} else
-		throw std::runtime_error("Malformed response");
+		throw SocketProtocolError{"Malformed response"};
 }
 
 static void
