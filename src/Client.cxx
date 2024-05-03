@@ -5,6 +5,7 @@
 #include "Protocol.hxx"
 #include "Entity.hxx"
 #include "Parser.hxx"
+#include "lib/fmt/RuntimeError.hxx"
 #include "net/ReceiveMessage.hxx"
 #include "net/AllocatedSocketAddress.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
@@ -81,8 +82,8 @@ ReceiveResponse(SocketDescriptor s)
 		if (response.args.empty())
 			throw std::runtime_error("Server error");
 		else
-			throw std::runtime_error("Server error: " +
-						 response.args.front());
+			throw FmtRuntimeError("Server error: {:?}",
+					      response.args.front());
 	} else
 		throw std::runtime_error("Malformed response");
 }
