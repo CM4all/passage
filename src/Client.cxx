@@ -15,6 +15,7 @@
 
 #include <fmt/format.h>
 
+#include <limits.h> // for INT_MAX
 #include <stdlib.h>
 #include <fcntl.h>
 
@@ -91,7 +92,7 @@ Copy(FileDescriptor in, FileDescriptor out)
 {
 	while (true) {
 		ssize_t nbytes = splice(in.Get(), nullptr, out.Get(), nullptr,
-					1024 * 1024 * 1024, SPLICE_F_MOVE);
+					INT_MAX, SPLICE_F_MOVE);
 		if (nbytes == 0)
 			return;
 
