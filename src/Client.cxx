@@ -7,7 +7,7 @@
 #include "Parser.hxx"
 #include "lib/fmt/RuntimeError.hxx"
 #include "net/ReceiveMessage.hxx"
-#include "net/AllocatedSocketAddress.hxx"
+#include "net/LocalSocketAddress.hxx"
 #include "net/SocketProtocolError.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "system/Error.hxx"
@@ -41,11 +41,9 @@ CreateConnect(SocketAddress address)
 }
 
 static UniqueSocketDescriptor
-CreateConnect(const char *path)
+CreateConnect(std::string_view path)
 {
-	AllocatedSocketAddress address;
-	address.SetLocal(path);
-	return CreateConnect(address);
+	return CreateConnect(LocalSocketAddress{path});
 }
 
 static void
