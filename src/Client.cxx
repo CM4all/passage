@@ -6,6 +6,7 @@
 #include "Entity.hxx"
 #include "Parser.hxx"
 #include "lib/fmt/RuntimeError.hxx"
+#include "net/ConnectSocket.hxx"
 #include "net/ReceiveMessage.hxx"
 #include "net/LocalSocketAddress.hxx"
 #include "net/SocketProtocolError.hxx"
@@ -24,26 +25,9 @@
 struct Usage {};
 
 static UniqueSocketDescriptor
-CreateConnect(SocketAddress address)
-{
-	const int family = address.GetFamily();
-	constexpr int socktype = SOCK_SEQPACKET;
-	constexpr int protocol = 0;
-
-	UniqueSocketDescriptor fd;
-	if (!fd.Create(family, socktype, protocol))
-		throw MakeErrno("Failed to create socket");
-
-	if (!fd.Connect(address))
-		throw MakeErrno("Failed to connect");
-
-	return fd;
-}
-
-static UniqueSocketDescriptor
 CreateConnect(std::string_view path)
 {
-	return CreateConnect(LocalSocketAddress{path});
+	return CreateConnectSocket(LocalSocketAddress{path}, SOCK_SEQPACKET);
 }
 
 static void
