@@ -2,7 +2,7 @@ cm4all-passage (0.20) unstable; urgency=low
 
   * pg: fix assertion failure
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Mon, 05 Aug 2024 19:14:34 +0200
 
 cm4all-passage (0.19) unstable; urgency=low
 
