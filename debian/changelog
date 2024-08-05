@@ -1,6 +1,6 @@
 cm4all-passage (0.20) unstable; urgency=low
 
-  * 
+  * pg: fix assertion failure
 
  --   
 
