@@ -1,6 +1,6 @@
 cm4all-passage (0.21) unstable; urgency=low
 
-  * 
+  * increase listener backlog to 256
 
  --   
 
