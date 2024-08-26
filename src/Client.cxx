@@ -33,7 +33,7 @@ CreateConnect(std::string_view path)
 static void
 SendOrThrow(SocketDescriptor fd, std::span<const std::byte> payload)
 {
-	ssize_t nbytes = send(fd.Get(), payload.data(), payload.size(), 0);
+	ssize_t nbytes = fd.Send(payload);
 	if (nbytes < 0)
 		throw MakeErrno("Failed to send");
 	if (size_t(nbytes) < payload.size())
