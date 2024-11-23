@@ -166,6 +166,13 @@ try {
 	return false;
 }
 
+bool
+PassageConnection::OnUdpHangup()
+{
+	delete this;
+	return false;
+}
+
 void
 PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
 {
