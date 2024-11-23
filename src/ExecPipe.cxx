@@ -13,8 +13,8 @@
 static void
 ReadDummy(FileDescriptor fd) noexcept
 {
-	char dummy;
-	(void)fd.Read(&dummy, sizeof(dummy));
+	std::byte dummy[1];
+	(void)fd.Read(dummy);
 }
 
 UniqueFileDescriptor
