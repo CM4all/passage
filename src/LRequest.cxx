@@ -209,7 +209,7 @@ RichRequest::GetCgroupPath() const
 
 inline int
 RichRequest::Index(lua_State *L)
-{
+try {
 	using namespace Lua;
 
 	if (lua_gettop(L) != 2)
@@ -281,6 +281,8 @@ RichRequest::Index(lua_State *L)
 		return 1;
 	} else
 		return luaL_error(L, "Unknown attribute");
+} catch (...) {
+	Lua::RaiseCurrent(L);
 }
 
 void
