@@ -7,6 +7,7 @@
 struct ucred;
 struct lua_State;
 struct Entity;
+class FileDescriptor;
 namespace Lua { class AutoCloseList; }
 
 void
@@ -14,7 +15,8 @@ RegisterLuaRequest(lua_State *L);
 
 Entity *
 NewLuaRequest(lua_State *L, Lua::AutoCloseList &auto_close,
-	      Entity &&src, const struct ucred &peer_cred);
+	      Entity &&src, const struct ucred &peer_cred,
+	      FileDescriptor pidfd);
 
 Entity &
 CastLuaRequest(lua_State *L, int idx);

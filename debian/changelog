@@ -2,6 +2,7 @@ cm4all-passage (0.21) unstable; urgency=low
 
   * pg: support integer parameters
   * increase listener backlog to 256
+  * use pidfd to avoid PID recycling races
 
  --   
 

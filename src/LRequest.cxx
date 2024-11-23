@@ -17,6 +17,7 @@
 #include "io/FileAt.hxx"
 #include "io/Open.hxx"
 #include "io/linux/ProcCgroup.hxx"
+#include "io/linux/ProcFdinfo.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "util/StringAPI.hxx"
 #include "util/StringCompare.hxx"
@@ -30,12 +31,15 @@ class RichRequest : public Entity {
 
 	const struct ucred cred;
 
+	const FileDescriptor pidfd;
+
 public:
 	RichRequest(lua_State *L, Lua::AutoCloseList &_auto_close,
-		    Entity &&src, const struct ucred &_peer_cred)
+		    Entity &&src, const struct ucred &_peer_cred,
+		    FileDescriptor _pidfd)
 		:Entity(std::move(src)),
 		 auto_close(&_auto_close),
-		 cred(_peer_cred)
+		 cred(_peer_cred), pidfd(_pidfd)
 	{
 		auto_close->Add(L, Lua::RelativeStackIndex{-1});
 
@@ -75,6 +79,9 @@ public:
 	}
 
 	int Index(lua_State *L);
+
+private:
+	std::string GetCgroupPath() const;
 };
 
 static constexpr char lua_request_class[] = "passage.request";
@@ -165,6 +172,41 @@ static constexpr struct luaL_Reg request_methods [] = {
 	{nullptr, nullptr}
 };
 
+static std::string
+ReadPidfdCgroup(FileDescriptor pidfd, pid_t expected_pid)
+{
+	const int pid = ReadPidfdPid(pidfd);
+	if (pid < 0)
+		throw std::runtime_error{"Client process has already exited"};
+
+	/* must be the same PID as the one from SO_PEERCRED */
+	if (expected_pid > 0 && expected_pid != pid)
+		throw std::runtime_error{"PID mismatch"};
+
+	/* read /proc/PID/cgroup */
+	auto cgroup = ReadProcessCgroup(pid);
+
+	/* verify the pidfd/PID again to rule out a race during
+           ReadProcessCgroup() */
+	if (const int pid2 = ReadPidfdPid(pidfd); pid2 < 0)
+		throw std::runtime_error{"Client process has already exited"};
+	else if (pid2 != pid)
+		throw std::runtime_error{"PID mismatch"};
+
+	return cgroup;
+}
+
+inline std::string
+RichRequest::GetCgroupPath() const
+{
+	if (pidfd.IsDefined())
+		return ReadPidfdCgroup(pidfd, cred.pid);
+	else if (HavePeerCred())
+		return ReadProcessCgroup(GetPid());
+	else
+		return {};
+}
+
 inline int
 RichRequest::Index(lua_State *L)
 {
@@ -227,10 +269,7 @@ RichRequest::Index(lua_State *L)
 		Lua::Push(L, static_cast<lua_Integer>(GetGid()));
 		return 1;
 	} else if (StringIsEqual(name, "cgroup")) {
-		if (!HavePeerCred())
-			return 0;
-
-		const auto path = ReadProcessCgroup(GetPid());
+		const auto path = GetCgroupPath();
 		if (path.empty())
 			return 0;
 
@@ -257,10 +296,11 @@ RegisterLuaRequest(lua_State *L)
 
 Entity *
 NewLuaRequest(lua_State *L, Lua::AutoCloseList &auto_close,
-	      Entity &&src, const struct ucred &peer_cred)
+	      Entity &&src, const struct ucred &peer_cred,
+	      FileDescriptor pidfd)
 {
 	return LuaRequest::New(L, L, auto_close,
-			       std::move(src), peer_cred);
+			       std::move(src), peer_cred, pidfd);
 }
 
 Entity &

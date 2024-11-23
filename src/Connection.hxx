@@ -9,6 +9,7 @@
 #include "event/net/UdpListener.hxx"
 #include "event/net/UdpHandler.hxx"
 #include "io/Logger.hxx"
+#include "io/UniqueFileDescriptor.hxx"
 #include "util/IntrusiveList.hxx"
 
 #include <string_view>
@@ -34,6 +35,8 @@ class PassageConnection final
 	Lua::AutoCloseList auto_close;
 
 	UdpListener listener;
+
+	const UniqueFileDescriptor pidfd;
 
 	bool pending_response = false;
 
