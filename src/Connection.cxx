@@ -25,12 +25,12 @@
 #include <fmt/format.h>
 
 static std::string
-MakeLoggerDomain(const struct ucred &cred, SocketAddress)
+MakeLoggerDomain(const SocketPeerAuth &auth, SocketAddress)
 {
-	if (cred.pid < 0)
+	if (!auth.HaveCred())
 		return "connection";
 
-	return fmt::format("pid={} uid={}", cred.pid, cred.uid);
+	return fmt::format("pid={} uid={}", auth.GetPid(), auth.GetUid());
 }
 
 PassageConnection::PassageConnection(Instance &_instance,
@@ -39,11 +39,10 @@ PassageConnection::PassageConnection(Instance &_instance,
 				     UniqueSocketDescriptor &&_fd,
 				     SocketAddress address)
 	:instance(_instance), handler(std::move(_handler)),
-	 peer_cred(_fd.GetPeerCredentials()),
-	 logger(parent_logger, MakeLoggerDomain(peer_cred, address).c_str()),
+	 peer_auth(_fd),
+	 logger(parent_logger, MakeLoggerDomain(peer_auth, address).c_str()),
 	 auto_close(handler->GetState()),
-	 listener(instance.GetEventLoop(), std::move(_fd), *this),
-	 pidfd(listener.GetSocket().GetPeerPidfd())
+	 listener(instance.GetEventLoop(), std::move(_fd), *this)
 {
 }
 
@@ -144,7 +143,7 @@ try {
 	handler->Push(L);
 
 	NewLuaRequest(L, auto_close,
-		      std::move(request), peer_cred, pidfd);
+		      std::move(request), peer_auth);
 	if (lua_pcall(L, 1, 1, 0))
 		throw Lua::PopError(L);
 

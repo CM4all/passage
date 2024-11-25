@@ -8,13 +8,12 @@
 #include "lua/ValuePtr.hxx"
 #include "event/net/UdpListener.hxx"
 #include "event/net/UdpHandler.hxx"
+#include "net/linux/PeerAuth.hxx"
 #include "io/Logger.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "util/IntrusiveList.hxx"
 
 #include <string_view>
-
-#include <sys/socket.h>
 
 struct Action;
 class Instance;
@@ -29,14 +28,13 @@ class PassageConnection final
 
 	Lua::ValuePtr handler;
 
-	const struct ucred peer_cred;
+	const SocketPeerAuth peer_auth;
+
 	ChildLogger logger;
 
 	Lua::AutoCloseList auto_close;
 
 	UdpListener listener;
-
-	const UniqueFileDescriptor pidfd;
 
 	bool pending_response = false;
 
