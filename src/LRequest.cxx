@@ -183,6 +183,9 @@ try {
 		for (const auto &i : headers)
 			SetTable(L, RelativeStackIndex{-1}, i.first, i.second);
 
+		// copy a reference to the fenv (our cache)
+		Lua::SetFenvCache(L, 1, name_idx, Lua::RelativeStackIndex{-1});
+
 		return 1;
 	} else if (StringIsEqual(name, "body")) {
 		if (body.empty())
