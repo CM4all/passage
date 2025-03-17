@@ -29,6 +29,10 @@
 #include "lua/sodium/Init.hxx"
 #endif
 
+#ifdef HAVE_CURL
+#include "lib/curl/Init.hxx"
+#endif
+
 extern "C" {
 #include <lauxlib.h>
 #include <lualib.h>
@@ -149,6 +153,10 @@ SetupRuntimeState(lua_State *L)
 static int
 Run(const CommandLine &cmdline)
 {
+#ifdef HAVE_CURL
+	const ScopeCurlInit curl_init;
+#endif
+
 	Instance instance;
 	SetupConfigState(instance.GetLuaState(), instance);
 
