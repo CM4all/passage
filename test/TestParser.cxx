@@ -7,6 +7,8 @@
 
 #include <gtest/gtest.h>
 
+using std::string_view_literals::operator""sv;
+
 TEST(Parser, Simple)
 {
 	const auto e = ParseEntity("OK\n\n");
@@ -51,13 +53,13 @@ TEST(Parser, Headers)
 
 TEST(Parser, Full)
 {
-	static constexpr char payload[] =
+	static constexpr std::string_view payload =
 		"FOO one two three\n"
 		"abc: 1\n"
 		"def: 2\n"
 		"\n"
-		"\x00\x01\x02\x03";
-	const auto e = ParseEntity({payload, sizeof(payload) - 1});
+		"\x00\x01\x02\x03"sv;
+	const auto e = ParseEntity(payload);
 	EXPECT_EQ(e.command, "FOO");
 	EXPECT_FALSE(e.args.empty());
 	EXPECT_EQ(e.args.front(), "one");
