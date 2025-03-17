@@ -58,6 +58,10 @@ ReceiveResponse(SocketDescriptor s)
 	const auto response = ParseEntity(ToStringView(result.payload));
 
 	if (response.command == "OK") {
+		if (!response.body.empty())
+			// TODO let caller decide what to do with the response body
+			(void)FileDescriptor{STDOUT_FILENO}.Write(AsBytes(response.body));
+
 		return result.fds.empty()
 			? UniqueFileDescriptor()
 			: std::move(result.fds.front());
