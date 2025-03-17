@@ -43,6 +43,7 @@ jobs:
         run: |
           meson setup \
             -Ddocumentation=disabled \
+            -Dsystemd=enabled \
              --force-fallback-for=fmt \
             -Dwrap_mode=nofallback \
             output
