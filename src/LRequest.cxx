@@ -118,8 +118,9 @@ NewExecPipeAction(lua_State *L)
 	if (!lua_istable(L, 2))
 		luaL_argerror(L, 2, "array expected");
 
-	Action action;
-	action.type = Action::Type::EXEC_PIPE;
+	Action action{
+		.type = Action::Type::EXEC_PIPE,
+	};
 
 	auto tail = action.args.before_begin();
 
@@ -145,9 +146,10 @@ NewHttpGetAction(lua_State *L)
 
 	const char *url = luaL_checkstring(L, 2);
 
-	Action action;
-	action.type = Action::Type::HTTP_GET;
-	action.param = url;
+	Action action{
+		.type = Action::Type::HTTP_GET,
+		.param = url,
+	};
 
 	NewLuaAction(L, 1, std::move(action));
 	return 1;
