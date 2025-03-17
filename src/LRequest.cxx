@@ -10,6 +10,7 @@
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
 #include "lua/FenvCache.hxx"
+#include "lua/StringView.hxx"
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
 #include "net/control/Protocol.hxx"
@@ -144,11 +145,13 @@ NewHttpGetAction(lua_State *L)
 	if (top != 2)
 		return luaL_error(L, "Invalid parameters");
 
-	const char *url = luaL_checkstring(L, 2);
+	const auto url = Lua::ToStringView(L, Lua::GetStackIndex(2));
+	if (url.empty())
+		throw std::invalid_argument{"Bad URL"};
 
 	Action action{
 		.type = Action::Type::HTTP_GET,
-		.param = url,
+		.param = std::string{url},
 	};
 
 	NewLuaAction(L, 1, std::move(action));
