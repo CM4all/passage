@@ -71,7 +71,7 @@ Instance::AddSystemdListener(Lua::ValuePtr &&handler)
 		throw std::runtime_error("No systemd socket");
 
 	for (unsigned i = 0; i < unsigned(n); ++i)
-		AddListener(UniqueSocketDescriptor(SD_LISTEN_FDS_START + i),
+		AddListener(UniqueSocketDescriptor(AdoptTag{}, SD_LISTEN_FDS_START + i),
 			    Lua::ValuePtr(handler));
 }
 
