@@ -73,6 +73,9 @@ The following attributes can be queried:
 
 * :samp:`headers`: A table containing headers (name/value pairs).
 
+* :samp:`body`: An optional string of (binary) data; may be ``nil`` if
+  none was specified.
+
 * :samp:`pid`: The client's process id.
 
 * :samp:`uid`: The client's user id.
@@ -243,7 +246,7 @@ response share the same general structure::
   COMMAND/STATUS [PARAM1 PARAM2 ...]\n
   HEADER1: VALUE1\n
   HEADER2: VALUE2\n
-  \0BINARY
+  \0BODY
 
 A packet consists of at least one command (request) or status
 (response).  The command is an unquoted string consisting of ASCII
@@ -252,14 +255,12 @@ letters, digits or underscore.  The response status can be either
 followed by a message as the first (and only) parameter.
 
 There may be positional string parameters, and named headers.  The
-last newline character may be omitted.  Finally, binary data may be
-appended, separated from the rest with a null byte.  Ancillary data
-may contain file descriptors.
+last newline character may be omitted.  Finally, a body of binary data
+may be appended, separated from the rest with a null byte.  Ancillary
+data may contain file descriptors.
 
-The meaning of commands, parameters, headers, binary data and the file
+The meaning of commands, parameters, headers, body and the file
 descriptors is defined by the Lua configuration script.
-
-**Note** that binary data is not yet implemented.
 
 
 Common Commands

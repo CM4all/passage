@@ -24,7 +24,10 @@ Entity::Serialize() const noexcept
 		result.push_back('\n');
 	}
 
-	result.push_back('\n');
+	if (!body.empty()) {
+		result.push_back('\0');
+		result.append(body);
+	}
 
 	return result;
 }

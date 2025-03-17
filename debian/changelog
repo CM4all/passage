@@ -1,6 +1,6 @@
 cm4all-passage (0.22) unstable; urgency=low
 
-  * 
+  * protocol: add "body" support
 
  --   
 

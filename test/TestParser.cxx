@@ -57,7 +57,7 @@ TEST(Parser, Full)
 		"FOO one two three\n"
 		"abc: 1\n"
 		"def: 2\n"
-		"\n"
+		"\0"
 		"\x00\x01\x02\x03"sv;
 	const auto e = ParseEntity(payload);
 	EXPECT_EQ(e.command, "FOO");
@@ -70,4 +70,5 @@ TEST(Parser, Full)
 	EXPECT_EQ(std::distance(e.headers.begin(), e.headers.end()), 2u);
 	EXPECT_EQ(e.headers.find("abc")->second, "1");
 	EXPECT_EQ(e.headers.find("def")->second, "2");
+	EXPECT_EQ(e.body, "\x00\x01\x02\x03"sv);
 }

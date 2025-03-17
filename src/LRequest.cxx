@@ -184,6 +184,12 @@ try {
 			SetTable(L, RelativeStackIndex{-1}, i.first, i.second);
 
 		return 1;
+	} else if (StringIsEqual(name, "body")) {
+		if (body.empty())
+			return 0;
+
+		Lua::Push(L, body);
+		return 1;
 	} else if (StringIsEqual(name, "pid")) {
 		if (!peer_auth.HaveCred())
 			return 0;

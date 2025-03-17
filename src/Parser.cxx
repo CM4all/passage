@@ -35,6 +35,11 @@ ParseEntity(std::string_view payload)
 {
 	Entity entity;
 
+	const auto [_payload, body] = Split(payload, '\0');
+	if (!body.empty())
+		entity.body = std::string{body};
+	payload = _payload;
+
 	auto line = NextLine(payload);
 
 	const auto command = NextUnquoted(line);
