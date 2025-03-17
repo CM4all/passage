@@ -21,6 +21,11 @@
 #include "util/StringAPI.hxx"
 #include "util/StringCompare.hxx"
 
+#ifdef HAVE_CURL
+#include "uri/Escape.hxx"
+#include "util/AllocatedString.hxx"
+#endif
+
 #include <assert.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -142,6 +147,39 @@ NewExecPipeAction(lua_State *L)
 #ifdef HAVE_CURL
 
 static std::string
+ParseHttpQuery(lua_State *L, Lua::RelativeStackIndex query_idx)
+{
+	if (lua_isstring(L, Lua::GetStackIndex(query_idx)))
+		return std::string{Lua::ToStringView(L, Lua::GetStackIndex(query_idx))};
+
+	luaL_checktype(L, Lua::GetStackIndex(query_idx), LUA_TTABLE);
+
+	std::string query;
+
+	Lua::ForEach(L, query_idx, [L, &query](const auto key_idx, const auto value_idx){
+		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
+			throw std::invalid_argument{"Key is not a string"};
+
+		if (!query.empty())
+			query.push_back('&');
+
+		query.append(UriEscape(Lua::ToStringView(L, Lua::GetStackIndex(key_idx))));
+
+		if (lua_isnil(L, Lua::GetStackIndex(value_idx)))
+			return;
+
+		query.push_back('=');
+
+		if (lua_isstring(L, Lua::GetStackIndex(value_idx)))
+			query.append(UriEscape(Lua::ToStringView(L, Lua::GetStackIndex(value_idx))));
+		else
+			throw std::invalid_argument{"Value is not a string"};
+	});
+
+	return query;
+}
+
+static std::string
 ParseHttpRequest(lua_State *L, int request_idx)
 {
 	if (lua_isstring(L, request_idx)) {
@@ -154,9 +192,9 @@ ParseHttpRequest(lua_State *L, int request_idx)
 
 	luaL_checktype(L, request_idx, LUA_TTABLE);
 
-	std::string url;
+	std::string url, query;
 
-	Lua::ForEach(L, request_idx, [L, &url](const auto key_idx, const auto value_idx){
+	Lua::ForEach(L, request_idx, [L, &url, &query](const auto key_idx, const auto value_idx){
 		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
 			throw std::invalid_argument{"Key is not a string"};
 
@@ -170,12 +208,19 @@ ParseHttpRequest(lua_State *L, int request_idx)
 				throw std::invalid_argument{"Bad URL"};
 
 			url = value;
+		} else if (key == "query"sv) {
+			query = ParseHttpQuery(L, value_idx);
 		} else
 			throw std::invalid_argument{"Unrecognized key"};
 	});
 
 	if (url.empty())
 		throw std::invalid_argument{"No URL"};
+
+	if (!query.empty()) {
+		url.push_back(url.find('?') == url.npos ? '?' : '&');
+		url.append(query);
+	}
 
 	return url;
 }

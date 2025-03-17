@@ -138,6 +138,7 @@ The following actions are possible:
   The following table keys are recognized:
 
   - ``url``: an absolute HTTP URL
+  - ``query``: a table containing names and values of query parameters
 
 Returning without an action from the handler function (i.e. returning
 :samp:`nil`) is considered a silent success.

@@ -144,6 +144,12 @@ else
   lua_sodium_dep = sodium_dep
 endif
 
+if curl_dep.found()
+  subdir('libcommon/src/uri')
+else
+  uri_dep = dependency('', required: false)
+endif
+
 libcommon_require_pg = get_option('pg')
 subdir('libcommon/src/pg')
 if pg_dep.found()
@@ -196,7 +202,7 @@ executable('cm4all-passage',
     net_linux_dep,
     libsystemd,
     spawn_dep,
-    curl_dep,
+    curl_dep, uri_dep,
     fmt_dep,
   ],
   install: true,
