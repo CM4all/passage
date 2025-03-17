@@ -5,6 +5,8 @@
 #pragma once
 
 #include "lua/AutoCloseList.hxx"
+#include "lua/CoRunner.hxx"
+#include "lua/Resume.hxx"
 #include "lua/ValuePtr.hxx"
 #include "event/net/UdpListener.hxx"
 #include "event/net/UdpHandler.hxx"
@@ -13,6 +15,7 @@
 #include "io/UniqueFileDescriptor.hxx"
 #include "util/IntrusiveList.hxx"
 
+#include <cstdint>
 #include <string_view>
 
 struct Action;
@@ -22,8 +25,9 @@ class FileDescriptor;
 
 class PassageConnection final
 	: public AutoUnlinkIntrusiveListHook,
-	UdpHandler {
-
+	  Lua::ResumeListener,
+	  UdpHandler
+{
 	Instance &instance;
 
 	const Lua::ValuePtr handler;
@@ -36,6 +40,13 @@ class PassageConnection final
 
 	UdpListener listener;
 
+	/**
+	 * The Lua thread which runs the handler coroutine.
+	 */
+	Lua::CoRunner thread;
+
+	bool running_lua = false;
+
 	bool pending_response = false;
 
 public:
@@ -43,6 +54,8 @@ public:
 			  Lua::ValuePtr _handler,
 			  const RootLogger &parent_logger,
 			  UniqueSocketDescriptor &&_fd, SocketAddress address);
+
+	~PassageConnection() noexcept;
 
 	static void Register(lua_State *L);
 
@@ -59,4 +72,8 @@ private:
 			   SocketAddress address, int uid) override;
 	bool OnUdpHangup() override;
 	void OnUdpError(std::exception_ptr ep) noexcept override;
+
+	/* virtual methods from class Lua::ResumeListener */
+	void OnLuaFinished(lua_State *L) noexcept override;
+	void OnLuaError(lua_State *L, std::exception_ptr e) noexcept override;
 };

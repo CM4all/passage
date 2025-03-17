@@ -14,6 +14,7 @@
 #include "io/Iovec.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
+#include "net/SocketProtocolError.hxx"
 #include "net/ScmRightsBuilder.hxx"
 #include "net/SendMessage.hxx"
 #include "util/StaticVector.hxx"
@@ -42,8 +43,14 @@ PassageConnection::PassageConnection(Instance &_instance,
 	 peer_auth(_fd),
 	 logger(parent_logger, MakeLoggerDomain(peer_auth, address).c_str()),
 	 auto_close(handler->GetState()),
-	 listener(instance.GetEventLoop(), std::move(_fd), *this)
+	 listener(instance.GetEventLoop(), std::move(_fd), *this),
+	 thread(handler->GetState())
 {
+}
+
+PassageConnection::~PassageConnection() noexcept
+{
+	thread.Cancel();
 }
 
 void
@@ -127,6 +134,9 @@ PassageConnection::OnUdpDatagram(std::span<const std::byte> payload,
 				 std::span<UniqueFileDescriptor>,
 				 SocketAddress address, int)
 try {
+	if (running_lua)
+		throw SocketProtocolError{"Received another datagram while handling request"};
+
 	assert(!pending_response);
 
 	if (payload.empty()) {
@@ -138,27 +148,16 @@ try {
 
 	auto request = ParseEntity(ToStringView(payload));
 
-	const auto L = handler->GetState();
+	/* create a new thread for the handler coroutine */
+	const auto L = thread.CreateThread(*this);
 
 	handler->Push(L);
 
 	NewLuaRequest(L, auto_close,
 		      std::move(request), peer_auth);
-	if (lua_pcall(L, 1, 1, 0))
-		throw Lua::PopError(L);
 
-	AtScopeExit(L) { lua_pop(L, 1); };
-
-	if (!lua_isnil(L, -1)) {
-		auto *action = CheckLuaAction(L, -1);
-		if (action == nullptr)
-			throw std::runtime_error("Wrong return type from Lua handler");
-
-		Do(address, *action);
-	}
-
-	if (pending_response)
-		SendResponse(address, "OK");
+	running_lua = true;
+	Lua::Resume(L, 1);
 
 	return true;
 } catch (...) {
@@ -182,4 +181,36 @@ PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
 {
 	logger(1, ep);
 	delete this;
+}
+
+void
+PassageConnection::OnLuaFinished(lua_State *L) noexcept
+try {
+	assert(running_lua);
+
+	const Lua::ScopeCheckStack check_thread_stack(L);
+
+	if (!lua_isnil(L, -1)) {
+		auto *action = CheckLuaAction(L, -1);
+		if (action == nullptr)
+			throw std::runtime_error("Wrong return type from Lua handler");
+
+		Do(nullptr, *action);
+	}
+
+	if (pending_response)
+		SendResponse(nullptr, "OK");
+} catch (...) {
+	OnLuaError(L, std::current_exception());
+}
+
+void
+PassageConnection::OnLuaError(lua_State *, std::exception_ptr e) noexcept
+{
+	assert(running_lua);
+
+	logger(1, e);
+
+	if (pending_response)
+		SendResponse(nullptr, "ERROR");
 }
