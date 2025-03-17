@@ -6,7 +6,7 @@ cm4all-passage (0.22) unstable; urgency=low
   * protocol: add "body" support
   * add action "http_get"
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Mon, 17 Mar 2025 22:08:42 +0100
 
 cm4all-passage (0.21) unstable; urgency=low
 
