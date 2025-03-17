@@ -11,6 +11,11 @@ project('CM4all Passage', 'cpp', version: '0.22',
   ],
 )
 
+version_h = configuration_data()
+version_h.set_quoted('PACKAGE', meson.project_name())
+version_h.set_quoted('VERSION', meson.project_version())
+configure_file(output: 'version.h', configuration: version_h)
+
 compiler = meson.get_compiler('cpp')
 
 debug = get_option('b_ndebug') != 'true'
@@ -103,9 +108,10 @@ add_project_arguments(compiler.get_supported_arguments(test_cxxflags), language:
 
 libsystemd = dependency('libsystemd', required: get_option('systemd'))
 
-inc = include_directories('src', 'libcommon/src')
+inc = include_directories('src', 'libcommon/src', '.')
 
 libcommon_enable_DefaultFifoBuffer = false
+libcommon_require_curl = get_option('curl')
 libcommon_require_sodium = get_option('sodium')
 
 subdir('libcommon/src/util')
@@ -122,6 +128,7 @@ subdir('libcommon/src/net')
 subdir('libcommon/src/net/control')
 subdir('libcommon/src/net/linux')
 subdir('libcommon/src/event/net')
+subdir('libcommon/src/lib/curl')
 subdir('libcommon/src/lua/io')
 subdir('libcommon/src/lua/net')
 subdir('libcommon/src/lua/event')
@@ -152,6 +159,7 @@ spawn = static_library('spawn',
 spawn_dep = declare_dependency(link_with: spawn,
                                dependencies: [event_dep])
 
+conf.set('HAVE_CURL', curl_dep.found())
 conf.set('HAVE_LIBSODIUM', sodium_dep.found())
 conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
 conf.set('HAVE_PG', pg_dep.found())
@@ -188,6 +196,7 @@ executable('cm4all-passage',
     net_linux_dep,
     libsystemd,
     spawn_dep,
+    curl_dep,
     fmt_dep,
   ],
   install: true,

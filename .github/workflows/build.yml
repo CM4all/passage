@@ -32,6 +32,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             meson \
             ccache \
+            libcurl4-openssl-dev \
             libsodium-dev \
             libsystemd-dev \
             libpq-dev \
@@ -44,6 +45,7 @@ jobs:
       - name: Configure
         run: |
           meson setup \
+            -Dcurl=enabled \
             -Ddocumentation=disabled \
             -Dpg=enabled \
             -Dsodium=enabled \

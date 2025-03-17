@@ -134,10 +134,34 @@ NewExecPipeAction(lua_State *L)
 	return 1;
 }
 
+#ifdef HAVE_CURL
+
+static int
+NewHttpGetAction(lua_State *L)
+{
+	const auto top = lua_gettop(L);
+	if (top != 2)
+		return luaL_error(L, "Invalid parameters");
+
+	const char *url = luaL_checkstring(L, 2);
+
+	Action action;
+	action.type = Action::Type::HTTP_GET;
+	action.param = url;
+
+	NewLuaAction(L, 1, std::move(action));
+	return 1;
+}
+
+#endif // HAVE_CURL
+
 static constexpr struct luaL_Reg request_methods [] = {
 	{"fade_children", NewFadeChildrenAction},
 	{"flush_http_cache", NewFlushHttpCacheAction},
 	{"exec_pipe", NewExecPipeAction},
+#ifdef HAVE_CURL
+	{"http_get", NewHttpGetAction},
+#endif
 	{nullptr, nullptr}
 };
 

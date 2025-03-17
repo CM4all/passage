@@ -23,7 +23,16 @@
 #include "util/Macros.hxx"
 #include "util/Compiler.h"
 
+#ifdef HAVE_CURL
+#include "lib/curl/CoRequest.hxx"
+#include "lib/curl/Easy.hxx"
+#include "lib/curl/Setup.hxx"
+#include "co/Task.hxx"
+#endif
+
 #include <fmt/format.h>
+
+using std::string_view_literals::operator""sv;
 
 static std::string
 MakeLoggerDomain(const SocketPeerAuth &auth, SocketAddress)
@@ -91,6 +100,33 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 	SendMessage(listener.GetSocket(), m, MSG_DONTWAIT|MSG_NOSIGNAL);
 }
 
+#ifdef HAVE_CURL
+
+static CurlEasy
+ActionToCurlEasy(const Action &action)
+{
+	CurlEasy easy{action.param.c_str()};
+	Curl::Setup(easy);
+	easy.SetFailOnError();
+	return easy;
+}
+
+static Co::Task<Entity>
+HttpGet(CurlGlobal &curl, const Action &action)
+{
+	// TODO body size limit
+	auto response = co_await Curl::CoRequest(curl, ActionToCurlEasy(action));
+
+	Entity entity{
+		.command = std::string{"OK"sv},
+		.body = std::move(response.body),
+	};
+
+	co_return entity;
+}
+
+#endif // HAVE_CURL
+
 Co::InvokeTask
 PassageConnection::Do(SocketAddress address, const Action &action)
 {
@@ -126,6 +162,13 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 		}
 
 		break;
+
+#ifdef HAVE_CURL
+	case Action::Type::HTTP_GET:
+		SendResponse(address,
+			     (co_await HttpGet(instance.GetCurl(), action)).Serialize());
+		break;
+#endif // HAVE_CURL
 	}
 
 	co_return;

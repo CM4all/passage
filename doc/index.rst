@@ -122,6 +122,12 @@ The following actions are possible:
   resolution here) and connect a pipe to its standard output; send the
   pipe's reading side to the client.
 
+* :samp:`http_get(URL)`: perform a HTTP GET request and send the
+  response to the Passage client.  Non-successful HTTP responses
+  (anything other than 2xx) cause the operation to fail.  (This works
+  only with small HTTP responses because Passage responses are limited
+  to one datagram.)
+
 Returning without an action from the handler function (i.e. returning
 :samp:`nil`) is considered a silent success.
 

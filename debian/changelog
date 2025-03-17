@@ -4,6 +4,7 @@ cm4all-passage (0.22) unstable; urgency=low
   * run Lua code as coroutine
   * lua: add PostgreSQL client
   * protocol: add "body" support
+  * add action "http_get"
 
  --   
 

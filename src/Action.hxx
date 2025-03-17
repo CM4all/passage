@@ -5,6 +5,7 @@
 #pragma once
 
 #include "net/AllocatedSocketAddress.hxx"
+#include "config.h"
 
 #include <string>
 #include <forward_list>
@@ -15,6 +16,9 @@ struct Action {
 		FADE_CHILDREN,
 		FLUSH_HTTP_CACHE,
 		EXEC_PIPE,
+#ifdef HAVE_CURL
+		HTTP_GET,
+#endif
 	};
 
 	Type type = Type::UNDEFINED;

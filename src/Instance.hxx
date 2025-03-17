@@ -19,6 +19,10 @@
 #include "event/systemd/Watchdog.hxx"
 #endif
 
+#ifdef HAVE_CURL
+#include "lib/curl/Global.hxx"
+#endif
+
 #include <forward_list>
 
 class SocketAddress;
@@ -31,6 +35,10 @@ class Instance final {
 
 #ifdef HAVE_LIBSYSTEMD
 	Systemd::Watchdog systemd_watchdog{event_loop};
+#endif
+
+#ifdef HAVE_CURL
+	CurlGlobal curl{event_loop};
 #endif
 
 	ZombieReaper zombie_reaper{event_loop};
@@ -50,6 +58,12 @@ public:
 	auto &GetEventLoop() noexcept {
 		return event_loop;
 	}
+
+#ifdef HAVE_CURL
+	auto &GetCurl() noexcept {
+		return curl;
+	}
+#endif
 
 	lua_State *GetLuaState() {
 		return lua_state.get();
