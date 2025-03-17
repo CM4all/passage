@@ -1,5 +1,6 @@
 cm4all-passage (0.22) unstable; urgency=low
 
+  * allow the Lua handler function to return nil
   * protocol: add "body" support
 
  --   

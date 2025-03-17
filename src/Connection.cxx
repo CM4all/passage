@@ -149,11 +149,13 @@ try {
 
 	AtScopeExit(L) { lua_pop(L, 1); };
 
-	auto *action = CheckLuaAction(L, -1);
-	if (action == nullptr)
-		throw std::runtime_error("Wrong return type from Lua handler");
+	if (!lua_isnil(L, -1)) {
+		auto *action = CheckLuaAction(L, -1);
+		if (action == nullptr)
+			throw std::runtime_error("Wrong return type from Lua handler");
 
-	Do(address, *action);
+		Do(address, *action);
+	}
 
 	if (pending_response)
 		SendResponse(address, "OK");
