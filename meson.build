@@ -4,6 +4,9 @@ project('CM4all Passage', 'cpp', version: '0.22',
     'cpp_std=c++20',
     'warning_level=3',
 
+    # This is only here to build subprojects as static libraries
+    'default_library=static',
+
     'fmt:cpp_std=c++20',
   ],
 )
