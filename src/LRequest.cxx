@@ -10,6 +10,7 @@
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
 #include "lua/FenvCache.hxx"
+#include "lua/ForEach.hxx"
 #include "lua/StringView.hxx"
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
@@ -23,6 +24,8 @@
 #include <assert.h>
 #include <sys/socket.h>
 #include <string.h>
+
+using std::string_view_literals::operator""sv;
 
 class RichRequest : public Entity {
 	Lua::AutoCloseList *auto_close;
@@ -138,6 +141,45 @@ NewExecPipeAction(lua_State *L)
 
 #ifdef HAVE_CURL
 
+static std::string
+ParseHttpRequest(lua_State *L, int request_idx)
+{
+	if (lua_isstring(L, request_idx)) {
+		const auto value = Lua::ToStringView(L, request_idx);
+		if (value.empty())
+			throw std::invalid_argument{"Bad URL"};
+
+		return std::string{value};
+	}
+
+	luaL_checktype(L, request_idx, LUA_TTABLE);
+
+	std::string url;
+
+	Lua::ForEach(L, request_idx, [L, &url](const auto key_idx, const auto value_idx){
+		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
+			throw std::invalid_argument{"Key is not a string"};
+
+		const auto key = Lua::ToStringView(L, Lua::GetStackIndex(key_idx));
+		if (key == "url"sv) {
+			if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
+				throw std::invalid_argument{"url is not a string"};
+
+			const auto value = Lua::ToStringView(L, Lua::GetStackIndex(value_idx));
+			if (value.empty())
+				throw std::invalid_argument{"Bad URL"};
+
+			url = value;
+		} else
+			throw std::invalid_argument{"Unrecognized key"};
+	});
+
+	if (url.empty())
+		throw std::invalid_argument{"No URL"};
+
+	return url;
+}
+
 static int
 NewHttpGetAction(lua_State *L)
 {
@@ -145,13 +187,9 @@ NewHttpGetAction(lua_State *L)
 	if (top != 2)
 		return luaL_error(L, "Invalid parameters");
 
-	const auto url = Lua::ToStringView(L, Lua::GetStackIndex(2));
-	if (url.empty())
-		throw std::invalid_argument{"Bad URL"};
-
 	Action action{
 		.type = Action::Type::HTTP_GET,
-		.param = std::string{url},
+		.param = ParseHttpRequest(L, 2),
 	};
 
 	NewLuaAction(L, 1, std::move(action));

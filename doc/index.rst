@@ -128,6 +128,17 @@ The following actions are possible:
   only with small HTTP responses because Passage responses are limited
   to one datagram.)
 
+  Instead of a simple URL string, you can construct more complex
+  requests by passing a table::
+
+    return request:http_get({
+      url='http://example.com/',
+    })
+
+  The following table keys are recognized:
+
+  - ``url``: an absolute HTTP URL
+
 Returning without an action from the handler function (i.e. returning
 :samp:`nil`) is considered a silent success.
 
