@@ -26,7 +26,7 @@ class PassageConnection final
 
 	Instance &instance;
 
-	Lua::ValuePtr handler;
+	const Lua::ValuePtr handler;
 
 	const SocketPeerAuth peer_auth;
 
