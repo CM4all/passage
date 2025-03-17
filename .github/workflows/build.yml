@@ -34,6 +34,7 @@ jobs:
             ccache \
             libsodium-dev \
             libsystemd-dev \
+            libpq-dev \
             libluajit-5.1-dev \
             libgtest-dev
 
@@ -44,6 +45,7 @@ jobs:
         run: |
           meson setup \
             -Ddocumentation=disabled \
+            -Dpg=enabled \
             -Dsodium=enabled \
             -Dsystemd=enabled \
              --force-fallback-for=fmt \

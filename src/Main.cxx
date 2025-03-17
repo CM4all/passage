@@ -21,6 +21,10 @@
 #include "util/PrintException.hxx"
 #include "config.h"
 
+#ifdef HAVE_PG
+#include "lua/pg/Init.hxx"
+#endif
+
 #ifdef HAVE_LIBSODIUM
 #include "lua/sodium/Init.hxx"
 #endif
@@ -90,6 +94,10 @@ SetupConfigState(lua_State *L, Instance &instance)
 #endif
 
 	Lua::InitEvent(L, instance.GetEventLoop());
+
+#ifdef HAVE_PG
+	Lua::InitPg(L, instance.GetEventLoop());
+#endif
 
 	Lua::InitSocketAddress(L);
 	RegisterLuaResolver(L);

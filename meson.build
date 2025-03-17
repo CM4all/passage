@@ -135,6 +135,13 @@ else
   lua_sodium_dep = sodium_dep
 endif
 
+libcommon_require_pg = get_option('pg')
+subdir('libcommon/src/pg')
+if pg_dep.found()
+  subdir('libcommon/src/lua/pg')
+  pg_dep = lua_pg_dep
+endif
+
 spawn = static_library('spawn',
   'libcommon/src/spawn/ZombieReaper.cxx',
   include_directories: inc,
@@ -145,6 +152,7 @@ spawn_dep = declare_dependency(link_with: spawn,
 
 conf.set('HAVE_LIBSODIUM', sodium_dep.found())
 conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
+conf.set('HAVE_PG', pg_dep.found())
 configure_file(output: 'config.h', configuration: conf)
 
 executable('cm4all-passage',
@@ -171,6 +179,7 @@ executable('cm4all-passage',
     lua_net_dep,
     lua_event_dep,
     lua_sodium_dep,
+    pg_dep,
     control_client_dep,
     event_net_dep,
     net_linux_dep,

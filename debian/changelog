@@ -2,6 +2,7 @@ cm4all-passage (0.22) unstable; urgency=low
 
   * allow the Lua handler function to return nil
   * run Lua code as coroutine
+  * lua: add PostgreSQL client
   * protocol: add "body" support
 
  --   

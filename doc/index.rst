@@ -186,6 +186,41 @@ There are some `libsodium <https://www.libsodium.org/>`__ bindings.
   pk = sodium.crypto_scalarmult_base(sk)
 
 
+PostgreSQL Client
+^^^^^^^^^^^^^^^^^
+
+The Lua script can query a PostgreSQL database.  First, a connection
+should be established during initialization::
+
+  db = pg:new('dbname=foo', 'schemaname')
+
+In the handler function, queries can be executed like this (the API is
+similar to `LuaSQL <https://keplerproject.github.io/luasql/>`__)::
+
+  local result = assert(db:execute('SELECT id, name FROM bar'))
+  local row = result:fetch({}, "a")
+  print(row.id, row.name)
+
+Query parameters are passed to ``db:execute()`` as an array after the
+SQL string::
+
+  local result = assert(
+    db:execute('SELECT name FROM bar WHERE id=$1', {42}))
+
+The functions ``pg:encode_array()`` and ``pg:decode_array()`` support
+PostgreSQL arrays; the former encodes a Lua array to a PostgreSQL
+array string, and the latter decodes a PostgreSQL array string to a
+Lua array.
+
+To listen for `PostgreSQL notifications
+<https://www.postgresql.org/docs/current/sql-notify.html>`__, invoke
+the ``listen`` method with a callback function::
+
+  db:listen('bar', function()
+    print("Received a PostgreSQL NOTIFY")
+  end)
+
+
 Security
 ^^^^^^^^
 
