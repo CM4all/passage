@@ -134,15 +134,13 @@ PassageConnection::OnUdpDatagram(std::span<const std::byte> payload,
 				 std::span<UniqueFileDescriptor>,
 				 SocketAddress address, int)
 try {
-	if (running_lua)
-		throw SocketProtocolError{"Received another datagram while handling request"};
-
-	assert(!pending_response);
-
 	if (payload.empty()) {
 		delete this;
 		return false;
 	}
+
+	if (pending_response)
+		throw SocketProtocolError{"Received another datagram while handling request"};
 
 	pending_response = true;
 
@@ -156,7 +154,6 @@ try {
 	NewLuaRequest(L, auto_close,
 		      std::move(request), peer_auth);
 
-	running_lua = true;
 	Lua::Resume(L, 1);
 
 	return true;
@@ -186,9 +183,6 @@ PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
 void
 PassageConnection::OnLuaFinished(lua_State *L) noexcept
 try {
-	assert(running_lua);
-	running_lua = false;
-
 	const Lua::ScopeCheckStack check_thread_stack(L);
 
 	if (!lua_isnil(L, -1)) {
@@ -208,9 +202,6 @@ try {
 void
 PassageConnection::OnLuaError(lua_State *, std::exception_ptr e) noexcept
 {
-	assert(running_lua);
-	running_lua = false;
-
 	logger(1, e);
 
 	if (pending_response)

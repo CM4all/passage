@@ -45,8 +45,6 @@ class PassageConnection final
 	 */
 	Lua::CoRunner thread;
 
-	bool running_lua = false;
-
 	bool pending_response = false;
 
 public:
