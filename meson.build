@@ -109,6 +109,7 @@ libcommon_enable_DefaultFifoBuffer = false
 libcommon_require_sodium = get_option('sodium')
 
 subdir('libcommon/src/util')
+subdir('libcommon/src/time')
 subdir('libcommon/src/lib/fmt')
 subdir('libcommon/src/lib/sodium')
 subdir('libcommon/src/lua')
@@ -205,6 +206,9 @@ executable('cm4all-passage-client',
 )
 
 subdir('test')
-subdir('libcommon/test/util')
+subdir('libcommon/test/lua')
 subdir('libcommon/test/net')
+subdir('libcommon/test/pg')
+subdir('libcommon/test/sodium')
+subdir('libcommon/test/util')
 subdir('doc')
