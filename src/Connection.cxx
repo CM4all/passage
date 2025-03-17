@@ -187,6 +187,7 @@ void
 PassageConnection::OnLuaFinished(lua_State *L) noexcept
 try {
 	assert(running_lua);
+	running_lua = false;
 
 	const Lua::ScopeCheckStack check_thread_stack(L);
 
@@ -208,6 +209,7 @@ void
 PassageConnection::OnLuaError(lua_State *, std::exception_ptr e) noexcept
 {
 	assert(running_lua);
+	running_lua = false;
 
 	logger(1, e);
 
