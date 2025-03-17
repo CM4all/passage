@@ -17,6 +17,7 @@
 #include "lua/io/XattrTable.hxx"
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
+#include "lua/event/Init.hxx"
 #include "util/PrintException.hxx"
 #include "config.h"
 
@@ -87,6 +88,8 @@ SetupConfigState(lua_State *L, Instance &instance)
 #ifdef HAVE_LIBSODIUM
 	Lua::InitSodium(L);
 #endif
+
+	Lua::InitEvent(L, instance.GetEventLoop());
 
 	Lua::InitSocketAddress(L);
 	RegisterLuaResolver(L);

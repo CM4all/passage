@@ -119,6 +119,7 @@ subdir('libcommon/src/net/linux')
 subdir('libcommon/src/event/net')
 subdir('libcommon/src/lua/io')
 subdir('libcommon/src/lua/net')
+subdir('libcommon/src/lua/event')
 
 if libsystemd.found()
   subdir('libcommon/src/event/systemd')
@@ -165,6 +166,7 @@ executable('cm4all-passage',
     lua_dep,
     lua_io_dep,
     lua_net_dep,
+    lua_event_dep,
     lua_sodium_dep,
     control_client_dep,
     event_net_dep,
