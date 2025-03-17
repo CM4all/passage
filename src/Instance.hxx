@@ -47,7 +47,7 @@ public:
 	Instance();
 	~Instance() noexcept;
 
-	EventLoop &GetEventLoop() {
+	auto &GetEventLoop() noexcept {
 		return event_loop;
 	}
 
