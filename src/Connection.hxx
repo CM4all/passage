@@ -13,6 +13,7 @@
 #include "net/linux/PeerAuth.hxx"
 #include "io/Logger.hxx"
 #include "io/UniqueFileDescriptor.hxx"
+#include "co/InvokeTask.hxx"
 #include "util/IntrusiveList.hxx"
 
 #include <cstdint>
@@ -45,6 +46,8 @@ class PassageConnection final
 	 */
 	Lua::CoRunner thread;
 
+	Co::InvokeTask invoke_task;
+
 	bool pending_response = false;
 
 public:
@@ -58,11 +61,13 @@ public:
 	static void Register(lua_State *L);
 
 private:
-	void Do(SocketAddress address, const Action &action);
+	Co::InvokeTask Do(SocketAddress address, const Action &action);
 
 	void SendResponse(SocketAddress address, std::string_view status);
 	void SendResponse(SocketAddress address, std::string_view status,
 			  FileDescriptor fd);
+
+	void OnCoComplete(std::exception_ptr error) noexcept;
 
 	/* virtual methods from class UdpHandler */
 	bool OnUdpDatagram(std::span<const std::byte> payload,

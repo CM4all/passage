@@ -91,7 +91,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 	SendMessage(listener.GetSocket(), m, MSG_DONTWAIT|MSG_NOSIGNAL);
 }
 
-void
+Co::InvokeTask
 PassageConnection::Do(SocketAddress address, const Action &action)
 {
 	assert(pending_response);
@@ -127,6 +127,8 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 		break;
 	}
+
+	co_return;
 }
 
 bool
@@ -141,6 +143,8 @@ try {
 
 	if (pending_response)
 		throw SocketProtocolError{"Received another datagram while handling request"};
+
+	assert(!invoke_task);
 
 	pending_response = true;
 
@@ -183,6 +187,8 @@ PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
 void
 PassageConnection::OnLuaFinished(lua_State *L) noexcept
 try {
+	assert(!invoke_task);
+
 	const Lua::ScopeCheckStack check_thread_stack(L);
 
 	if (!lua_isnil(L, -1)) {
@@ -190,10 +196,9 @@ try {
 		if (action == nullptr)
 			throw std::runtime_error("Wrong return type from Lua handler");
 
-		Do(nullptr, *action);
-	}
-
-	if (pending_response)
+		invoke_task = Do(nullptr, *action);
+		invoke_task.Start(BIND_THIS_METHOD(OnCoComplete));
+	} else if (pending_response)
 		SendResponse(nullptr, "OK");
 } catch (...) {
 	OnLuaError(L, std::current_exception());
@@ -202,8 +207,24 @@ try {
 void
 PassageConnection::OnLuaError(lua_State *, std::exception_ptr e) noexcept
 {
+	assert(!invoke_task);
+
 	logger(1, e);
 
 	if (pending_response)
 		SendResponse(nullptr, "ERROR");
+}
+
+inline void
+PassageConnection::OnCoComplete(std::exception_ptr error) noexcept
+{
+	if (error) {
+		logger(1, std::move(error));
+
+		if (pending_response)
+			SendResponse(nullptr, "ERROR");
+	} else {
+		if (pending_response)
+			SendResponse(nullptr, "OK");
+	}
 }

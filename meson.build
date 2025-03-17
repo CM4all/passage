@@ -109,6 +109,7 @@ libcommon_enable_DefaultFifoBuffer = false
 libcommon_require_sodium = get_option('sodium')
 
 subdir('libcommon/src/util')
+subdir('libcommon/src/co')
 subdir('libcommon/src/time')
 subdir('libcommon/src/lib/fmt')
 subdir('libcommon/src/lib/sodium')
@@ -175,6 +176,7 @@ executable('cm4all-passage',
     liblua,
     io_linux_dep,
     util_dep,
+    coroutines_dep,
     lua_dep,
     lua_io_dep,
     lua_net_dep,
