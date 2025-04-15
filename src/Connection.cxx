@@ -32,6 +32,8 @@
 
 #include <fmt/format.h>
 
+#include <utility> // for std::unreachable()
+
 using std::string_view_literals::operator""sv;
 
 static std::string
@@ -134,8 +136,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 	switch (action.type) {
 	case Action::Type::UNDEFINED:
-		assert(false);
-		gcc_unreachable();
+		std::unreachable();
 
 	case Action::Type::FADE_CHILDREN:
 		FadeChildren(action.address,
