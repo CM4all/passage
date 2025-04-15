@@ -1,6 +1,6 @@
 cm4all-passage (0.23) unstable; urgency=low
 
-  * 
+  * require Meson 1.2
 
  --   
 
