@@ -1,13 +1,13 @@
 project('CM4all Passage', 'cpp', version: '0.23',
   meson_version: '>= 1.0',
   default_options : [
-    'cpp_std=c++20',
+    'cpp_std=c++23',
     'warning_level=3',
 
     # This is only here to build subprojects as static libraries
     'default_library=static',
 
-    'fmt:cpp_std=c++20',
+    'fmt:cpp_std=c++23',
   ],
 )
 
