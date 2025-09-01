@@ -5,7 +5,7 @@ cm4all-passage (0.23) unstable; urgency=low
   * switch to C++23
   * require Meson 1.2
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Mon, 01 Sep 2025 21:15:12 +0200
 
 cm4all-passage (0.22) unstable; urgency=low
 
