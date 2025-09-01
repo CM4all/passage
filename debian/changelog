@@ -1,6 +1,7 @@
 cm4all-passage (0.23) unstable; urgency=low
 
   * close cgroup file descriptors on disconnect
+  * log proper error message instead of "C++ exception"
   * switch to C++23
   * require Meson 1.2
 

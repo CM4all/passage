@@ -227,7 +227,7 @@ ParseHttpRequest(lua_State *L, int request_idx)
 
 static int
 NewHttpGetAction(lua_State *L)
-{
+try {
 	const auto top = lua_gettop(L);
 	if (top != 2)
 		return luaL_error(L, "Invalid parameters");
@@ -239,6 +239,8 @@ NewHttpGetAction(lua_State *L)
 
 	NewLuaAction(L, 1, std::move(action));
 	return 1;
+} catch (...) {
+	Lua::RaiseCurrent(L);
 }
 
 #endif // HAVE_CURL
