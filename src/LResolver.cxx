@@ -12,10 +12,16 @@ extern "C" {
 #include <lua.h>
 }
 
+#include <netdb.h>
+
 void
 RegisterLuaResolver(lua_State *L)
 {
-	static constexpr auto hints = MakeAddrInfo(0, AF_UNSPEC, SOCK_STREAM);
+	static constexpr struct addrinfo hints{
+		.ai_family = AF_UNSPEC,
+		.ai_socktype = SOCK_STREAM,
+	};
+
 	Lua::PushResolveFunction(L, hints, BengControl::DEFAULT_PORT);
 	lua_setglobal(L, "control_resolve");
 }
