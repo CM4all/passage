@@ -13,7 +13,7 @@ cm4all-passage (0.22) unstable; urgency=low
   * protocol: add "body" support
   * add action "http_get"
 
- -- Max Kellermann <mk@cm4all.com>  Mon, 17 Mar 2025 22:08:42 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Mon, 17 Mar 2025 22:08:42 +0100
 
 cm4all-passage (0.21) unstable; urgency=low
 
@@ -22,26 +22,26 @@ cm4all-passage (0.21) unstable; urgency=low
   * use pidfd to avoid PID recycling races
   * log error messages instead of the stub text "C++ exception"
 
- -- Max Kellermann <mk@cm4all.com>  Sat, 23 Nov 2024 12:02:44 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Sat, 23 Nov 2024 12:02:44 +0100
 
 cm4all-passage (0.20) unstable; urgency=low
 
   * pg: fix assertion failure
 
- -- Max Kellermann <mk@cm4all.com>  Mon, 05 Aug 2024 19:14:34 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Mon, 05 Aug 2024 19:14:34 +0200
 
 cm4all-passage (0.19) unstable; urgency=low
 
   * lua: add libsodium bindings
   * make libsystemd optional
 
- -- Max Kellermann <mk@cm4all.com>  Wed, 19 Jun 2024 14:58:30 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Wed, 19 Jun 2024 14:58:30 +0200
 
 cm4all-passage (0.18) unstable; urgency=low
 
   * request: add action "flush_http_cache"
 
- -- Max Kellermann <mk@cm4all.com>  Tue, 20 Feb 2024 12:28:02 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Tue, 20 Feb 2024 12:28:02 +0100
 
 cm4all-passage (0.17) unstable; urgency=low
 
@@ -56,20 +56,20 @@ cm4all-passage (0.17) unstable; urgency=low
   * systemd: configure security settings
   * systemd: remove dependency on "network-online.target"
 
- -- Max Kellermann <mk@cm4all.com>  Wed, 06 Dec 2023 13:22:51 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Wed, 06 Dec 2023 13:22:51 +0100
 
 cm4all-passage (0.16) unstable; urgency=low
 
   * fix use-after-free crash bug
   * allow relative "dofile" commands in config.lua
 
- -- Max Kellermann <mk@cm4all.com>  Fri, 24 Nov 2023 15:37:44 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Fri, 24 Nov 2023 15:37:44 +0100
 
 cm4all-passage (0.15) unstable; urgency=low
 
   * support cgroup xattr
 
- -- Max Kellermann <mk@cm4all.com>  Wed, 22 Nov 2023 15:32:43 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Wed, 22 Nov 2023 15:32:43 +0100
 
 cm4all-passage (0.14) unstable; urgency=low
 
@@ -77,52 +77,52 @@ cm4all-passage (0.14) unstable; urgency=low
   * fix file descriptor leak bug
   * debian: restart after upgrade
 
- -- Max Kellermann <mk@cm4all.com>  Wed, 20 Sep 2023 12:25:23 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Wed, 20 Sep 2023 12:25:23 +0200
 
 cm4all-passage (0.13) unstable; urgency=low
 
   * lua: eliminate manual GC on cancellation
   * add "mail.cgroup", deprecate "mail:get_cgroup()"
 
- -- Max Kellermann <mk@cm4all.com>  Thu, 20 Apr 2023 09:49:07 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Thu, 20 Apr 2023 09:49:07 +0200
 
 cm4all-passage (0.12) unstable; urgency=low
 
   * flush "print" statements immediately
   * debian: eliminate build-dependency on libcm4all-beng-proxy3-dev
 
- -- Max Kellermann <mk@cm4all.com>  Thu, 02 Mar 2023 18:38:49 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Thu, 02 Mar 2023 18:38:49 +0100
 
 cm4all-passage (0.11) unstable; urgency=low
 
   * fix use-after-free bug due to race condition
 
- -- Max Kellermann <mk@cm4all.com>  Tue, 03 May 2022 20:37:30 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Tue, 03 May 2022 20:37:30 +0200
 
 cm4all-passage (0.10) unstable; urgency=low
 
   * fix crash on Lua error
   * cgroup2 support for get_cgroup()
 
- -- Max Kellermann <mk@cm4all.com>  Fri, 23 Apr 2021 18:14:19 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Fri, 23 Apr 2021 18:14:19 +0200
 
 cm4all-passage (0.9) unstable; urgency=low
 
   * debian: move postinst code to sysusers.d
 
- -- Max Kellermann <mk@cm4all.com>  Tue, 22 Dec 2020 12:18:39 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Tue, 22 Dec 2020 12:18:39 +0100
 
 cm4all-passage (0.8) unstable; urgency=low
 
   * eliminate runtime Boost dependency
 
- -- Max Kellermann <mk@cm4all.com>  Wed, 16 Dec 2020 22:08:36 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Wed, 16 Dec 2020 22:08:36 +0100
 
 cm4all-passage (0.7) unstable; urgency=low
 
   * meson.build: disable ld.so lazy binding and enable relro
 
- -- Max Kellermann <mk@cm4all.com>  Tue, 03 Nov 2020 13:56:20 +0100
+ -- Max Kellermann <max.kellermann@ionos.com>  Tue, 03 Nov 2020 13:56:20 +0100
 
 cm4all-passage (0.6) unstable; urgency=low
 
@@ -130,7 +130,7 @@ cm4all-passage (0.6) unstable; urgency=low
   * debian: use dh_sphinxdoc
   * migrate to libcm4all-beng-proxy3-dev
 
- -- Max Kellermann <mk@cm4all.com>  Fri, 09 Aug 2019 13:59:54 +0200
+ -- Max Kellermann <max.kellermann@ionos.com>  Fri, 09 Aug 2019 13:59:54 +0200
 
 cm4all-passage (0.5) unstable; urgency=low
 
@@ -140,29 +140,29 @@ cm4all-passage (0.5) unstable; urgency=low
   * fix multiple systemd sockets
   * debian: enable compiler optimization
 
- -- Max Kellermann <mk@cm4all.com>  Thu, 30 Aug 2018 11:02:58 -0000
+ -- Max Kellermann <max.kellermann@ionos.com>  Thu, 30 Aug 2018 11:02:58 -0000
 
 cm4all-passage (0.4) unstable; urgency=low
 
   * implement command arguments and headers
 
- -- Max Kellermann <mk@cm4all.com>  Tue, 07 Nov 2017 10:09:43 -0000
+ -- Max Kellermann <max.kellermann@ionos.com>  Tue, 07 Nov 2017 10:09:43 -0000
 
 cm4all-passage (0.3) unstable; urgency=low
 
   * systemd: add "Install" section
   * request: add action "exec_pipe"
 
- -- Max Kellermann <mk@cm4all.com>  Mon, 06 Nov 2017 11:11:09 -0000
+ -- Max Kellermann <max.kellermann@ionos.com>  Mon, 06 Nov 2017 11:11:09 -0000
 
 cm4all-passage (0.2) unstable; urgency=low
 
   * control: prepend protocol magic in beng-proxy control packets
 
- -- Max Kellermann <mk@cm4all.com>  Thu, 07 Sep 2017 14:34:39 -0000
+ -- Max Kellermann <max.kellermann@ionos.com>  Thu, 07 Sep 2017 14:34:39 -0000
 
 cm4all-passage (0.1) unstable; urgency=low
 
   * initial release
 
- -- Max Kellermann <mk@cm4all.com>  Thu, 07 Sep 2017 09:27:03 -0000
+ -- Max Kellermann <max.kellermann@ionos.com>  Thu, 07 Sep 2017 09:27:03 -0000

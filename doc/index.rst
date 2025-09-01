@@ -1,7 +1,7 @@
 Passage
 =======
 
-Author: Max Kellermann <mk@cm4all.com>
+Author: Max Kellermann <max.kellermann@ionos.com>
 
 *Passage* is a daemon which allows jailed/containerized processes to
 talk to the host to trigger certain actions.
