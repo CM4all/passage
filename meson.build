@@ -175,6 +175,7 @@ lib = static_library(
   'libpassage',
   'src/Entity.cxx',
   'src/Parser.cxx',
+  'src/Verify.cxx',
   include_directories: inc,
   dependencies: [
     util_dep,
