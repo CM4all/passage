@@ -17,9 +17,9 @@ gtest = declare_dependency(
 )
 
 test(
-  'TestParser',
+  'TestProtocol',
   executable(
-    'TestParser',
+    'TestProtocol',
     'TestParser.cxx',
     '../src/Parser.cxx',
     include_directories: inc,
