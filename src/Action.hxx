@@ -30,7 +30,7 @@ struct Action {
 
 	std::forward_list<std::string> args;
 
-	bool IsDefined() const {
+	constexpr bool IsDefined() const noexcept {
 		return type != Type::UNDEFINED;
 	}
 };
