@@ -4,7 +4,7 @@
 
 #include "Parser.hxx"
 #include "Entity.hxx"
-#include "Protocol.hxx"
+#include "Verify.hxx"
 #include "util/StringSplit.hxx"
 #include "util/StringStrip.hxx"
 
