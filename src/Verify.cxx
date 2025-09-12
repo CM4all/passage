@@ -3,7 +3,6 @@
 // author: Max Kellermann <max.kellermann@ionos.com>
 
 #include "Verify.hxx"
-#include "util/StringVerify.hxx"
 
 #include <stdexcept>
 

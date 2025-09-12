@@ -65,3 +65,14 @@ TEST(Serialize, Everything)
 	const auto result = e.Serialize();
 	EXPECT_EQ(result, "FOO one two three\nabc:1\ndef:2\n\0\x00\x01\x02\x03"sv);
 }
+
+TEST(Serialize, QuotedParameters)
+{
+	const Entity e{
+		.command = "FOO",
+		.args = {"", "\"", "\\", " "},
+	};
+
+	const auto result = e.Serialize();
+	EXPECT_EQ(result, R"(FOO "" "\"" "\\" " ")");
+}

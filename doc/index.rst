@@ -307,10 +307,19 @@ letters, digits or underscore.  The response status can be either
 :samp:`OK` or :samp:`ERROR` (unquoted).  An error status may be
 followed by a message as the first (and only) parameter.
 
-There may be positional string parameters, and named headers.  The
-last newline character may be omitted.  Finally, a body of binary data
-may be appended, separated from the rest with a null byte.  Ancillary
-data may contain file descriptors.
+After the command, there may be positional string parameters separated
+by a space.  An unquoted parameter is a non-empty string of ASCII
+letters, digits, underscores or dashes.  Parameters that contain
+other characters must be enclosed in double quotes.  The double quote
+and backslash may be escaped by preceding it with a backslash
+character.  Control characters and null bytes (0x00..0x1f) are not
+allowed.
+
+Following lines may be headers, i.e. name-value pairs.  The last
+newline character may be omitted.
+
+Finally, a body of binary data may be appended, separated from the
+rest with a null byte.  Ancillary data may contain file descriptors.
 
 The meaning of commands, parameters, headers, body and the file
 descriptors is defined by the Lua configuration script.

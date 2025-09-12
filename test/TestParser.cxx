@@ -72,3 +72,79 @@ TEST(Parser, Full)
 	EXPECT_EQ(e.headers.find("def")->second, "2");
 	EXPECT_EQ(e.body, "\x00\x01\x02\x03"sv);
 }
+
+TEST(Parser, QuotedSimple)
+{
+	const auto e = ParseEntity("FOO \"hello\"");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "hello");
+	EXPECT_EQ(std::next(e.args.begin()), e.args.end());
+}
+
+TEST(Parser, QuotedEmpty)
+{
+	const auto e = ParseEntity("FOO \"\"");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "");
+	EXPECT_EQ(std::next(e.args.begin()), e.args.end());
+}
+
+TEST(Parser, QuotedWhitespace)
+{
+	const auto e = ParseEntity("FOO \"   \"");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "   ");
+	EXPECT_EQ(std::next(e.args.begin()), e.args.end());
+}
+
+TEST(Parser, QuotedBackslash)
+{
+	const auto e = ParseEntity(R"(FOO "\\")");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "\\");
+	EXPECT_EQ(std::next(e.args.begin()), e.args.end());
+}
+
+TEST(Parser, QuotedDoubleQuote)
+{
+	const auto e = ParseEntity(R"(FOO "\"")");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "\"");
+	EXPECT_EQ(std::next(e.args.begin()), e.args.end());
+}
+
+TEST(Parser, QuotedSingleQuote)
+{
+	const auto e = ParseEntity("FOO \"'\"");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "'");
+	EXPECT_EQ(std::next(e.args.begin()), e.args.end());
+}
+
+TEST(Parser, QuotedMultipleArgs)
+{
+	const auto e = ParseEntity(R"(FOO "first" "second\"quote" "third\\backslash")");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "first");
+	EXPECT_EQ(*std::next(e.args.begin()), "second\"quote");
+	EXPECT_EQ(*std::next(e.args.begin(), 2), "third\\backslash");
+	EXPECT_EQ(std::next(e.args.begin(), 3), e.args.end());
+}
+
+TEST(Parser, QuotedMixedArgs)
+{
+	const auto e = ParseEntity("FOO unquoted \"quoted\" another");
+	EXPECT_EQ(e.command, "FOO");
+	EXPECT_FALSE(e.args.empty());
+	EXPECT_EQ(e.args.front(), "unquoted");
+	EXPECT_EQ(*std::next(e.args.begin()), "quoted");
+	EXPECT_EQ(*std::next(e.args.begin(), 2), "another");
+	EXPECT_EQ(std::next(e.args.begin(), 3), e.args.end());
+}

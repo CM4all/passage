@@ -3,6 +3,36 @@
 // author: Max Kellermann <max.kellermann@ionos.com>
 
 #include "Entity.hxx"
+#include "Verify.hxx"
+
+static void
+AppendQuotedParameter(std::string &dest, std::string_view value) noexcept
+{
+	dest.push_back('"');
+
+	for (char ch : value) {
+		if (ch == '\\' || ch == '"')
+			dest.push_back('\\');
+		else if (IsWhitespaceOrNull(ch))
+			/* TODO these characters are not legal, we
+			   should probably better throw an
+			   exception */
+			ch = ' ';
+
+		dest.push_back(ch);
+	}
+
+	dest.push_back('"');
+}
+
+static void
+AppendParameter(std::string &dest, std::string_view value) noexcept
+{
+	if (IsValidUnquotedParameter(value))
+		dest.append(value);
+	else
+		AppendQuotedParameter(dest, value);
+}
 
 std::string
 Entity::Serialize() const noexcept
@@ -12,7 +42,7 @@ Entity::Serialize() const noexcept
 	for (const auto &i : args) {
 		// TODO: quote argument value
 		result.push_back(' ');
-		result.append(i);
+		AppendParameter(result, i);
 	}
 
 	if (!headers.empty())

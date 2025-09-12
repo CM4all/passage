@@ -1,6 +1,6 @@
 cm4all-passage (0.24) unstable; urgency=low
 
-  * 
+  * protocol: support quoted parameters
 
  --   
 
