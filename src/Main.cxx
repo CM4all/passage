@@ -77,7 +77,7 @@ try {
 
 		instance.AddListener(LocalSocketAddress{address_string}, std::move(handler));
 #ifdef HAVE_LIBSYSTEMD
-	} if (IsSystemdMagic(L, 1)) {
+	} else if (IsSystemdMagic(L, 1)) {
 		instance.AddSystemdListener(std::move(handler));
 #endif
 	} else

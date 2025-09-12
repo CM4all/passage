@@ -1,5 +1,6 @@
 cm4all-passage (0.24) unstable; urgency=low
 
+  * fix binding to local sockets (0.18 regression)
   * protocol: support quoted parameters
 
  --   
