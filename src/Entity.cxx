@@ -15,7 +15,8 @@ Entity::Serialize() const noexcept
 		result.append(i);
 	}
 
-	result.push_back('\n');
+	if (!headers.empty())
+		result.push_back('\n');
 
 	for (const auto &i : headers) {
 		result.append(i.first);
