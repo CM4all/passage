@@ -21,7 +21,9 @@ test(
   executable(
     'TestProtocol',
     'TestParser.cxx',
+    'TestSerialize.cxx',
     '../src/Parser.cxx',
+    '../src/Entity.cxx',
     include_directories: inc,
     install: false,
     dependencies: [
