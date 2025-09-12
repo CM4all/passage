@@ -7,8 +7,14 @@
 #include "net/AllocatedSocketAddress.hxx"
 #include "config.h"
 
+#include <cstdint>
 #include <string>
 #include <forward_list>
+
+enum class StderrOption : uint_least8_t {
+	JOURNAL,
+	PIPE,
+};
 
 struct Action {
 	enum class Type {
@@ -29,6 +35,8 @@ struct Action {
 	std::string param;
 
 	std::forward_list<std::string> args;
+
+	StderrOption stderr = StderrOption::JOURNAL;
 
 	constexpr bool IsDefined() const noexcept {
 		return type != Type::UNDEFINED;

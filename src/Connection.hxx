@@ -66,7 +66,8 @@ private:
 
 	void SendResponse(SocketAddress address, std::string_view status);
 	void SendResponse(SocketAddress address, std::string_view status,
-			  FileDescriptor fd);
+			  FileDescriptor fd,
+			  FileDescriptor fd2=FileDescriptor::Undefined());
 	void SendResponse(SocketAddress address, const Entity &response);
 
 	void OnCoComplete(std::exception_ptr error) noexcept;

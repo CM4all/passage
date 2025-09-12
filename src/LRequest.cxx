@@ -133,11 +133,53 @@ NewFlushHttpCacheAction(lua_State *L)
 	return 1;
 }
 
+static StderrOption
+ParseStderrOption(lua_State *L, std::string_view value)
+{
+	if (value == "journal"sv)
+		return StderrOption::JOURNAL;
+	else if (value == "pipe"sv)
+		return StderrOption::PIPE;
+	else {
+		luaL_error(L, "Bad 'stderr' option");
+		std::unreachable();
+	}
+}
+
+static StderrOption
+ParseStderrOption(lua_State *L, int idx)
+{
+	if (lua_type(L, idx) == LUA_TSTRING)
+		return ParseStderrOption(L, Lua::ToStringView(L, idx));
+	else {
+		luaL_error(L, "Bad 'stderr' option");
+		std::unreachable();
+	}
+}
+
+/**
+ * Collect parameters from the "options" table passed to exec_pipe().
+ */
+static void
+CollectExecOptions(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
+{
+	Lua::ForEach(L, idx, [L, &action](auto key_idx, auto value_idx){
+		if (lua_type(L, Lua::GetStackIndex(key_idx)) != LUA_TSTRING)
+			luaL_error(L, "Option key is not a string");
+
+		const auto key = Lua::ToStringView(L, Lua::GetStackIndex(key_idx));
+		if (key == "stderr"sv) {
+			action.stderr = ParseStderrOption(L, Lua::GetStackIndex(value_idx));
+		} else
+			luaL_error(L, "Unknown option");
+	});
+}
+
 static int
 NewExecPipeAction(lua_State *L)
 {
 	const auto top = lua_gettop(L);
-	if (top != 2)
+	if (top < 2 || top > 3)
 		return luaL_error(L, "Invalid parameters");
 
 	if (!lua_istable(L, 2))
@@ -155,6 +197,9 @@ NewExecPipeAction(lua_State *L)
 
 		tail = action.args.emplace_after(tail, lua_tostring(L, -1));
 	}
+
+	if (top >= 3)
+		CollectExecOptions(action, L, 3);
 
 	NewLuaAction(L, 1, std::move(action));
 	return 1;

@@ -157,7 +157,6 @@ try {
 				},
 			};
 
-
 		returned_fds.clear();
 
 		Copy(stdout_pipe, FileDescriptor(STDOUT_FILENO));

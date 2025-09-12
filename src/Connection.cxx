@@ -82,9 +82,10 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status)
 
 void
 PassageConnection::SendResponse(SocketAddress address, std::string_view status,
-				FileDescriptor fd)
+				FileDescriptor fd, FileDescriptor fd2)
 {
 	assert(pending_response);
+	assert(fd.IsDefined());
 
 	pending_response = false;
 
@@ -95,8 +96,10 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 	MessageHeader m{vec};
 	m.SetAddress(address);
 
-	ScmRightsBuilder<1> rb(m);
+	ScmRightsBuilder<2> rb(m);
 	rb.push_back(fd.Get());
+	if (fd2.IsDefined())
+		rb.push_back(fd2.Get());
 	rb.Finish(m);
 
 	SendMessage(listener.GetSocket(), m, MSG_DONTWAIT|MSG_NOSIGNAL);
@@ -174,9 +177,9 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 			args.emplace_back(nullptr);
 
-			auto result = ExecPipe(args.front(), &args.front());
+			auto result = ExecPipe(args.front(), &args.front(), action.stderr);
 
-			SendResponse(address, "OK", result.stdout_pipe);
+			SendResponse(address, "OK", result.stdout_pipe, result.stderr_pipe);
 		}
 
 		break;

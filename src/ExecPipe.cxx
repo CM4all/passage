@@ -3,6 +3,7 @@
 // author: Max Kellermann <max.kellermann@ionos.com>
 
 #include "ExecPipe.hxx"
+#include "Action.hxx" // for StderrOption
 #include "system/Error.hxx"
 #include "system/SetupProcess.hxx"
 #include "io/Pipe.hxx"
@@ -17,9 +18,21 @@ ReadDummy(FileDescriptor fd) noexcept
 }
 
 ExecPipeResult
-ExecPipe(const char *path, const char *const*args)
+ExecPipe(const char *path, const char *const*args,
+	 StderrOption stderr_option)
 {
 	auto [r, w] = CreatePipe();
+
+	UniqueFileDescriptor stderr_r, stderr_w;
+	switch (stderr_option) {
+	case StderrOption::JOURNAL:
+		break;
+
+	case StderrOption::PIPE:
+		std::tie(stderr_r, stderr_w) = CreatePipe();
+		break;
+	}
+
 	auto [exec_wait_r, exec_wait_w] = CreatePipe();
 
 	const auto pid = fork();
@@ -30,6 +43,10 @@ ExecPipe(const char *path, const char *const*args)
 		PostFork();
 
 		w.CheckDuplicate(FileDescriptor(STDOUT_FILENO));
+
+		if (stderr_w.IsDefined())
+			stderr_w.CheckDuplicate(FileDescriptor(STDERR_FILENO));
+
 		execv(path, const_cast<char*const*>(args));
 		fmt::print(stderr, "Failed to execute '{}': {}\n",
 			   path, strerror(errno));
@@ -44,5 +61,6 @@ ExecPipe(const char *path, const char *const*args)
 
 	return {
 		.stdout_pipe = std::move(r),
+		.stderr_pipe = std::move(stderr_r),
 	};
 }

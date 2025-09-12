@@ -6,12 +6,18 @@
 
 #include "io/UniqueFileDescriptor.hxx"
 
+#include <cstdint>
+
+enum class StderrOption : uint_least8_t;
+
 struct ExecPipeResult {
 	/**
 	 * The read end of the pipe that is connected to the child's
 	 * #STDOUT_FILENO.
 	 */
 	UniqueFileDescriptor stdout_pipe;
+
+	UniqueFileDescriptor stderr_pipe;
 };
 
 /**
@@ -20,4 +26,5 @@ struct ExecPipeResult {
  * @param args a nullptr-terminated list of command-line arguments
  */
 ExecPipeResult
-ExecPipe(const char *path, const char *const*args);
+ExecPipe(const char *path, const char *const*args,
+	 StderrOption stderr_option);

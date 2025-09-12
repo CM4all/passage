@@ -117,10 +117,15 @@ The following actions are possible:
   :samp:`control_resolve()`.  The tag selects the cache items which
   shall be flushed.
 
-* :samp:`exec_pipe({PATH, ARG, ...})`: execute the given program
-  (should be an absolute path because there is no :envvar:`$PATH`
-  resolution here) and connect a pipe to its standard output; send the
-  pipe's reading side to the client.
+* :samp:`exec_pipe({PATH, ARG, ...}, [{OPTIONS}])`: execute the given
+  program (should be an absolute path because there is no
+  :envvar:`$PATH` resolution here) and connect a pipe to its standard
+  output; send the pipe's reading side to the client.
+
+  The second parameter may be a table specifying options:
+
+  - ``stderr=pipe``: Connect the program's ``stderr`` to a pipe and
+    return the read side to the client.
 
 * :samp:`http_get(URL)`: perform a HTTP GET request and send the
   response to the Passage client.  Non-successful HTTP responses
