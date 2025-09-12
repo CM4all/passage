@@ -222,9 +222,9 @@ PassageConnection::OnUdpHangup()
 }
 
 void
-PassageConnection::OnUdpError(std::exception_ptr ep) noexcept
+PassageConnection::OnUdpError(std::exception_ptr &&error) noexcept
 {
-	logger(1, ep);
+	logger(1, std::move(error));
 	delete this;
 }
 
