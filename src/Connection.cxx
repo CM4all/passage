@@ -102,6 +102,12 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view status,
 	SendMessage(listener.GetSocket(), m, MSG_DONTWAIT|MSG_NOSIGNAL);
 }
 
+void
+PassageConnection::SendResponse(SocketAddress address, const Entity &response)
+{
+	SendResponse(address, response.Serialize());
+}
+
 #ifdef HAVE_CURL
 
 static CurlEasy
