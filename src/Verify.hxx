@@ -8,8 +8,8 @@
 
 #include <string_view>
 
-static constexpr bool
-IsValidCommandChar(char ch)
+constexpr bool
+IsValidCommandChar(char ch) noexcept
 {
 	return IsAlphaNumericASCII(ch) || ch == '_';
 }
