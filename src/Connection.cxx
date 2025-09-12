@@ -144,6 +144,16 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 	case Action::Type::UNDEFINED:
 		std::unreachable();
 
+	case Action::Type::ERROR:
+		if (action.param.empty())
+			SendResponse(address, "ERROR");
+		else
+			SendResponse(address, Entity{
+				.command = std::string{"ERROR"sv},
+				.args = {action.param},
+			});
+		break;
+
 	case Action::Type::FADE_CHILDREN:
 		FadeChildren(action.address,
 			     action.param.empty() ? nullptr : action.param.c_str());

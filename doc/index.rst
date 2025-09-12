@@ -140,6 +140,11 @@ The following actions are possible:
   - ``url``: an absolute HTTP URL
   - ``query``: a table containing names and values of query parameters
 
+* :samp:`error([MESSAGE])`: send an error response to the client.
+  Takes an optional error message parameter. If a message is provided,
+  it will be included in the error response. This allows the handler to
+  explicitly return an error status without raising a Lua exception.
+
 Returning without an action from the handler function (i.e. returning
 :samp:`nil`) is considered a silent success.
 

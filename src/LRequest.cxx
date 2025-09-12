@@ -7,6 +7,7 @@
 #include "LAction.hxx"
 #include "Action.hxx"
 #include "lua/AutoCloseList.hxx"
+#include "lua/CheckArg.hxx"
 #include "lua/Class.hxx"
 #include "lua/Error.hxx"
 #include "lua/FenvCache.hxx"
@@ -64,6 +65,21 @@ public:
 
 static constexpr char lua_request_class[] = "passage.request";
 typedef Lua::Class<RichRequest, lua_request_class> LuaRequest;
+
+static int
+NewErrorAction(lua_State *L)
+{
+	const auto top = lua_gettop(L);
+	if (top < 1 || top > 2)
+		return luaL_error(L, "Invalid parameters");
+
+	auto &action = *NewLuaAction(L, 1);
+	action.type = Action::Type::ERROR;
+	if (top >= 2) {
+		action.param = Lua::CheckStringView(L, 2);
+	}
+	return 1;
+}
 
 static int
 NewFadeChildrenAction(lua_State *L)
@@ -246,6 +262,7 @@ try {
 #endif // HAVE_CURL
 
 static constexpr struct luaL_Reg request_methods [] = {
+	{"error", NewErrorAction},
 	{"fade_children", NewFadeChildrenAction},
 	{"flush_http_cache", NewFlushHttpCacheAction},
 	{"exec_pipe", NewExecPipeAction},
