@@ -174,8 +174,9 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 			args.emplace_back(nullptr);
 
-			SendResponse(address, "OK", ExecPipe(args.front(),
-							     &args.front()));
+			auto result = ExecPipe(args.front(), &args.front());
+
+			SendResponse(address, "OK", result.stdout_pipe);
 		}
 
 		break;

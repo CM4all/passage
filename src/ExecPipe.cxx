@@ -6,7 +6,6 @@
 #include "system/Error.hxx"
 #include "system/SetupProcess.hxx"
 #include "io/Pipe.hxx"
-#include "io/UniqueFileDescriptor.hxx"
 
 #include <fmt/format.h>
 
@@ -17,7 +16,7 @@ ReadDummy(FileDescriptor fd) noexcept
 	(void)fd.Read(dummy);
 }
 
-UniqueFileDescriptor
+ExecPipeResult
 ExecPipe(const char *path, const char *const*args)
 {
 	auto [r, w] = CreatePipe();
@@ -43,5 +42,7 @@ ExecPipe(const char *path, const char *const*args)
 	exec_wait_w.Close();
 	ReadDummy(exec_wait_r);
 
-	return std::move(r);
+	return {
+		.stdout_pipe = std::move(r),
+	};
 }
