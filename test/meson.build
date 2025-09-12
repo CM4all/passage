@@ -25,7 +25,7 @@ test(
     include_directories: inc,
     install: false,
     dependencies: [
-      util_dep,
+      lib_dep,
       gtest,
     ],
   ),

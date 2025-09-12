@@ -171,14 +171,29 @@ conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
 conf.set('HAVE_PG', pg_dep.found())
 configure_file(output: 'config.h', configuration: conf)
 
+lib = static_library(
+  'libpassage',
+  'src/Entity.cxx',
+  'src/Parser.cxx',
+  include_directories: inc,
+  dependencies: [
+    util_dep,
+  ],
+)
+
+lib_dep = declare_dependency(
+  link_with: lib,
+  dependencies: [
+    util_dep,
+  ]
+)
+
 executable('cm4all-passage',
   'src/system/SetupProcess.cxx',
   'src/LAction.cxx',
   'src/LResolver.cxx',
   'src/Instance.cxx',
   'src/Connection.cxx',
-  'src/Parser.cxx',
-  'src/Entity.cxx',
   'src/LRequest.cxx',
   'src/SendControl.cxx',
   'src/ExecPipe.cxx',
@@ -186,6 +201,7 @@ executable('cm4all-passage',
   'src/Main.cxx',
   include_directories: inc,
   dependencies: [
+    lib_dep,
     libsystemd,
     liblua,
     io_linux_dep,
@@ -211,10 +227,9 @@ executable('cm4all-passage',
 
 executable('cm4all-passage-client',
   'src/Client.cxx',
-  'src/Parser.cxx',
-  'src/Entity.cxx',
   include_directories: inc,
   dependencies: [
+    lib_dep,
     net_dep,
     util_dep,
     fmt_dep,
