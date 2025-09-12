@@ -5,6 +5,7 @@
 #pragma once
 
 #include "util/CharUtil.hxx"
+#include "util/StringVerify.hxx"
 
 #include <stdexcept>
 #include <string_view>
@@ -21,7 +22,6 @@ CheckCommand(std::string_view s)
 	if (s.empty())
 		throw std::runtime_error("Empty command");
 
-	for (char ch : s)
-		if (!IsValidCommandChar(ch))
-			throw std::runtime_error("Malformed command");
+	if (!CheckChars(s, IsValidCommandChar))
+		throw std::runtime_error{"Malformed command"};
 }
