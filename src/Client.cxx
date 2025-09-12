@@ -18,6 +18,8 @@
 
 #include <fmt/format.h>
 
+#include <thread>
+
 #include <limits.h> // for INT_MAX
 #include <stdlib.h>
 #include <fcntl.h>
@@ -145,9 +147,23 @@ try {
 		fd.Close();
 
 		const auto stdout_pipe = std::move(returned_fds.front());
+
+		std::jthread stderr_thread;
+
+		if (returned_fds.size() >= 2 && returned_fds[1].IsPipe())
+			stderr_thread = std::jthread{
+				[stderr_pipe = std::move(returned_fds[1])](){
+					Copy(stderr_pipe, FileDescriptor(STDERR_FILENO));
+				},
+			};
+
+
 		returned_fds.clear();
 
 		Copy(stdout_pipe, FileDescriptor(STDOUT_FILENO));
+
+		if (stderr_thread.joinable())
+			stderr_thread.join();
 	}
 
 	return EXIT_SUCCESS;

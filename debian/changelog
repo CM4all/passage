@@ -3,6 +3,7 @@ cm4all-passage (0.24) unstable; urgency=low
   * fix binding to local sockets (0.18 regression)
   * protocol: support quoted parameters
   * lua: add action "error" to send an error to the client
+  * client: copy the second file descriptor to stderr
 
  --   
 
