@@ -47,7 +47,7 @@ SendRequest(SocketDescriptor fd, const Entity &request)
 	SendOrThrow(fd, AsBytes(payload));
 }
 
-static UniqueFileDescriptor
+static std::vector<UniqueFileDescriptor>
 ReceiveResponse(SocketDescriptor s)
 {
 	ReceiveMessageBuffer<4096, 1024> buffer;
@@ -62,9 +62,7 @@ ReceiveResponse(SocketDescriptor s)
 			// TODO let caller decide what to do with the response body
 			(void)FileDescriptor{STDOUT_FILENO}.Write(AsBytes(response.body));
 
-		return result.fds.empty()
-			? UniqueFileDescriptor()
-			: std::move(result.fds.front());
+		return std::move(result.fds);
 	} else if (response.command == "ERROR") {
 		if (response.args.empty())
 			throw std::runtime_error("Server error");
@@ -139,13 +137,17 @@ try {
 
 	auto fd = CreateConnect(path);
 	SendRequest(fd, request);
-	auto returned_fd = ReceiveResponse(fd);
+	auto returned_fds = ReceiveResponse(fd);
 
-	if (returned_fd.IsDefined() && returned_fd.IsPipe()) {
+	if (!returned_fds.empty() && returned_fds.front().IsPipe()) {
 		/* if the returned file descriptor is a pipe, copy its
 		   data to stdout */
 		fd.Close();
-		Copy(returned_fd, FileDescriptor(STDOUT_FILENO));
+
+		const auto stdout_pipe = std::move(returned_fds.front());
+		returned_fds.clear();
+
+		Copy(stdout_pipe, FileDescriptor(STDOUT_FILENO));
 	}
 
 	return EXIT_SUCCESS;
