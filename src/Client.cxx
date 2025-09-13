@@ -49,6 +49,10 @@ SendRequest(SocketDescriptor fd, const Entity &request)
 	SendOrThrow(fd, AsBytes(payload));
 }
 
+struct ServerError {
+	std::string message;
+};
+
 static std::vector<UniqueFileDescriptor>
 ReceiveResponse(SocketDescriptor s)
 {
@@ -66,11 +70,10 @@ ReceiveResponse(SocketDescriptor s)
 
 		return std::move(result.fds);
 	} else if (response.command == "ERROR") {
-		if (response.args.empty())
-			throw std::runtime_error("Server error");
-		else
-			throw FmtRuntimeError("Server error: {:?}",
-					      response.args.front());
+		ServerError error;
+		if (!response.args.empty())
+			error.message = std::move(response.args.front());
+		throw std::move(error);
 	} else
 		throw SocketProtocolError{"Malformed response"};
 }
@@ -169,6 +172,12 @@ try {
 } catch (Usage) {
 	fmt::print(stderr, "Usage: {} [--server=PATH] [--header=NAME:VALUE ...] COMMAND [ARGS...]\n",
 		   argv[0]);
+	return EXIT_FAILURE;
+} catch (const ServerError &error) {
+	if (error.message.empty())
+		fmt::print(stderr, "Server error\n");
+	else
+		fmt::print(stderr, "Server error: {}\n", error.message);
 	return EXIT_FAILURE;
 } catch (...) {
 	PrintException(std::current_exception());
