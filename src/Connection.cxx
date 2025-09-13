@@ -111,6 +111,18 @@ PassageConnection::SendResponse(SocketAddress address, const Entity &response)
 	SendResponse(address, response.Serialize());
 }
 
+inline void
+PassageConnection::SendError(SocketAddress address, const Action &action)
+{
+	if (action.param.empty())
+		SendResponse(address, "ERROR");
+	else
+		SendResponse(address, Entity{
+			.command = std::string{"ERROR"sv},
+			.args = {action.param},
+		});
+}
+
 #ifdef HAVE_CURL
 
 static CurlEasy
@@ -148,13 +160,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 		std::unreachable();
 
 	case Action::Type::ERROR:
-		if (action.param.empty())
-			SendResponse(address, "ERROR");
-		else
-			SendResponse(address, Entity{
-				.command = std::string{"ERROR"sv},
-				.args = {action.param},
-			});
+		SendError(address, action);
 		break;
 
 	case Action::Type::FADE_CHILDREN:
