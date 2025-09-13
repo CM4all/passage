@@ -17,7 +17,7 @@ enum class StderrOption : uint_least8_t {
 };
 
 struct Action {
-	enum class Type {
+	enum class Type : uint_least8_t {
 		UNDEFINED,
 		ERROR,
 		FADE_CHILDREN,
@@ -28,13 +28,13 @@ struct Action {
 #endif
 	};
 
-	Type type = Type::UNDEFINED;
-
 	AllocatedSocketAddress address;
 
 	std::string param;
 
 	std::forward_list<std::string> args;
+
+	Type type = Type::UNDEFINED;
 
 	StderrOption stderr = StderrOption::JOURNAL;
 

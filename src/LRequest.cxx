@@ -294,8 +294,8 @@ try {
 		return luaL_error(L, "Invalid parameters");
 
 	Action action{
-		.type = Action::Type::HTTP_GET,
 		.param = ParseHttpRequest(L, 2),
+		.type = Action::Type::HTTP_GET,
 	};
 
 	NewLuaAction(L, 1, std::move(action));
