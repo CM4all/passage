@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+using std::string_view_literals::operator""sv;
+
 struct Usage {};
 
 static UniqueSocketDescriptor
@@ -51,6 +53,7 @@ SendRequest(SocketDescriptor fd, const Entity &request)
 
 struct ServerError {
 	std::string message;
+	int exit_status = EXIT_FAILURE;
 };
 
 static std::vector<UniqueFileDescriptor>
@@ -73,6 +76,11 @@ ReceiveResponse(SocketDescriptor s)
 		ServerError error;
 		if (!response.args.empty())
 			error.message = std::move(response.args.front());
+
+		if (const auto i = response.headers.find("exit_status"sv);
+		    i != response.headers.end())
+			error.exit_status = atoi(i->second.c_str());
+
 		throw std::move(error);
 	} else
 		throw SocketProtocolError{"Malformed response"};
@@ -178,7 +186,7 @@ try {
 		fmt::print(stderr, "Server error\n");
 	else
 		fmt::print(stderr, "Server error: {}\n", error.message);
-	return EXIT_FAILURE;
+	return error.exit_status;
 } catch (...) {
 	PrintException(std::current_exception());
 	return EXIT_FAILURE;

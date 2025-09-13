@@ -4,6 +4,7 @@ cm4all-passage (0.24) unstable; urgency=low
   * protocol: support quoted parameters
   * lua: add action "error" to send an error to the client
   * client: copy the second file descriptor to stderr
+  * client: on ERROR, take the exit status from the "exit_status" response header
 
  --   
 
