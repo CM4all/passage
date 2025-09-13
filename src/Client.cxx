@@ -170,7 +170,7 @@ try {
 	fmt::print(stderr, "Usage: {} [--server=PATH] [--header=NAME:VALUE ...] COMMAND [ARGS...]\n",
 		   argv[0]);
 	return EXIT_FAILURE;
-} catch (const std::exception &e) {
-	PrintException(e);
+} catch (...) {
+	PrintException(std::current_exception());
 	return EXIT_FAILURE;
 }
