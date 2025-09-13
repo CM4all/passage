@@ -114,13 +114,14 @@ PassageConnection::SendResponse(SocketAddress address, const Entity &response)
 inline void
 PassageConnection::SendError(SocketAddress address, const Action &action)
 {
-	if (action.param.empty())
-		SendResponse(address, "ERROR");
-	else
-		SendResponse(address, Entity{
-			.command = std::string{"ERROR"sv},
-			.args = {action.param},
-		});
+	Entity response{
+		.command = std::string{"ERROR"sv},
+	};
+
+	if (!action.param.empty())
+		response.args.emplace_front(action.param);
+
+	SendResponse(address, response);
 }
 
 #ifdef HAVE_CURL
