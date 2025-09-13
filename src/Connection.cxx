@@ -116,6 +116,7 @@ PassageConnection::SendError(SocketAddress address, const Action &action)
 {
 	Entity response{
 		.command = std::string{"ERROR"sv},
+		.headers = action.response_headers,
 	};
 
 	if (!action.param.empty())

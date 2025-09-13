@@ -66,18 +66,40 @@ public:
 static constexpr char lua_request_class[] = "passage.request";
 typedef Lua::Class<RichRequest, lua_request_class> LuaRequest;
 
+static void
+LuaTableToStringMap(std::map<std::string, std::string, std::less<>> &dest,
+		    lua_State *L, int table_idx)
+{
+	Lua::ForEach(L, table_idx, [L, &dest](auto key_idx, auto value_idx){
+		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
+			throw std::invalid_argument{"Key is not a string"};
+
+		if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
+			throw std::invalid_argument{"Value is not a string"};
+
+		dest.emplace(Lua::ToStringView(L, Lua::GetStackIndex(key_idx)),
+			     Lua::ToStringView(L, Lua::GetStackIndex(value_idx)));
+	});
+}
+
 static int
 NewErrorAction(lua_State *L)
 {
 	const auto top = lua_gettop(L);
-	if (top < 1 || top > 2)
+	if (top < 1 || top > 3)
 		return luaL_error(L, "Invalid parameters");
 
 	auto &action = *NewLuaAction(L, 1);
 	action.type = Action::Type::ERROR;
-	if (top >= 2) {
+	if (top >= 2 && !lua_isnil(L, 2)) {
 		action.param = Lua::CheckStringView(L, 2);
 	}
+
+	if (top >= 3) {
+		luaL_checktype(L, 3, LUA_TTABLE);
+		LuaTableToStringMap(action.response_headers, L, 3);
+	}
+
 	return 1;
 }
 

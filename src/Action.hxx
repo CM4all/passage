@@ -8,6 +8,7 @@
 #include "config.h"
 
 #include <cstdint>
+#include <map>
 #include <string>
 #include <forward_list>
 
@@ -27,6 +28,8 @@ struct Action {
 		HTTP_GET,
 #endif
 	};
+
+	std::map<std::string, std::string, std::less<>> response_headers;
 
 	AllocatedSocketAddress address;
 
