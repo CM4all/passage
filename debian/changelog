@@ -6,7 +6,7 @@ cm4all-passage (0.24) unstable; urgency=low
   * client: copy the second file descriptor to stderr
   * client: on ERROR, take the exit status from the "exit_status" response header
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Sat, 27 Sep 2025 21:45:57 +0200
 
 cm4all-passage (0.23) unstable; urgency=low
 
