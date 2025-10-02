@@ -124,7 +124,7 @@ The following actions are possible:
 
   The second parameter may be a table specifying options:
 
-  - ``stderr=pipe``: Connect the program's ``stderr`` to a pipe and
+  - ``stderr='pipe'``: Connect the program's ``stderr`` to a pipe and
     return the read side to the client.
 
 * :samp:`http_get(URL)`: perform a HTTP GET request and send the
