@@ -24,6 +24,7 @@
 
 #ifdef HAVE_CURL
 #include "uri/Escape.hxx"
+#include "http/HeaderName.hxx"
 #include "util/AllocatedString.hxx"
 #endif
 
@@ -263,6 +264,30 @@ ParseHttpQuery(lua_State *L, Lua::RelativeStackIndex query_idx)
 }
 
 static void
+ParseHttpHeaders(std::map<std::string, std::string, std::less<>> &headers,
+		 lua_State *L, Lua::RelativeStackIndex query_idx)
+{
+	luaL_checktype(L, Lua::GetStackIndex(query_idx), LUA_TTABLE);
+
+	Lua::ForEach(L, query_idx, [L, &headers](const auto key_idx, const auto value_idx){
+		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
+			throw std::invalid_argument{"Key is not a string"};
+
+		const std::string_view name{Lua::ToStringView(L, Lua::GetStackIndex(key_idx))};
+		if (!http_header_name_valid(name))
+			throw std::invalid_argument{"Not a valid HTTP header name"};
+
+		if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
+			throw std::invalid_argument{"Value is not a string"};
+
+		const std::string_view value{Lua::ToStringView(L, Lua::GetStackIndex(value_idx))};
+		// TODO check value
+
+		headers.emplace(name, value);
+	});
+}
+
+static void
 ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 {
 	if (lua_isstring(L, request_idx)) {
@@ -278,7 +303,7 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 
 	std::string url, query;
 
-	Lua::ForEach(L, request_idx, [L, &url, &query](const auto key_idx, const auto value_idx){
+	Lua::ForEach(L, request_idx, [L, &action, &url, &query](const auto key_idx, const auto value_idx){
 		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
 			throw std::invalid_argument{"Key is not a string"};
 
@@ -294,6 +319,8 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 			url = value;
 		} else if (key == "query"sv) {
 			query = ParseHttpQuery(L, value_idx);
+		} else if (key == "headers"sv) {
+			ParseHttpHeaders(action.request_headers, L, value_idx);
 		} else
 			throw std::invalid_argument{"Unrecognized key"};
 	});

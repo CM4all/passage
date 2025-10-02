@@ -144,6 +144,7 @@ The following actions are possible:
 
   - ``url``: an absolute HTTP URL
   - ``query``: a table containing names and values of query parameters
+  - ``headers``: a table containing custom request headers
 
 * :samp:`error([MESSAGE], [HEADERS])`: send an error response to the
   client.  Takes an optional error message parameter.  If a message is

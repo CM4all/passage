@@ -146,8 +146,10 @@ endif
 
 if curl_dep.found()
   subdir('libcommon/src/uri')
+  subdir('libcommon/src/http')
 else
   uri_dep = dependency('', required: false)
+  http_dep = dependency('', required: false)
 endif
 
 libcommon_require_pg = get_option('pg')
@@ -219,7 +221,7 @@ executable('cm4all-passage',
     net_linux_dep,
     libsystemd,
     spawn_dep,
-    curl_dep, uri_dep,
+    curl_dep, uri_dep, http_dep,
     fmt_dep,
   ],
   install: true,

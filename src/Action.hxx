@@ -37,6 +37,10 @@ struct Action {
 
 	std::forward_list<std::string> args;
 
+#ifdef HAVE_CURL
+	std::map<std::string, std::string, std::less<>> request_headers;
+#endif
+
 	Type type = Type::UNDEFINED;
 
 	StderrOption stderr = StderrOption::JOURNAL;

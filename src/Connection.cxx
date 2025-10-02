@@ -27,6 +27,7 @@
 #include "lib/curl/CoRequest.hxx"
 #include "lib/curl/Easy.hxx"
 #include "lib/curl/Setup.hxx"
+#include "lib/curl/Slist.hxx"
 #include "co/Task.hxx"
 #endif
 
@@ -129,6 +130,7 @@ PassageConnection::SendError(SocketAddress address, const Action &action)
 
 struct HttpRequest {
 	CurlEasy curl;
+	CurlSlist headers;
 };
 
 static HttpRequest
@@ -140,6 +142,11 @@ ActionToHttpRequest(const Action &action)
 
 	Curl::Setup(request.curl);
 	request.curl.SetFailOnError();
+
+	for (const auto &[name, value] : action.request_headers)
+		request.headers.Append(fmt::format("{}: {}"sv, name, value).c_str());
+
+	request.curl.SetRequestHeaders(request.headers.Get());
 	return request;
 }
 
