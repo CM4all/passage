@@ -262,15 +262,16 @@ ParseHttpQuery(lua_State *L, Lua::RelativeStackIndex query_idx)
 	return query;
 }
 
-static std::string
-ParseHttpRequest(lua_State *L, int request_idx)
+static void
+ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 {
 	if (lua_isstring(L, request_idx)) {
 		const auto value = Lua::ToStringView(L, request_idx);
 		if (value.empty())
 			throw std::invalid_argument{"Bad URL"};
 
-		return std::string{value};
+		action.param = value;
+		return;
 	}
 
 	luaL_checktype(L, request_idx, LUA_TTABLE);
@@ -305,7 +306,7 @@ ParseHttpRequest(lua_State *L, int request_idx)
 		url.append(query);
 	}
 
-	return url;
+	action.param = std::move(url);
 }
 
 static int
@@ -316,9 +317,10 @@ try {
 		return luaL_error(L, "Invalid parameters");
 
 	Action action{
-		.param = ParseHttpRequest(L, 2),
 		.type = Action::Type::HTTP_GET,
 	};
+
+	ParseHttpRequest(action, L, 2),
 
 	NewLuaAction(L, 1, std::move(action));
 	return 1;
