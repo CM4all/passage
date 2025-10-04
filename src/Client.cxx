@@ -23,6 +23,7 @@
 #include <limits.h> // for INT_MAX
 #include <stdlib.h>
 #include <fcntl.h>
+#include <sysexits.h> // for EX_*
 
 using std::string_view_literals::operator""sv;
 
@@ -180,7 +181,7 @@ try {
 } catch (Usage) {
 	fmt::print(stderr, "Usage: {} [--server=PATH] [--header=NAME:VALUE ...] COMMAND [ARGS...]\n",
 		   argv[0]);
-	return EXIT_FAILURE;
+	return EX_USAGE;
 } catch (const ServerError &error) {
 	if (error.message.empty())
 		fmt::print(stderr, "Server error\n");
