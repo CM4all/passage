@@ -57,7 +57,7 @@ avoid anything but querying the request's parameters.
 ``SIGHUP``
 ^^^^^^^^^^
 
-On ``systemctl reload cm4all-qrelay`` (i.e. ``SIGHUP``), qrelay
+On ``systemctl reload cm4all-passage`` (i.e. ``SIGHUP``), Passage
 calls the Lua function ``reload`` if one was defined.  It is up to the
 Lua script to define the exact meaning of this feature.
 

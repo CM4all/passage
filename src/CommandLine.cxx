@@ -13,7 +13,7 @@ ParseCommandLine(int argc, char **argv)
 	if (argc == 3 && StringIsEqual(argv[1], "--config"))
 		cmdline.config_path = argv[2];
 	else if (argc != 1)
-		throw "Usage: cm4all-qrelay [--config PATH]";
+		throw "Usage: cm4all-passage [--config PATH]";
 
 	return cmdline;
 }
