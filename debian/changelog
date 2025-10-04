@@ -4,6 +4,7 @@ cm4all-passage (0.25) unstable; urgency=low
   * lua: add "method" parameter to http_request()
   * lua: allow passing custom headers to HTTP servers
   * lua: support sending a HTTP request body
+  * client: remove the "Server error" prefix
 
  --   
 

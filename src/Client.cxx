@@ -186,7 +186,7 @@ try {
 	if (error.message.empty())
 		fmt::print(stderr, "Server error\n");
 	else
-		fmt::print(stderr, "Server error: {}\n", error.message);
+		fmt::print(stderr, "{}\n", error.message);
 	return error.exit_status;
 } catch (...) {
 	PrintException(std::current_exception());
