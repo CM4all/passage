@@ -1,3 +1,9 @@
+cm4all-passage (0.26) unstable; urgency=low
+
+  * 
+
+ --   
+
 cm4all-passage (0.25) unstable; urgency=low
 
   * lua: rename http_get() to http_request()
