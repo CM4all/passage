@@ -127,7 +127,7 @@ The following actions are possible:
   - ``stderr='pipe'``: Connect the program's ``stderr`` to a pipe and
     return the read side to the client.
 
-* :samp:`http_get(URL)`: perform a HTTP GET request and send the
+* :samp:`http_request(URL)`: perform a HTTP request and send the
   response to the Passage client.  Non-successful HTTP responses
   (anything other than 2xx) cause the operation to fail.  (This works
   only with small HTTP responses because Passage responses are limited
@@ -136,7 +136,7 @@ The following actions are possible:
   Instead of a simple URL string, you can construct more complex
   requests by passing a table::
 
-    return request:http_get({
+    return request:http_request({
       url='http://example.com/',
     })
 

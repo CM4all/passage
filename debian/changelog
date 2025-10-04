@@ -1,5 +1,6 @@
 cm4all-passage (0.25) unstable; urgency=low
 
+  * lua: rename http_get() to http_request()
   * lua: allow passing custom headers to HTTP servers
 
  --   

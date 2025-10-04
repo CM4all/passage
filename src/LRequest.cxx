@@ -337,14 +337,14 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 }
 
 static int
-NewHttpGetAction(lua_State *L)
+NewHttpRequestAction(lua_State *L)
 try {
 	const auto top = lua_gettop(L);
 	if (top != 2)
 		return luaL_error(L, "Invalid parameters");
 
 	Action action{
-		.type = Action::Type::HTTP_GET,
+		.type = Action::Type::HTTP_REQUEST,
 	};
 
 	ParseHttpRequest(action, L, 2),
@@ -363,7 +363,8 @@ static constexpr struct luaL_Reg request_methods [] = {
 	{"flush_http_cache", NewFlushHttpCacheAction},
 	{"exec_pipe", NewExecPipeAction},
 #ifdef HAVE_CURL
-	{"http_get", NewHttpGetAction},
+	{"http_request", NewHttpRequestAction},
+	{"http_get", NewHttpRequestAction}, // pre 0.25 legacy
 #endif
 	{nullptr, nullptr}
 };

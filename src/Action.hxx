@@ -25,7 +25,7 @@ struct Action {
 		FLUSH_HTTP_CACHE,
 		EXEC_PIPE,
 #ifdef HAVE_CURL
-		HTTP_GET,
+		HTTP_REQUEST,
 #endif
 	};
 

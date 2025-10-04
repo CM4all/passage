@@ -151,7 +151,7 @@ ActionToHttpRequest(const Action &action)
 }
 
 static Co::Task<Entity>
-HttpGet(CurlGlobal &curl, const Action &action)
+DoHttpRequest(CurlGlobal &curl, const Action &action)
 {
 	// TODO body size limit
 	auto response = co_await Curl::CoRequest(curl, ActionToHttpRequest(action).curl);
@@ -207,9 +207,9 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 		break;
 
 #ifdef HAVE_CURL
-	case Action::Type::HTTP_GET:
+	case Action::Type::HTTP_REQUEST:
 		SendResponse(address,
-			     (co_await HttpGet(instance.GetCurl(), action)).Serialize());
+			     (co_await DoHttpRequest(instance.GetCurl(), action)).Serialize());
 		break;
 #endif // HAVE_CURL
 	}
