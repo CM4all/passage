@@ -7,7 +7,7 @@ cm4all-passage (0.25) unstable; urgency=low
   * client: remove the "Server error" prefix
   * systemd: do not restart on configuration errors
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Sat, 04 Oct 2025 11:05:02 +0200
 
 cm4all-passage (0.24) unstable; urgency=low
 
