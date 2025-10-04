@@ -127,20 +127,27 @@ PassageConnection::SendError(SocketAddress address, const Action &action)
 
 #ifdef HAVE_CURL
 
-static CurlEasy
-ActionToCurlEasy(const Action &action)
+struct HttpRequest {
+	CurlEasy curl;
+};
+
+static HttpRequest
+ActionToHttpRequest(const Action &action)
 {
-	CurlEasy easy{action.param.c_str()};
-	Curl::Setup(easy);
-	easy.SetFailOnError();
-	return easy;
+	HttpRequest request{
+		.curl{action.param.c_str()},
+	};
+
+	Curl::Setup(request.curl);
+	request.curl.SetFailOnError();
+	return request;
 }
 
 static Co::Task<Entity>
 HttpGet(CurlGlobal &curl, const Action &action)
 {
 	// TODO body size limit
-	auto response = co_await Curl::CoRequest(curl, ActionToCurlEasy(action));
+	auto response = co_await Curl::CoRequest(curl, ActionToHttpRequest(action).curl);
 
 	Entity entity{
 		.command = std::string{"OK"sv},
