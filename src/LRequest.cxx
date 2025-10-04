@@ -339,6 +339,11 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 			query = ParseHttpQuery(L, value_idx);
 		} else if (key == "headers"sv) {
 			ParseHttpHeaders(action.request_headers, L, value_idx);
+		} else if (key == "body"sv) {
+			if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
+				throw std::invalid_argument{"url is not a string"};
+
+			action.body.emplace(Lua::ToStringView(L, Lua::GetStackIndex(value_idx)));
 		} else
 			throw std::invalid_argument{"Unrecognized key"};
 	});

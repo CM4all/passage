@@ -146,6 +146,8 @@ The following actions are possible:
   - ``method``: the HTTP request method
   - ``query``: a table containing names and values of query parameters
   - ``headers``: a table containing custom request headers
+  - ``body``: the request body; switches the default request method to
+    ``POST``
 
 * :samp:`error([MESSAGE], [HEADERS])`: send an error response to the
   client.  Takes an optional error message parameter.  If a message is

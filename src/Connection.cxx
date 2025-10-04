@@ -152,6 +152,10 @@ ActionToHttpRequest(const Action &action)
 		request.headers.Append(fmt::format("{}: {}"sv, name, value).c_str());
 
 	request.curl.SetRequestHeaders(request.headers.Get());
+
+	if (action.body)
+		request.curl.SetRequestBody(*action.body);
+
 	return request;
 }
 

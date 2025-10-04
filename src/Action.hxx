@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <map>
+#include <optional>
 #include <string>
 #include <forward_list>
 
@@ -41,6 +42,8 @@ struct Action {
 
 #ifdef HAVE_CURL
 	std::map<std::string, std::string, std::less<>> request_headers;
+	std::optional<std::string> body;
+
 	HttpMethod http_method;
 #endif
 
