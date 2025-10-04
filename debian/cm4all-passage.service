@@ -6,6 +6,8 @@ Type=notify
 User=cm4all-passage
 ExecStart=/usr/sbin/cm4all-passage
 ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartPreventExitStatus=USAGE CONFIG
 
 WatchdogSec=2m
 

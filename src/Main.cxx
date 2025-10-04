@@ -44,6 +44,7 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sysexits.h> // for EX_*
 #include <unistd.h> // for chdir()
 
 #ifdef HAVE_LIBSYSTEMD
@@ -158,13 +159,19 @@ Run(const CommandLine &cmdline)
 #endif
 
 	Instance instance;
-	SetupConfigState(instance.GetLuaState(), instance);
 
-	LoadConfigFile(instance.GetLuaState(), cmdline.config_path.c_str());
+	try {
+		SetupConfigState(instance.GetLuaState(), instance);
 
-	instance.Check();
+		LoadConfigFile(instance.GetLuaState(), cmdline.config_path.c_str());
 
-	SetupRuntimeState(instance.GetLuaState());
+		instance.Check();
+
+		SetupRuntimeState(instance.GetLuaState());
+	} catch (...) {
+		PrintException(std::current_exception());
+		return EX_CONFIG;
+	}
 
 #ifdef HAVE_LIBSYSTEMD
 	/* tell systemd we're ready */
