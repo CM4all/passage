@@ -12,6 +12,8 @@
 #include <string>
 #include <forward_list>
 
+enum class HttpMethod : uint_least8_t;
+
 enum class StderrOption : uint_least8_t {
 	JOURNAL,
 	PIPE,
@@ -39,6 +41,7 @@ struct Action {
 
 #ifdef HAVE_CURL
 	std::map<std::string, std::string, std::less<>> request_headers;
+	HttpMethod http_method;
 #endif
 
 	Type type = Type::UNDEFINED;

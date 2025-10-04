@@ -143,6 +143,7 @@ The following actions are possible:
   The following table keys are recognized:
 
   - ``url``: an absolute HTTP URL
+  - ``method``: the HTTP request method
   - ``query``: a table containing names and values of query parameters
   - ``headers``: a table containing custom request headers
 

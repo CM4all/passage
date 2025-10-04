@@ -28,6 +28,7 @@
 #include "lib/curl/Easy.hxx"
 #include "lib/curl/Setup.hxx"
 #include "lib/curl/Slist.hxx"
+#include "http/Method.hxx"
 #include "co/Task.hxx"
 #endif
 
@@ -142,6 +143,10 @@ ActionToHttpRequest(const Action &action)
 
 	Curl::Setup(request.curl);
 	request.curl.SetFailOnError();
+
+	if (action.http_method != HttpMethod::UNDEFINED)
+		request.curl.SetOption(CURLOPT_CUSTOMREQUEST,
+				       http_method_to_string(action.http_method));
 
 	for (const auto &[name, value] : action.request_headers)
 		request.headers.Append(fmt::format("{}: {}"sv, name, value).c_str());

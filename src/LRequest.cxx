@@ -25,6 +25,7 @@
 #ifdef HAVE_CURL
 #include "uri/Escape.hxx"
 #include "http/HeaderName.hxx"
+#include "http/Method.hxx"
 #include "util/AllocatedString.hxx"
 #endif
 
@@ -287,6 +288,17 @@ ParseHttpHeaders(std::map<std::string, std::string, std::less<>> &headers,
 	});
 }
 
+static HttpMethod
+ParseHttpMethod(const char *s)
+{
+	for (std::size_t i = 0; i < std::size(http_method_to_string_data); ++i)
+		if (http_method_to_string_data[i] != nullptr &&
+		    StringIsEqual(http_method_to_string_data[i], s))
+			return static_cast<HttpMethod>(i);
+
+	throw std::invalid_argument{"Bad HTTP method"};
+}
+
 static void
 ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 {
@@ -317,6 +329,12 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 				throw std::invalid_argument{"Bad URL"};
 
 			url = value;
+		} else if (key == "method"sv) {
+			if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
+				throw std::invalid_argument{"method is not a string"};
+
+			const char *value = lua_tostring(L, Lua::GetStackIndex(value_idx));
+			action.http_method = ParseHttpMethod(value);
 		} else if (key == "query"sv) {
 			query = ParseHttpQuery(L, value_idx);
 		} else if (key == "headers"sv) {
@@ -344,6 +362,7 @@ try {
 		return luaL_error(L, "Invalid parameters");
 
 	Action action{
+		.http_method = HttpMethod::UNDEFINED,
 		.type = Action::Type::HTTP_REQUEST,
 	};
 
