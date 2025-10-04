@@ -138,7 +138,7 @@ static HttpRequest
 ActionToHttpRequest(const Action &action)
 {
 	HttpRequest request{
-		.curl{action.param.c_str()},
+		.curl = CurlEasy{action.param.c_str()},
 	};
 
 	Curl::Setup(request.curl);
