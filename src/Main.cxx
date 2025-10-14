@@ -12,6 +12,7 @@
 #include "lua/Value.hxx"
 #include "lua/Util.hxx"
 #include "lua/Error.hxx"
+#include "lua/LightUserData.hxx"
 #include "lua/RunFile.hxx"
 #include "lua/StringView.hxx"
 #include "lua/io/XattrTable.hxx"
