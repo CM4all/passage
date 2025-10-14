@@ -1,5 +1,6 @@
 cm4all-passage (0.26) unstable; urgency=low
 
+  * lua: support coroutine.yield(), coroutine.resume()
   * pg: no delay for first auto-reconnect
   * pg: fix assertion failure
   * pg: fix stalled connection
