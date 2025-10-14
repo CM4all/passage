@@ -156,7 +156,8 @@ libcommon_require_pg = get_option('pg')
 subdir('libcommon/src/pg')
 if pg_dep.found()
   subdir('libcommon/src/lua/pg')
-  pg_dep = lua_pg_dep
+else
+  lua_pg_dep = pg_dep
 endif
 
 spawn = static_library('spawn',
@@ -215,7 +216,7 @@ executable('cm4all-passage',
     lua_net_dep,
     lua_event_dep,
     lua_sodium_dep,
-    pg_dep,
+    lua_pg_dep,
     control_client_dep,
     event_net_dep,
     net_linux_dep,
