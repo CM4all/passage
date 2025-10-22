@@ -311,7 +311,7 @@ PassageConnection::OnLuaError(lua_State *, std::exception_ptr &&error) noexcept
 }
 
 inline void
-PassageConnection::OnCoComplete(std::exception_ptr error) noexcept
+PassageConnection::OnCoComplete(std::exception_ptr &&error) noexcept
 {
 	if (error) {
 		logger(1, std::move(error));

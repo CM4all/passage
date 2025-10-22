@@ -71,7 +71,7 @@ private:
 	void SendResponse(SocketAddress address, const Entity &response);
 	void SendError(SocketAddress address, const Action &action);
 
-	void OnCoComplete(std::exception_ptr error) noexcept;
+	void OnCoComplete(std::exception_ptr &&error) noexcept;
 
 	/* virtual methods from class UdpHandler */
 	bool OnUdpDatagram(std::span<const std::byte> payload,
