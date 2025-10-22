@@ -300,11 +300,11 @@ try {
 }
 
 void
-PassageConnection::OnLuaError(lua_State *, std::exception_ptr e) noexcept
+PassageConnection::OnLuaError(lua_State *, std::exception_ptr &&error) noexcept
 {
 	assert(!invoke_task);
 
-	logger(1, e);
+	logger(1, std::move(error));
 
 	if (pending_response)
 		SendResponse(nullptr, "ERROR");
