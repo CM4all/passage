@@ -18,6 +18,7 @@
 #include "lua/io/XattrTable.hxx"
 #include "lua/io/CgroupInfo.hxx"
 #include "lua/net/SocketAddress.hxx"
+#include "lua/net/ControlClient.hxx"
 #include "lua/event/Init.hxx"
 #include "util/PrintException.hxx"
 #include "config.h"
@@ -107,6 +108,7 @@ SetupConfigState(lua_State *L, Instance &instance)
 #endif
 
 	Lua::InitSocketAddress(L);
+	Lua::InitControlClient(L);
 	RegisterLuaResolver(L);
 
 #ifdef HAVE_LIBSYSTEMD

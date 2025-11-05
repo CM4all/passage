@@ -24,8 +24,13 @@ struct Action {
 	enum class Type : uint_least8_t {
 		UNDEFINED,
 		ERROR,
+
+		// deprecated: use control_client.build().fade_children()
 		FADE_CHILDREN,
+
+		// deprecated: use control_client.build().flush_http_cache()
 		FLUSH_HTTP_CACHE,
+
 		EXEC_PIPE,
 #ifdef HAVE_CURL
 		HTTP_REQUEST,

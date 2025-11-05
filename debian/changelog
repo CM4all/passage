@@ -1,6 +1,6 @@
 cm4all-passage (0.27) unstable; urgency=low
 
-  * 
+  * lua: new control_client library
 
  --   
 
