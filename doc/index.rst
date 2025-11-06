@@ -210,11 +210,16 @@ During startup, create a ``control_client`` object::
   -- abstract socket
   c = control_client:new('@bp-control')
 
+The ``new()`` constructor returns ``nil,error`` on error (and thus the
+call can be wrapped in ``assert()`` to raise a Lua error instead).
+
 The method ``build()`` creates an object which can be used to build a
 control datagram with one or more commands.  After that datagram has
 been assembled, it can be sent with the ``send()`` method.  Example::
 
   c:send(c:build():fade_children('foo'):flush_http_cache('bar'))
+
+The ``send()`` method returns ``nil,error`` on error.
 
 The builder implements the following methods:
 
