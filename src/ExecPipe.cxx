@@ -6,9 +6,12 @@
 #include "Action.hxx" // for StderrOption
 #include "system/Error.hxx"
 #include "system/SetupProcess.hxx"
+#include "system/linux/clone3.h"
 #include "io/Pipe.hxx"
 
 #include <fmt/format.h>
+
+#include <signal.h> // for SIGCHLD
 
 static void
 ReadDummy(FileDescriptor fd) noexcept
@@ -35,9 +38,14 @@ ExecPipe(const char *path, const char *const*args,
 
 	auto [exec_wait_r, exec_wait_w] = CreatePipe();
 
-	const auto pid = fork();
+	struct clone_args ca{
+		.flags = CLONE_CLEAR_SIGHAND,
+		.exit_signal = SIGCHLD,
+	};
+
+	const auto pid = clone3(&ca, sizeof(ca));
 	if (pid < 0)
-		throw MakeErrno("fork() failed");
+		throw MakeErrno("clone3() failed");
 
 	if (pid == 0) {
 		PostFork();
