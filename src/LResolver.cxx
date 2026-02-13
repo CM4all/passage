@@ -5,7 +5,6 @@
 #include "LResolver.hxx"
 #include "lua/Util.hxx"
 #include "lua/net/Resolver.hxx"
-#include "net/AddressInfo.hxx"
 #include "net/control/Protocol.hxx"
 
 extern "C" {
