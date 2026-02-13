@@ -194,6 +194,15 @@ CollectExecOptions(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
 		const auto key = Lua::ToStringView(L, Lua::GetStackIndex(key_idx));
 		if (key == "stderr"sv) {
 			action.stderr = ParseStderrOption(L, Lua::GetStackIndex(value_idx));
+		} else if (key == "cgroup"sv) {
+			if (lua_type(L, Lua::GetStackIndex(value_idx)) != LUA_TSTRING)
+				luaL_error(L, "Bad 'cgroup' option");
+
+			const std::string_view value = Lua::ToStringView(L, Lua::GetStackIndex(value_idx));
+			if (value != "client"sv)
+				luaL_error(L, "Bad 'cgroup' value");
+
+			action.cgroup_client = true;
 		} else
 			luaL_error(L, "Unknown option");
 	});

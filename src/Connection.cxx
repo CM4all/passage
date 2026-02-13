@@ -11,7 +11,10 @@
 #include "SendControl.hxx"
 #include "ExecPipe.hxx"
 #include "lua/Error.hxx"
+#include "io/Beneath.hxx"
+#include "io/FileAt.hxx"
 #include "io/Iovec.hxx"
+#include "io/Open.hxx"
 #include "io/UniqueFileDescriptor.hxx"
 #include "net/SocketAddress.hxx"
 #include "net/SocketProtocolError.hxx"
@@ -189,7 +192,19 @@ PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
 
 	args.emplace_back(nullptr);
 
-	auto result = ExecPipe(args.front(), &args.front(), action.stderr);
+	UniqueFileDescriptor cgroup;
+	if (action.cgroup_client) {
+		const auto path = peer_auth.GetCgroupPath();
+		if (path.empty())
+			throw std::runtime_error("Client has no cgroup");
+
+		const auto sys_fs_cgroup = OpenPath("/sys/fs/cgroup");
+		cgroup = OpenReadOnlyBeneath({sys_fs_cgroup, std::string{path.substr(1)}.c_str()});
+	}
+
+	auto result = ExecPipe(args.front(), &args.front(),
+			       cgroup,
+			       action.stderr);
 
 	SendResponse(address, "OK", result.stdout_pipe, result.stderr_pipe);
 }

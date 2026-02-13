@@ -115,6 +115,9 @@ The following actions are possible:
   - ``stderr='pipe'``: Connect the program's ``stderr`` to a pipe and
     return the read side to the client.
 
+  - ``cgroup='client'``: Spawn the child process in the same cgroup as
+    the client.
+
 * :samp:`http_request(URL)`: perform a HTTP request and send the
   response to the Passage client.  Non-successful HTTP responses
   (anything other than 2xx) cause the operation to fail.  (This works

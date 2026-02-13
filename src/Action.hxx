@@ -56,6 +56,8 @@ struct Action {
 
 	StderrOption stderr = StderrOption::JOURNAL;
 
+	bool cgroup_client = false;
+
 	constexpr bool IsDefined() const noexcept {
 		return type != Type::UNDEFINED;
 	}

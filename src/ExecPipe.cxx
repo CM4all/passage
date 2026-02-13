@@ -22,6 +22,7 @@ ReadDummy(FileDescriptor fd) noexcept
 
 ExecPipeResult
 ExecPipe(const char *path, const char *const*args,
+	 FileDescriptor cgroup,
 	 StderrOption stderr_option)
 {
 	auto [r, w] = CreatePipe();
@@ -42,6 +43,11 @@ ExecPipe(const char *path, const char *const*args,
 		.flags = CLONE_CLEAR_SIGHAND,
 		.exit_signal = SIGCHLD,
 	};
+
+	if (cgroup.IsDefined()) {
+		ca.flags |= CLONE_INTO_CGROUP;
+		ca.cgroup = cgroup.Get();
+	}
 
 	const auto pid = clone3(&ca, sizeof(ca));
 	if (pid < 0)

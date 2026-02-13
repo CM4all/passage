@@ -11,6 +11,9 @@ RestartPreventExitStatus=USAGE CONFIG
 
 WatchdogSec=2m
 
+# Required for CLONE_INTO_CGROUP
+AmbientCapabilities=CAP_DAC_OVERRIDE
+
 # This allows the kernel to merge CPU wakeups, the default of 50ns is
 # too fine.
 TimerSlackNSec=10ms
