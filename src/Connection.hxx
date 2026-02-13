@@ -62,6 +62,7 @@ public:
 	static void Register(lua_State *L);
 
 private:
+	void DoExecPipe(SocketAddress address, const Action &action);
 	Co::InvokeTask Do(SocketAddress address, const Action &action);
 
 	void SendResponse(SocketAddress address, std::string_view status);

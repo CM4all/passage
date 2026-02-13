@@ -175,6 +175,25 @@ DoHttpRequest(CurlGlobal &curl, const Action &action)
 
 #endif // HAVE_CURL
 
+inline void
+PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
+{
+	assert(action.type == Action::Type::EXEC_PIPE);
+
+	StaticVector<const char *, 64> args;
+	for (const auto &i : action.args) {
+		args.emplace_back(i.c_str());
+		if (args.full())
+			throw std::runtime_error("Too many EXEC_PIPE arguments");
+	}
+
+	args.emplace_back(nullptr);
+
+	auto result = ExecPipe(args.front(), &args.front(), action.stderr);
+
+	SendResponse(address, "OK", result.stdout_pipe, result.stderr_pipe);
+}
+
 Co::InvokeTask
 PassageConnection::Do(SocketAddress address, const Action &action)
 {
@@ -198,21 +217,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 		break;
 
 	case Action::Type::EXEC_PIPE:
-		{
-			StaticVector<const char *, 64> args;
-			for (const auto &i : action.args) {
-				args.emplace_back(i.c_str());
-				if (args.full())
-					throw std::runtime_error("Too many EXEC_PIPE arguments");
-			}
-
-			args.emplace_back(nullptr);
-
-			auto result = ExecPipe(args.front(), &args.front(), action.stderr);
-
-			SendResponse(address, "OK", result.stdout_pipe, result.stderr_pipe);
-		}
-
+		DoExecPipe(address, action);
 		break;
 
 #ifdef HAVE_CURL
