@@ -1,5 +1,6 @@
 cm4all-passage (0.28) unstable; urgency=low
 
+  * clear all capabilities in child processes
   * fix build with glibc 2.43
 
  --   

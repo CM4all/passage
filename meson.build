@@ -111,12 +111,14 @@ libsystemd = dependency('libsystemd', required: get_option('systemd'))
 inc = include_directories('src', 'libcommon/src', '.')
 
 libcommon_enable_DefaultFifoBuffer = false
+libcommon_require_cap = get_option('cap')
 libcommon_require_curl = get_option('curl')
 libcommon_require_sodium = get_option('sodium')
 
 subdir('libcommon/src/util')
 subdir('libcommon/src/co')
 subdir('libcommon/src/time')
+subdir('libcommon/src/lib/cap')
 subdir('libcommon/src/lib/fmt')
 subdir('libcommon/src/lib/sodium')
 subdir('libcommon/src/lua')
@@ -169,6 +171,7 @@ spawn_dep = declare_dependency(link_with: spawn,
                                dependencies: [event_dep])
 
 conf.set('HAVE_CURL', curl_dep.found())
+conf.set('HAVE_LIBCAP', cap_dep.found())
 conf.set('HAVE_LIBSODIUM', sodium_dep.found())
 conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
 conf.set('HAVE_PG', pg_dep.found())
@@ -206,6 +209,7 @@ executable('cm4all-passage',
   include_directories: inc,
   dependencies: [
     lib_dep,
+    cap_dep,
     libsystemd,
     liblua,
     io_linux_dep,

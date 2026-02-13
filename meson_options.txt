@@ -1,3 +1,4 @@
+option('cap', type: 'feature', description: 'Linux capability support (using libcap)')
 option('curl', type: 'feature', description: 'CURL support')
 option('sodium', type: 'feature', description: 'libsodium support')
 option('systemd', type: 'feature', description: 'systemd support (using libsystemd)')

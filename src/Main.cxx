@@ -28,6 +28,10 @@
 #include "lua/pg/Init.hxx"
 #endif
 
+#ifdef HAVE_LIBCAP
+#include "lib/cap/State.hxx"
+#endif
+
 #ifdef HAVE_LIBSODIUM
 #include "lua/sodium/Init.hxx"
 #endif
@@ -201,6 +205,15 @@ try {
 	   even if stdout is a pipe to systemd-journald */
 	setvbuf(stdout, nullptr, _IOLBF, 0);
 	setvbuf(stderr, nullptr, _IOLBF, 0);
+
+#ifdef HAVE_LIBCAP
+	{
+		/* don't inherit any capabilities to spawned processes */
+		auto state = CapabilityState::Current();
+		state.ClearFlag(CAP_INHERITABLE);
+		state.Install();
+	}
+#endif // HAVE_LIBCAP
 
 	return Run(cmdline);
 } catch (...) {
