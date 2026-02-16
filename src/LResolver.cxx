@@ -18,7 +18,7 @@ RegisterLuaResolver(lua_State *L)
 {
 	static constexpr struct addrinfo hints{
 		.ai_family = AF_UNSPEC,
-		.ai_socktype = SOCK_STREAM,
+		.ai_socktype = SOCK_DGRAM,
 	};
 
 	Lua::PushResolveFunction(L, hints, BengControl::DEFAULT_PORT);
