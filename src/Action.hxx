@@ -5,13 +5,13 @@
 #pragma once
 
 #include "net/AllocatedSocketAddress.hxx"
+#include "util/StaticVector.hxx"
 #include "config.h"
 
 #include <cstdint>
 #include <map>
 #include <optional>
 #include <string>
-#include <forward_list>
 
 enum class HttpMethod : uint_least8_t;
 
@@ -21,6 +21,8 @@ enum class StderrOption : uint_least8_t {
 };
 
 struct Action {
+	static constexpr unsigned MAX_EXEC = 32;
+
 	enum class Type : uint_least8_t {
 		UNDEFINED,
 		ERROR,
@@ -43,7 +45,7 @@ struct Action {
 
 	std::string param;
 
-	std::forward_list<std::string> args;
+	StaticVector<std::string, MAX_EXEC> exec;
 
 #ifdef HAVE_CURL
 	std::map<std::string, std::string, std::less<>> request_headers;

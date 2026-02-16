@@ -222,13 +222,14 @@ NewExecPipeAction(lua_State *L)
 		.type = Action::Type::EXEC_PIPE,
 	};
 
-	auto tail = action.args.before_begin();
-
 	for (lua_pushnil(L); lua_next(L, 2); lua_pop(L, 1)) {
 		if (!lua_isstring(L, -1))
 			luaL_error(L, "string expected");
 
-		tail = action.args.emplace_after(tail, lua_tostring(L, -1));
+		if (action.exec.full())
+			luaL_error(L, "Too many arguments");
+
+		action.exec.emplace_back(Lua::CheckStringView(L, -1));
 	}
 
 	if (top >= 3)

@@ -183,11 +183,9 @@ PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
 {
 	assert(action.type == Action::Type::EXEC_PIPE);
 
-	StaticVector<const char *, 64> args;
-	for (const auto &i : action.args) {
+	StaticVector<const char *, Action::MAX_EXEC + 1> args;
+	for (const auto &i : action.exec) {
 		args.emplace_back(i.c_str());
-		if (args.full())
-			throw std::runtime_error("Too many EXEC_PIPE arguments");
 	}
 
 	args.emplace_back(nullptr);
