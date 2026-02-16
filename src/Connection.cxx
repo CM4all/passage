@@ -20,7 +20,6 @@
 #include "net/SocketProtocolError.hxx"
 #include "net/ScmRightsBuilder.hxx"
 #include "net/SendMessage.hxx"
-#include "util/StaticVector.hxx"
 #include "util/ScopeExit.hxx"
 #include "util/SpanCast.hxx"
 #include "util/Macros.hxx"
@@ -183,12 +182,11 @@ PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
 {
 	assert(action.type == Action::Type::EXEC_PIPE);
 
-	StaticVector<const char *, Action::MAX_EXEC + 1> args;
-	for (const auto &i : action.exec) {
-		args.emplace_back(i.c_str());
-	}
-
-	args.emplace_back(nullptr);
+	char *argv[Action::MAX_EXEC + 1];
+	unsigned n = 0;
+	for (const auto &i : action.exec)
+		argv[n++] = const_cast<char *>(i.c_str());
+	argv[n] = nullptr;
 
 	UniqueFileDescriptor cgroup;
 	if (action.cgroup_client) {
@@ -200,7 +198,7 @@ PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
 		cgroup = OpenReadOnlyBeneath({sys_fs_cgroup, std::string{path.substr(1)}.c_str()});
 	}
 
-	auto result = ExecPipe(args.front(), &args.front(),
+	auto result = ExecPipe(argv[0], argv,
 			       cgroup,
 			       action.stderr);
 
