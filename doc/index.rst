@@ -112,6 +112,8 @@ The following actions are possible:
 
   The second parameter may be a table specifying options:
 
+  - ``env``: a table with environment variables for the child process.
+
   - ``stderr='pipe'``: Connect the program's ``stderr`` to a pipe and
     return the read side to the client.
 

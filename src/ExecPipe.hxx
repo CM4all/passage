@@ -27,5 +27,6 @@ struct ExecPipeResult {
  */
 ExecPipeResult
 ExecPipe(const char *path, const char *const*args,
+	 const char *const*env,
 	 FileDescriptor cgroup,
 	 StderrOption stderr_option);

@@ -1,6 +1,6 @@
 cm4all-passage (0.28) unstable; urgency=low
 
-  * add "exec_pipe" option "cgroup=client"
+  * add "exec_pipe" options "cgroup=client", "env"
   * clear all capabilities in child processes
   * fix build with glibc 2.43
 

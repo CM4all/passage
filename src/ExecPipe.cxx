@@ -22,6 +22,7 @@ ReadDummy(FileDescriptor fd) noexcept
 
 ExecPipeResult
 ExecPipe(const char *path, const char *const*args,
+	 const char *const*env,
 	 FileDescriptor cgroup,
 	 StderrOption stderr_option)
 {
@@ -61,7 +62,7 @@ ExecPipe(const char *path, const char *const*args,
 		if (stderr_w.IsDefined())
 			stderr_w.CheckDuplicate(FileDescriptor(STDERR_FILENO));
 
-		execv(path, const_cast<char*const*>(args));
+		execve(path, const_cast<char*const*>(args), const_cast<char*const*>(env));
 		fmt::print(stderr, "Failed to execute '{}': {}\n",
 			   path, strerror(errno));
 		exit(EXIT_FAILURE);

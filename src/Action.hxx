@@ -22,6 +22,7 @@ enum class StderrOption : uint_least8_t {
 
 struct Action {
 	static constexpr unsigned MAX_EXEC = 32;
+	static constexpr unsigned MAX_ENV = 32;
 
 	enum class Type : uint_least8_t {
 		UNDEFINED,
@@ -46,6 +47,11 @@ struct Action {
 	std::string param;
 
 	StaticVector<std::string, MAX_EXEC> exec;
+
+	/**
+	 * Environment variables for #EXEC_PIPE.
+	 */
+	StaticVector<std::string, MAX_ENV> env;
 
 #ifdef HAVE_CURL
 	std::map<std::string, std::string, std::less<>> request_headers;

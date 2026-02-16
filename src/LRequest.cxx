@@ -29,6 +29,8 @@
 #include "util/AllocatedString.hxx"
 #endif
 
+#include <fmt/core.h>
+
 #include <assert.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -182,6 +184,28 @@ ParseStderrOption(lua_State *L, int idx)
 }
 
 /**
+ * Collect parameters from the "options" table passed as the last
+ * parameter to exec() / exec_raw().
+ */
+static void
+CollectExecEnv(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
+{
+	Lua::ForEach(L, idx, [L, &action](auto name_idx, auto value_idx){
+		if (action.env.full())
+			luaL_error(L, "Too many environment variables");
+
+		if (lua_type(L, Lua::GetStackIndex(name_idx)) != LUA_TSTRING)
+			luaL_error(L, "Environment name is not a string");
+		if (lua_type(L, Lua::GetStackIndex(value_idx)) != LUA_TSTRING)
+			luaL_error(L, "Environment value is not a string");
+
+		const auto name = Lua::ToStringView(L, Lua::GetStackIndex(name_idx));
+		const auto value = Lua::ToStringView(L, Lua::GetStackIndex(value_idx));
+		action.env.emplace_back(fmt::format("{}={}"sv, name, value));
+	});
+}
+
+/**
  * Collect parameters from the "options" table passed to exec_pipe().
  */
 static void
@@ -194,6 +218,8 @@ CollectExecOptions(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
 		const auto key = Lua::ToStringView(L, Lua::GetStackIndex(key_idx));
 		if (key == "stderr"sv) {
 			action.stderr = ParseStderrOption(L, Lua::GetStackIndex(value_idx));
+		} else if (key == "env"sv) {
+			CollectExecEnv(action, L, value_idx);
 		} else if (key == "cgroup"sv) {
 			if (lua_type(L, Lua::GetStackIndex(value_idx)) != LUA_TSTRING)
 				luaL_error(L, "Bad 'cgroup' option");

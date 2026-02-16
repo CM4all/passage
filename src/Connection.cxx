@@ -188,6 +188,13 @@ PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
 		argv[n++] = const_cast<char *>(i.c_str());
 	argv[n] = nullptr;
 
+	char *env[Action::MAX_ENV + 1];
+	n = 0;
+	for (const auto &i : action.env)
+		env[n++] = const_cast<char *>(i.c_str());
+
+	env[n] = nullptr;
+
 	UniqueFileDescriptor cgroup;
 	if (action.cgroup_client) {
 		const auto path = peer_auth.GetCgroupPath();
@@ -198,7 +205,7 @@ PassageConnection::DoExecPipe(SocketAddress address, const Action &action)
 		cgroup = OpenReadOnlyBeneath({sys_fs_cgroup, std::string{path.substr(1)}.c_str()});
 	}
 
-	auto result = ExecPipe(argv[0], argv,
+	auto result = ExecPipe(argv[0], argv, env,
 			       cgroup,
 			       action.stderr);
 
