@@ -3,15 +3,14 @@
 // author: Max Kellermann <max.kellermann@ionos.com>
 
 #include "Verify.hxx"
-
-#include <stdexcept>
+#include "net/SocketProtocolError.hxx"
 
 void
 CheckCommand(std::string_view s)
 {
 	if (s.empty())
-		throw std::runtime_error("Empty command");
+		throw SocketProtocolError{"Empty command"};
 
 	if (!CheckChars(s, IsValidCommandChar))
-		throw std::runtime_error{"Malformed command"};
+		throw SocketProtocolError{"Malformed command"};
 }
