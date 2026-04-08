@@ -127,12 +127,12 @@ try {
 			path = p;
 		} else if (auto h = StringAfterPrefix(argv[i], "--header=")) {
 			const auto [name, value] = Split(std::string_view{h}, ':');
-			if (value.data() == nullptr || name.empty()) {
+			if (value.data() == nullptr || !IsValidHeaderName(name) ||
+			    !IsValidHeaderValue(value)) {
 				fmt::print(stderr, "Malformed header: {}\n", h);
 				throw Usage();
 			}
 
-			// TODO: verify valid name
 			request.headers.emplace(name, value);
 		} else {
 			fmt::print(stderr, "Unknown option: {}\n", argv[i]);

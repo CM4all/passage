@@ -6,6 +6,7 @@
 #include "Entity.hxx"
 #include "LAction.hxx"
 #include "Action.hxx"
+#include "Verify.hxx"
 #include "lua/AutoCloseList.hxx"
 #include "lua/CheckArg.hxx"
 #include "lua/Class.hxx"
@@ -71,18 +72,25 @@ static constexpr char lua_request_class[] = "passage.request";
 typedef Lua::Class<RichRequest, lua_request_class> LuaRequest;
 
 static void
-LuaTableToStringMap(std::map<std::string, std::string, std::less<>> &dest,
+LuaTableToHeaderMap(std::map<std::string, std::string, std::less<>> &dest,
 		    lua_State *L, int table_idx)
 {
 	Lua::ForEach(L, table_idx, [L, &dest](auto key_idx, auto value_idx){
 		if (!lua_isstring(L, Lua::GetStackIndex(key_idx)))
-			throw std::invalid_argument{"Key is not a string"};
+			throw std::invalid_argument{"Name is not a string"};
+
+		const auto name = Lua::ToStringView(L, Lua::GetStackIndex(key_idx));
+		if (!IsValidHeaderName(name))
+			throw std::invalid_argument{"Malformed header name"};
 
 		if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
 			throw std::invalid_argument{"Value is not a string"};
 
-		dest.emplace(Lua::ToStringView(L, Lua::GetStackIndex(key_idx)),
-			     Lua::ToStringView(L, Lua::GetStackIndex(value_idx)));
+		const auto value = Lua::ToStringView(L, Lua::GetStackIndex(value_idx));
+		if (!IsValidHeaderValue(value))
+			throw std::invalid_argument{"Malformed header value"};
+
+		dest.emplace(name, value);
 	});
 }
 
@@ -101,7 +109,7 @@ NewErrorAction(lua_State *L)
 
 	if (top >= 3) {
 		luaL_checktype(L, 3, LUA_TTABLE);
-		LuaTableToStringMap(action.response_headers, L, 3);
+		LuaTableToHeaderMap(action.response_headers, L, 3);
 	}
 
 	return 1;

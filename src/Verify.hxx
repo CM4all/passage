@@ -27,5 +27,17 @@ IsValidUnquotedParameter(std::string_view s) noexcept
 	return CheckCharsNonEmpty(s, IsValidUnquotedParameterChar);
 }
 
+constexpr bool
+IsValidHeaderName(std::string_view s) noexcept
+{
+	return IsValidUnquotedParameter(s);
+}
+
+constexpr bool
+IsValidHeaderValue(std::string_view s) noexcept
+{
+	return CheckChars(s, IsPrintableASCII);
+}
+
 void
 CheckCommand(std::string_view s);

@@ -111,10 +111,11 @@ ParseEntity(std::string_view payload)
 
 	while (!(line = NextLine(payload)).empty()) {
 		auto [name, value] = Split(line, ':');
-		if (value.data() == nullptr || name.empty())
-			throw SocketProtocolError("Bad header syntax");
-
 		value = StripLeft(value);
+
+		if (value.data() == nullptr || !IsValidHeaderName(name) ||
+		    !IsValidHeaderValue(value))
+			throw SocketProtocolError("Bad header syntax");
 
 		entity.headers.emplace(name, value);
 	}

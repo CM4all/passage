@@ -4,6 +4,7 @@ cm4all-passage (0.29) unstable; urgency=low
   * improved exec error reporting
   * validate unquoted parameters
   * client: stricter exit_status parser
+  * protocol: define allowed characters for headers
 
  --   
 
