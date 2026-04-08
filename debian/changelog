@@ -1,6 +1,7 @@
 cm4all-passage (0.29) unstable; urgency=low
 
   * fix use-after-free crash bug during Lua GC
+  * improved exec error reporting
 
  --   
 

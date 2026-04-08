@@ -4,21 +4,12 @@
 
 #include "ExecPipe.hxx"
 #include "Action.hxx" // for StderrOption
-#include "system/Error.hxx"
-#include "system/SetupProcess.hxx"
-#include "system/linux/clone3.h"
+#include "lib/fmt/SystemError.hxx"
 #include "io/Pipe.hxx"
+#include "util/ScopeExit.hxx"
 
-#include <fmt/format.h>
-
-#include <signal.h> // for SIGCHLD
-
-static void
-ReadDummy(FileDescriptor fd) noexcept
-{
-	std::byte dummy[1];
-	(void)fd.Read(dummy);
-}
+#include <signal.h>
+#include <spawn.h>
 
 ExecPipeResult
 ExecPipe(const char *path, const char *const*args,
@@ -38,41 +29,40 @@ ExecPipe(const char *path, const char *const*args,
 		break;
 	}
 
-	auto [exec_wait_r, exec_wait_w] = CreatePipe();
+	posix_spawnattr_t attr;
+	posix_spawnattr_init(&attr);
+	AtScopeExit(&attr) { posix_spawnattr_destroy(&attr); };
 
-	struct clone_args ca{
-		.flags = CLONE_CLEAR_SIGHAND,
-		.exit_signal = SIGCHLD,
-	};
+	sigset_t signals;
+	sigemptyset(&signals);
+	posix_spawnattr_setsigmask(&attr, &signals);
+	sigaddset(&signals, SIGPIPE);
+	posix_spawnattr_setsigdefault(&attr, &signals);
+
+	short flags = POSIX_SPAWN_SETSIGDEF|POSIX_SPAWN_SETSIGMASK;
 
 	if (cgroup.IsDefined()) {
-		ca.flags |= CLONE_INTO_CGROUP;
-		ca.cgroup = cgroup.Get();
+		flags |= POSIX_SPAWN_SETCGROUP;
+		posix_spawnattr_setcgroup_np(&attr, cgroup.Get());
 	}
 
-	const auto pid = clone3(&ca, sizeof(ca));
-	if (pid < 0)
-		throw MakeErrno("clone3() failed");
+	posix_spawnattr_setflags(&attr, flags);
 
-	if (pid == 0) {
-		PostFork();
+	posix_spawn_file_actions_t file_actions;
+	posix_spawn_file_actions_init(&file_actions);
+	AtScopeExit(&file_actions) { posix_spawn_file_actions_destroy(&file_actions); };
 
-		w.CheckDuplicate(FileDescriptor(STDOUT_FILENO));
+        posix_spawn_file_actions_adddup2(&file_actions, w.Get(), STDOUT_FILENO);
 
-		if (stderr_w.IsDefined())
-			stderr_w.CheckDuplicate(FileDescriptor(STDERR_FILENO));
+	if (stderr_w.IsDefined())
+		posix_spawn_file_actions_adddup2(&file_actions, stderr_w.Get(), STDERR_FILENO);
 
-		execve(path, const_cast<char*const*>(args), const_cast<char*const*>(env));
-		fmt::print(stderr, "Failed to execute '{}': {}\n",
-			   path, strerror(errno));
-		exit(EXIT_FAILURE);
-	}
-
-	/* wait for the execv() to complete, so all inherited file
-	   descriptors are closed (to avoid race condition inside
-	   EventLoop) */
-	exec_wait_w.Close();
-	ReadDummy(exec_wait_r);
+	pid_t pid;
+	if (int error = posix_spawn(&pid, path, &file_actions, &attr,
+				    const_cast<char *const *>(args),
+				    const_cast<char *const *>(env));
+	    error != 0)
+		throw FmtErrno(error, "Failed to execute {:?}", path);
 
 	return {
 		.stdout_pipe = std::move(r),
