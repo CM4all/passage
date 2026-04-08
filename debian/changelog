@@ -5,7 +5,7 @@ cm4all-passage (0.28) unstable; urgency=low
   * fix build failure after CURL 8.19 API change
   * fix build with glibc 2.43
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Wed, 08 Apr 2026 15:49:55 +0200
 
 cm4all-passage (0.27) unstable; urgency=low
 
