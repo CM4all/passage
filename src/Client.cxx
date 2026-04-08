@@ -15,6 +15,7 @@
 #include "util/NumberParser.hxx"
 #include "util/PrintException.hxx"
 #include "util/StringCompare.hxx"
+#include "util/StringSplit.hxx"
 #include "util/SpanCast.hxx"
 
 #include <fmt/format.h>
@@ -125,16 +126,14 @@ try {
 		if (auto p = StringAfterPrefix(argv[i], "--server=")) {
 			path = p;
 		} else if (auto h = StringAfterPrefix(argv[i], "--header=")) {
-			const char *colon = strchr(h, ':');
-			if (colon == nullptr || colon == h) {
+			const auto [name, value] = Split(std::string_view{h}, ':');
+			if (value.data() == nullptr || name.empty()) {
 				fmt::print(stderr, "Malformed header: {}\n", h);
 				throw Usage();
 			}
 
 			// TODO: verify valid name
-			request.headers.emplace(std::piecewise_construct,
-						std::forward_as_tuple(h, colon),
-						std::forward_as_tuple(colon + 1));
+			request.headers.emplace(name, value);
 		} else {
 			fmt::print(stderr, "Unknown option: {}\n", argv[i]);
 			throw Usage();
