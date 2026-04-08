@@ -12,6 +12,7 @@
 #include "net/SocketProtocolError.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "system/Error.hxx"
+#include "util/NumberParser.hxx"
 #include "util/PrintException.hxx"
 #include "util/StringCompare.hxx"
 #include "util/SpanCast.hxx"
@@ -54,7 +55,7 @@ SendRequest(SocketDescriptor fd, const Entity &request)
 
 struct ServerError {
 	std::string message;
-	int exit_status = EXIT_FAILURE;
+	uint_least8_t exit_status = EXIT_FAILURE;
 };
 
 static std::vector<UniqueFileDescriptor>
@@ -80,7 +81,8 @@ ReceiveResponse(SocketDescriptor s)
 
 		if (const auto i = response.headers.find("exit_status"sv);
 		    i != response.headers.end())
-			error.exit_status = atoi(i->second.c_str());
+			if (!ParseIntegerTo(i->second, error.exit_status))
+				throw SocketProtocolError{"Malformed exit_status"};
 
 		throw std::move(error);
 	} else
