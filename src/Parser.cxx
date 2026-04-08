@@ -27,9 +27,14 @@ NextLine(std::string_view &buffer) noexcept
 }
 
 static std::string_view
-NextUnquoted(std::string_view &buffer) noexcept
+NextUnquoted(std::string_view &buffer)
 {
-	return NextSplit(buffer, ' ');
+	std::string_view value = NextSplit(buffer, ' ');
+
+	if (!IsValidUnquotedParameter(value))
+		throw SocketProtocolError{"Bad unquoted parameter"};
+
+	return value;
 }
 
 static std::string
