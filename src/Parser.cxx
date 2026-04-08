@@ -5,6 +5,7 @@
 #include "Parser.hxx"
 #include "Entity.hxx"
 #include "Verify.hxx"
+#include "net/SocketProtocolError.hxx"
 #include "util/StringSplit.hxx"
 #include "util/StringStrip.hxx"
 
@@ -50,7 +51,7 @@ NextQuoted(std::string_view &_src)
 			else if (rest.front() == ' ')
 				_src = rest.substr(1);
 			else
-				throw std::runtime_error{"Garbage after closing quote"};
+				throw SocketProtocolError{"Garbage after closing quote"};
 			return dest;
 		}
 
@@ -64,7 +65,7 @@ NextQuoted(std::string_view &_src)
 		dest.push_back(ch);
 	}
 
-	throw std::runtime_error{"Closing quote missing"};
+	throw SocketProtocolError{"Closing quote missing"};
 }
 
 static std::string
@@ -106,7 +107,7 @@ ParseEntity(std::string_view payload)
 	while (!(line = NextLine(payload)).empty()) {
 		auto [name, value] = Split(line, ':');
 		if (value.data() == nullptr || name.empty())
-			throw std::runtime_error("Bad header syntax");
+			throw SocketProtocolError("Bad header syntax");
 
 		value = StripLeft(value);
 
