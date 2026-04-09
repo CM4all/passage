@@ -9,7 +9,7 @@ cm4all-passage (0.29) unstable; urgency=low
   * client: stricter exit_status parser
   * protocol: define allowed characters for headers
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Thu, 09 Apr 2026 12:17:41 +0200
 
 cm4all-passage (0.28) unstable; urgency=low
 
