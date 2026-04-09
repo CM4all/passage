@@ -26,6 +26,7 @@
 #ifdef HAVE_CURL
 #include "uri/Escape.hxx"
 #include "http/HeaderName.hxx"
+#include "http/HeaderValue.hxx"
 #include "http/Method.hxx"
 #include "util/AllocatedString.hxx"
 #endif
@@ -326,7 +327,8 @@ ParseHttpHeaders(std::map<std::string, std::string, std::less<>> &headers,
 			throw std::invalid_argument{"Value is not a string"};
 
 		const std::string_view value{Lua::ToStringView(L, Lua::GetStackIndex(value_idx))};
-		// TODO check value
+		if (!IsValidHttpHeaderValue(value))
+			throw std::invalid_argument{"Not a valid HTTP header value"};
 
 		headers.emplace(name, value);
 	});
