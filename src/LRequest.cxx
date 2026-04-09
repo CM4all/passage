@@ -25,6 +25,7 @@
 
 #ifdef HAVE_CURL
 #include "uri/Escape.hxx"
+#include "uri/Verify.hxx"
 #include "http/HeaderName.hxx"
 #include "http/HeaderValue.hxx"
 #include "http/Method.hxx"
@@ -371,7 +372,7 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 				throw std::invalid_argument{"url is not a string"};
 
 			const auto value = Lua::ToStringView(L, Lua::GetStackIndex(value_idx));
-			if (value.empty())
+			if (!VerifyHttpUrl(value))
 				throw std::invalid_argument{"Bad URL"};
 
 			url = value;

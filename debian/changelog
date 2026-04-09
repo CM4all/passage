@@ -4,6 +4,7 @@ cm4all-passage (0.29) unstable; urgency=low
   * improved exec error reporting
   * validate unquoted parameters
   * add size limit for action "http_get", defaulting to 64 kB
+  * validate HTTP URIs
   * validate HTTP request header values
   * client: stricter exit_status parser
   * protocol: define allowed characters for headers
