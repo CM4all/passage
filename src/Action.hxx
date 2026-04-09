@@ -57,6 +57,8 @@ struct Action {
 	std::map<std::string, std::string, std::less<>> request_headers;
 	std::optional<std::string> body;
 
+	std::size_t max_size;
+
 	HttpMethod http_method;
 #endif
 

@@ -141,6 +141,8 @@ The following actions are possible:
   - ``headers``: a table containing custom request headers
   - ``body``: the request body; switches the default request method to
     ``POST``
+  - ``max_size``: a size limit for the response body (in bytes); the
+    default is 64 kB
 
 * :samp:`error([MESSAGE], [HEADERS])`: send an error response to the
   client.  Takes an optional error message parameter.  If a message is

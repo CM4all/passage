@@ -388,6 +388,11 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 				throw std::invalid_argument{"url is not a string"};
 
 			action.body.emplace(Lua::ToStringView(L, Lua::GetStackIndex(value_idx)));
+		} else if (key == "max_size"sv) {
+			if (!lua_isnumber(L, Lua::GetStackIndex(value_idx)))
+				throw std::invalid_argument{"max_size is not a number"};
+
+			action.max_size = lua_tointeger(L, Lua::GetStackIndex(value_idx));
 		} else
 			throw std::invalid_argument{"Unrecognized key"};
 	});
@@ -411,6 +416,7 @@ try {
 		return luaL_error(L, "Invalid parameters");
 
 	Action action{
+		.max_size = 64 * 1024ZU,
 		.http_method = HttpMethod::UNDEFINED,
 		.type = Action::Type::HTTP_REQUEST,
 	};
