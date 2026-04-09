@@ -1,4 +1,4 @@
-project('CM4all Passage', 'cpp', version: '0.29',
+project('CM4all Passage', 'cpp', version: '0.30',
   meson_version: '>= 1.0',
   default_options : [
     'cpp_std=c++23',
