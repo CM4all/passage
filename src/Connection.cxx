@@ -327,18 +327,21 @@ try {
 
 void
 PassageConnection::OnLuaError(lua_State *, std::exception_ptr &&error) noexcept
-{
+try {
 	assert(!invoke_task);
 
 	logger(1, std::move(error));
 
 	if (pending_response)
 		SendResponse(nullptr, "ERROR");
+} catch (...) {
+	logger(1, std::move(error));
+	delete this;
 }
 
 inline void
 PassageConnection::OnCoComplete(std::exception_ptr &&error) noexcept
-{
+try {
 	if (error) {
 		logger(1, std::move(error));
 
@@ -348,4 +351,7 @@ PassageConnection::OnCoComplete(std::exception_ptr &&error) noexcept
 		if (pending_response)
 			SendResponse(nullptr, "OK");
 	}
+} catch (...) {
+	logger(1, std::move(error));
+	delete this;
 }
