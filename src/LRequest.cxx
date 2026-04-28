@@ -268,6 +268,9 @@ NewExecPipeAction(lua_State *L)
 		action.exec.emplace_back(Lua::CheckStringView(L, -1));
 	}
 
+	if (action.exec.empty())
+		luaL_error(L, "Not enough arguments");
+
 	if (top >= 3)
 		CollectExecOptions(action, L, 3);
 

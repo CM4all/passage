@@ -1,5 +1,6 @@
 cm4all-passage (0.30) unstable; urgency=low
 
+  * lua: fix nullptr defereference on illegal exec_pipe() call
   * reject requests with file descriptors
   * delay PostgreSQL reconnect after repeated errors
 
