@@ -164,7 +164,6 @@ ActionToHttpRequest(const Action &action)
 static Co::Task<Entity>
 DoHttpRequest(CurlGlobal &curl, const Action &action)
 {
-	// TODO body size limit
 	auto response = co_await Curl::CoRequest(curl, ActionToHttpRequest(action).curl,
 						 {.max_size = action.max_size});
 
