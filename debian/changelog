@@ -2,6 +2,7 @@ cm4all-passage (0.30) unstable; urgency=low
 
   * lua: fix nullptr defereference on illegal exec_pipe() call
   * lua: fix crash on error() with non-string parameter
+  * lua/socket: rethrow C++ exception from resolver as Lua error
   * reject requests with file descriptors
   * delay PostgreSQL reconnect after repeated errors
   * fix crash on reply send error
