@@ -252,13 +252,16 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 
 bool
 PassageConnection::OnUdpDatagram(std::span<const std::byte> payload,
-				 std::span<UniqueFileDescriptor>,
+				 std::span<UniqueFileDescriptor> fds,
 				 SocketAddress address, int)
 try {
 	if (payload.empty()) {
 		delete this;
 		return false;
 	}
+
+	if (!fds.empty())
+		throw SocketProtocolError{"Client unexpectedly passed file descriptors"};
 
 	if (pending_response)
 		throw SocketProtocolError{"Received another datagram while handling request"};
