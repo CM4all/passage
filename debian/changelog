@@ -1,6 +1,6 @@
 cm4all-passage (0.30) unstable; urgency=low
 
-  * 
+  * delay PostgreSQL reconnect after repeated errors
 
  --   
 
