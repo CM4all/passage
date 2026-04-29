@@ -7,7 +7,7 @@ cm4all-passage (0.30) unstable; urgency=low
   * delay PostgreSQL reconnect after repeated errors
   * fix crash on reply send error
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Wed, 29 Apr 2026 21:59:59 +0200
 
 cm4all-passage (0.29) unstable; urgency=low
 
