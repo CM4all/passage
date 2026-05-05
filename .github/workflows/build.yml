@@ -33,6 +33,7 @@ jobs:
             meson \
             ccache \
             libcurl4-openssl-dev \
+            nlohmann-json3-dev \
             libsodium-dev \
             libsystemd-dev \
             libpq-dev \
@@ -47,6 +48,7 @@ jobs:
           meson setup \
             -Dcurl=enabled \
             -Ddocumentation=disabled \
+            -Djson=enabled \
             -Dpg=enabled \
             -Dsodium=enabled \
             -Dsystemd=enabled \

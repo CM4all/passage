@@ -1,5 +1,6 @@
 cm4all-passage (0.31) unstable; urgency=low
 
+  * lua: add to_json()
   * debian: add missing build-dependency on pkg-config
 
  --   

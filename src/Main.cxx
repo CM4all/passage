@@ -36,6 +36,10 @@
 #include "lua/sodium/Init.hxx"
 #endif
 
+#ifdef HAVE_JSON
+#include "lua/json/ToJson.hxx"
+#endif
+
 #ifdef HAVE_CURL
 #include "lib/curl/Init.hxx"
 #endif
@@ -104,6 +108,10 @@ SetupConfigState(lua_State *L, Instance &instance)
 
 #ifdef HAVE_LIBSODIUM
 	Lua::InitSodium(L);
+#endif
+
+#ifdef HAVE_JSON
+	Lua::InitToJson(L);
 #endif
 
 	Lua::InitEvent(L, instance.GetEventLoop());

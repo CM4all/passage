@@ -305,6 +305,18 @@ There are some `libsodium <https://www.libsodium.org/>`__ bindings.
   pk = sodium.crypto_scalarmult_base(sk)
 
 
+json
+^^^^
+
+If built with `nlohmann json <https://json.nlohmann.me/>`__, the
+following functions is available::
+
+- the function ``to_json()`` converts the parameter to a JSON string::
+
+    print(to_json{x=42, y="z"})
+    {"x":42,"y":"z"}
+
+
 PostgreSQL Client
 ^^^^^^^^^^^^^^^^^
 

@@ -113,6 +113,7 @@ inc = include_directories('src', 'libcommon/src', '.')
 libcommon_enable_DefaultFifoBuffer = false
 libcommon_require_cap = get_option('cap')
 libcommon_require_curl = get_option('curl')
+libcommon_enable_json = get_option('json')
 libcommon_require_sodium = get_option('sodium')
 
 subdir('libcommon/src/util')
@@ -120,6 +121,7 @@ subdir('libcommon/src/co')
 subdir('libcommon/src/time')
 subdir('libcommon/src/lib/cap')
 subdir('libcommon/src/lib/fmt')
+subdir('libcommon/src/lib/nlohmann_json')
 subdir('libcommon/src/lib/sodium')
 subdir('libcommon/src/lua')
 subdir('libcommon/src/io')
@@ -144,6 +146,12 @@ if sodium_dep.found()
   subdir('libcommon/src/lua/sodium')
 else
   lua_sodium_dep = sodium_dep
+endif
+
+if nlohmann_json_dep.found()
+  subdir('libcommon/src/lua/json')
+else
+  lua_json_dep = nlohmann_json_dep
 endif
 
 if curl_dep.found()
@@ -174,6 +182,7 @@ conf.set('HAVE_CURL', curl_dep.found())
 conf.set('HAVE_LIBCAP', cap_dep.found())
 conf.set('HAVE_LIBSODIUM', sodium_dep.found())
 conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
+conf.set('HAVE_JSON', nlohmann_json_dep.found())
 conf.set('HAVE_PG', pg_dep.found())
 configure_file(output: 'config.h', configuration: conf)
 
@@ -219,6 +228,7 @@ executable('cm4all-passage',
     lua_io_dep,
     lua_net_dep,
     lua_event_dep,
+    lua_json_dep,
     lua_sodium_dep,
     lua_pg_dep,
     control_client_dep,

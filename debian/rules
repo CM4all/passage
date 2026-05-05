@@ -5,6 +5,7 @@ MESON_OPTIONS = \
 	-Dcap=enabled \
 	-Dcurl=enabled \
 	-Ddocumentation=enabled \
+	-Djson=enabled \
 	-Dpg=enabled \
 	-Dsodium=enabled \
 	-Dsystemd=enabled \
