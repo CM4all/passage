@@ -37,7 +37,7 @@
 #endif
 
 #ifdef HAVE_JSON
-#include "lua/json/ToJson.hxx"
+#include "lua/json/Init.hxx"
 #endif
 
 #ifdef HAVE_CURL
@@ -111,7 +111,7 @@ SetupConfigState(lua_State *L, Instance &instance)
 #endif
 
 #ifdef HAVE_JSON
-	Lua::InitToJson(L);
+	Lua::InitJson(L);
 #endif
 
 	Lua::InitEvent(L, instance.GetEventLoop());

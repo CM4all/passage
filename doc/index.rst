@@ -309,11 +309,12 @@ json
 ^^^^
 
 If built with `nlohmann json <https://json.nlohmann.me/>`__, the
-following functions is available::
+following functions are available in the ``json`` namespace::
 
-- the function ``to_json()`` converts the parameter to a JSON string::
+- the function ``json.dump()`` converts the parameter to a JSON
+  string::
 
-    print(to_json{x=42, y="z"})
+    print(json.dump{x=42, y="z"})
     {"x":42,"y":"z"}
 
 
