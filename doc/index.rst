@@ -317,6 +317,15 @@ following functions are available in the ``json`` namespace::
     print(json.dump{x=42, y="z"})
     {"x":42,"y":"z"}
 
+- the function ``json.parse()`` parses a JSON string and returns it as
+  a Lua value::
+
+    print(inspect(json.parse('{"x":42,"y":"z"}')))
+    {
+      x = 42,
+      y = "z"
+    }
+
 
 PostgreSQL Client
 ^^^^^^^^^^^^^^^^^
