@@ -1,6 +1,6 @@
 cm4all-passage (0.31) unstable; urgency=low
 
-  * 
+  * debian: add missing build-dependency on pkg-config
 
  --   
 
