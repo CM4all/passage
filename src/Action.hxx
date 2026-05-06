@@ -44,7 +44,7 @@ struct Action {
 
 	AllocatedSocketAddress address;
 
-	std::string param;
+	std::string param, body;
 
 	StaticVector<std::string, MAX_EXEC> exec;
 

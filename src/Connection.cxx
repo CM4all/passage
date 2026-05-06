@@ -122,6 +122,7 @@ PassageConnection::SendResponse(SocketAddress address, std::string_view command,
 	Entity response{
 		.command = std::string{command},
 		.headers = action.response_headers,
+		.body = action.body,
 	};
 
 	if (!action.param.empty())
