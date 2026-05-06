@@ -155,8 +155,8 @@ ActionToHttpRequest(const Action &action)
 
 	request.curl.SetRequestHeaders(request.headers.Get());
 
-	if (action.body)
-		request.curl.SetRequestBody(*action.body);
+	if (action.request_body)
+		request.curl.SetRequestBody(*action.request_body);
 
 	return request;
 }

@@ -393,7 +393,7 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 			if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
 				throw std::invalid_argument{"url is not a string"};
 
-			action.body.emplace(Lua::ToStringView(L, Lua::GetStackIndex(value_idx)));
+			action.request_body.emplace(Lua::ToStringView(L, Lua::GetStackIndex(value_idx)));
 		} else if (key == "max_size"sv) {
 			if (!lua_isnumber(L, Lua::GetStackIndex(value_idx)))
 				throw std::invalid_argument{"max_size is not a number"};
