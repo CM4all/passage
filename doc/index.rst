@@ -105,6 +105,15 @@ such action objects; they do not actually perform the action.
 
 The following actions are possible:
 
+* :samp:`ok([BODY], [HEADERS])`: send a successful response to the
+  client.
+
+  Example::
+
+    return request:ok()
+    return request:ok('Some message', {foo='A response header'})
+    return request:ok(nil, {foo='Only headers, no body'})
+
 * :samp:`exec_pipe({PATH, ARG, ...}, [{OPTIONS}])`: execute the given
   program (should be an absolute path because there is no
   :envvar:`$PATH` resolution here) and connect a pipe to its standard

@@ -97,6 +97,27 @@ LuaTableToHeaderMap(std::map<std::string, std::string, std::less<>> &dest,
 }
 
 static int
+NewOkAction(lua_State *L)
+{
+	const auto top = lua_gettop(L);
+	if (top < 1 || top > 3)
+		return luaL_error(L, "Invalid parameters");
+
+	auto &action = *NewLuaAction(L, 1);
+	action.type = Action::Type::OK;
+	if (top >= 2 && !lua_isnil(L, 2)) {
+		action.body = Lua::CheckStringView(L, 2);
+	}
+
+	if (top >= 3) {
+		luaL_checktype(L, 3, LUA_TTABLE);
+		LuaTableToHeaderMap(action.response_headers, L, 3);
+	}
+
+	return 1;
+}
+
+static int
 NewErrorAction(lua_State *L)
 {
 	const auto top = lua_gettop(L);
@@ -438,6 +459,7 @@ try {
 #endif // HAVE_CURL
 
 static constexpr struct luaL_Reg request_methods [] = {
+	{"ok", NewOkAction},
 	{"error", NewErrorAction},
 	{"fade_children", NewFadeChildrenAction},
 	{"flush_http_cache", NewFlushHttpCacheAction},

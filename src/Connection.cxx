@@ -223,6 +223,10 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 	case Action::Type::UNDEFINED:
 		std::unreachable();
 
+	case Action::Type::OK:
+		SendResponse(address, "OK"sv, action);
+		break;
+
 	case Action::Type::ERROR:
 		SendResponse(address, "ERROR"sv, action);
 		break;

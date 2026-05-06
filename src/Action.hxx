@@ -26,6 +26,7 @@ struct Action {
 
 	enum class Type : uint_least8_t {
 		UNDEFINED,
+		OK,
 		ERROR,
 
 		// deprecated: use control_client.build().fade_children()

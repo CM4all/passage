@@ -1,5 +1,6 @@
 cm4all-passage (0.31) unstable; urgency=low
 
+  * lua: add action "ok"
   * lua: add JSON library
   * lua/sodium: add Lua bindings for crypto_sign
   * debian: add missing build-dependency on pkg-config
