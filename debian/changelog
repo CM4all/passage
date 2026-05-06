@@ -5,7 +5,7 @@ cm4all-passage (0.31) unstable; urgency=low
   * lua/sodium: add Lua bindings for crypto_sign
   * debian: add missing build-dependency on pkg-config
 
- --   
+ -- Max Kellermann <mk@cm4all.com>  Wed, 06 May 2026 10:13:08 +0200
 
 cm4all-passage (0.30) unstable; urgency=low
 
