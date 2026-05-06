@@ -116,10 +116,11 @@ PassageConnection::SendResponse(SocketAddress address, const Entity &response)
 }
 
 inline void
-PassageConnection::SendError(SocketAddress address, const Action &action)
+PassageConnection::SendResponse(SocketAddress address, std::string_view command,
+				const Action &action)
 {
 	Entity response{
-		.command = std::string{"ERROR"sv},
+		.command = std::string{command},
 		.headers = action.response_headers,
 	};
 
@@ -222,7 +223,7 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 		std::unreachable();
 
 	case Action::Type::ERROR:
-		SendError(address, action);
+		SendResponse(address, "ERROR"sv, action);
 		break;
 
 	case Action::Type::FADE_CHILDREN:

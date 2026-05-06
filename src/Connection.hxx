@@ -70,7 +70,8 @@ private:
 			  FileDescriptor fd,
 			  FileDescriptor fd2=FileDescriptor::Undefined());
 	void SendResponse(SocketAddress address, const Entity &response);
-	void SendError(SocketAddress address, const Action &action);
+	void SendResponse(SocketAddress address, std::string_view command,
+			  const Action &action);
 
 	void OnCoComplete(std::exception_ptr &&error) noexcept;
 
