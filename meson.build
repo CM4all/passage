@@ -154,6 +154,14 @@ else
   lua_json_dep = nlohmann_json_dep
 endif
 
+if nlohmann_json_dep.found() and sodium_dep.found()
+  crypto_dep = dependency('', required: false)
+  subdir('libcommon/src/jwt')
+  subdir('libcommon/src/lua/jwt')
+else
+  lua_jwt_dep = dependency('', required: false)
+endif
+
 if curl_dep.found()
   subdir('libcommon/src/uri')
   subdir('libcommon/src/http')
@@ -183,6 +191,7 @@ conf.set('HAVE_LIBCAP', cap_dep.found())
 conf.set('HAVE_LIBSODIUM', sodium_dep.found())
 conf.set('HAVE_LIBSYSTEMD', libsystemd.found())
 conf.set('HAVE_JSON', nlohmann_json_dep.found())
+conf.set('HAVE_JWT', lua_jwt_dep.found())
 conf.set('HAVE_PG', pg_dep.found())
 configure_file(output: 'config.h', configuration: conf)
 
@@ -229,6 +238,7 @@ executable('cm4all-passage',
     lua_net_dep,
     lua_event_dep,
     lua_json_dep,
+    lua_jwt_dep,
     lua_sodium_dep,
     lua_pg_dep,
     control_client_dep,

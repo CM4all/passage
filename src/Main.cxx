@@ -40,6 +40,10 @@
 #include "lua/json/Init.hxx"
 #endif
 
+#ifdef HAVE_JWT
+#include "lua/jwt/Init.hxx"
+#endif
+
 #ifdef HAVE_CURL
 #include "lib/curl/Init.hxx"
 #endif
@@ -112,6 +116,10 @@ SetupConfigState(lua_State *L, Instance &instance)
 
 #ifdef HAVE_JSON
 	Lua::InitJson(L);
+#endif
+
+#ifdef HAVE_JWT
+	Lua::InitJwt(L);
 #endif
 
 	Lua::InitEvent(L, instance.GetEventLoop());
