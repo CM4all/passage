@@ -32,7 +32,7 @@
 #include "util/AllocatedString.hxx"
 #endif
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <assert.h>
 #include <sys/socket.h>
