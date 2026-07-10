@@ -5,6 +5,7 @@ cm4all-passage (0.32) unstable; urgency=low
   * debian: build-depend on pkgconf instead of pkg-config
   * debian: add copyright file
   * debian: add source/format file
+  * debian: add lintian override "no-manual-page"
 
  --   
 
