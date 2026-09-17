@@ -232,12 +232,11 @@ PassageConnection::Do(SocketAddress address, const Action &action)
 		break;
 
 	case Action::Type::FADE_CHILDREN:
-		FadeChildren(action.address,
-			     action.param.empty() ? nullptr : action.param.c_str());
+		FadeChildren(action.address, action.param);
 		break;
 
 	case Action::Type::FLUSH_HTTP_CACHE:
-		FlushHttpCache(action.address, action.param.c_str());
+		FlushHttpCache(action.address, action.param);
 		break;
 
 	case Action::Type::EXEC_PIPE:

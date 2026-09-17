@@ -9,17 +9,17 @@
 #include "net/control/Client.hxx"
 
 void
-FadeChildren(SocketAddress address, const char *tag)
+FadeChildren(SocketAddress address, std::string_view tag)
 {
 	using namespace BengControl;
 	Client client{CreateConnectDatagramSocket(address)};
-	client.Send(Command::FADE_CHILDREN, std::string_view{tag});
+	client.Send(Command::FADE_CHILDREN, tag);
 }
 
 void
-FlushHttpCache(SocketAddress address, const char *tag)
+FlushHttpCache(SocketAddress address, std::string_view tag)
 {
 	using namespace BengControl;
 	Client client{CreateConnectDatagramSocket(address)};
-	client.Send(Command::FLUSH_HTTP_CACHE, std::string_view{tag});
+	client.Send(Command::FLUSH_HTTP_CACHE, tag);
 }

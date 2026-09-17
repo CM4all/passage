@@ -1,6 +1,6 @@
 cm4all-passage (0.33) unstable; urgency=low
 
-  * 
+  * fix crash on fade_children() without tag parameter
 
  --   
 

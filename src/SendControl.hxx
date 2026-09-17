@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include <string_view>
+
 class SocketAddress;
 
 void
-FadeChildren(SocketAddress address, const char *tag);
+FadeChildren(SocketAddress address, std::string_view tag);
 
 void
-FlushHttpCache(SocketAddress address, const char *tag);
+FlushHttpCache(SocketAddress address, std::string_view tag);
