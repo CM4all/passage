@@ -51,6 +51,12 @@ static void
 SendRequest(SocketDescriptor fd, const Entity &request)
 {
 	const auto payload = request.Serialize();
+
+	/* the server disconnect on datagrams which don't fit into its
+	   receive buffer */
+	if (payload.size() > 4096)
+		throw std::runtime_error("Request too large");
+
 	SendOrThrow(fd, AsBytes(payload));
 }
 
