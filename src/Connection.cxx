@@ -297,6 +297,13 @@ try {
 }
 
 bool
+PassageConnection::OnUdpTruncated() noexcept
+{
+	delete this;
+	return false;
+}
+
+bool
 PassageConnection::OnUdpHangup()
 {
 	delete this;

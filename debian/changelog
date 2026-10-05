@@ -1,6 +1,6 @@
 cm4all-passage (0.33) unstable; urgency=low
 
-  * listener: ignore truncated datagrams
+  * listener: disconnect on truncated datagram
   * lua: fix C format string confusion
   * lua/control: rethrow LuaJIT errors
   * lua/curl: validate all HTTP URIs
