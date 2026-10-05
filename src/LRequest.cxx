@@ -153,16 +153,15 @@ NewFadeChildrenAction(lua_State *L)
 		return luaL_error(L, "%s", e.what());
 	}
 
-	const char *child_tag = nullptr;
+	std::string_view child_tag;
 	if (top >= 3) {
-		child_tag = luaL_checkstring(L, 3);
+		child_tag = Lua::CheckStringView(L, 3);
 	}
 
 	auto &action = *NewLuaAction(L, 1);
 	action.type = Action::Type::FADE_CHILDREN;
 	action.address = std::move(address);
-	if (child_tag != nullptr)
-		action.param = child_tag;
+	action.param = child_tag;
 	return 1;
 }
 
@@ -181,7 +180,7 @@ NewFlushHttpCacheAction(lua_State *L)
 		return luaL_error(L, "%s", e.what());
 	}
 
-	const char *child_tag = luaL_checkstring(L, 3);
+	const auto child_tag = Lua::CheckStringView(L, 3);
 
 	auto &action = *NewLuaAction(L, 1);
 	action.type = Action::Type::FLUSH_HTTP_CACHE;
