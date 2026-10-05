@@ -150,7 +150,7 @@ NewFadeChildrenAction(lua_State *L)
 	try {
 		address = Lua::ToSocketAddress(L, 2, BengControl::DEFAULT_PORT);
 	} catch (const std::exception &e) {
-		return luaL_error(L, e.what());
+		return luaL_error(L, "%s", e.what());
 	}
 
 	const char *child_tag = nullptr;
@@ -178,7 +178,7 @@ NewFlushHttpCacheAction(lua_State *L)
 	try {
 		address = Lua::ToSocketAddress(L, 2, BengControl::DEFAULT_PORT);
 	} catch (const std::exception &e) {
-		return luaL_error(L, e.what());
+		return luaL_error(L, "%s", e.what());
 	}
 
 	const char *child_tag = luaL_checkstring(L, 3);
