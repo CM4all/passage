@@ -9,7 +9,7 @@ cm4all-passage (0.33) unstable; urgency=low
   * fix crash on fade_children() without tag parameter
   * require CURL 7.85
 
- --   
+ -- Max Kellermann <max.kellermann@ionos.com>  Mon, 05 Oct 2026 17:24:01 +0200
 
 cm4all-passage (0.32) unstable; urgency=low
 
