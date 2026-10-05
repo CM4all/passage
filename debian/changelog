@@ -3,6 +3,7 @@ cm4all-passage (0.33) unstable; urgency=low
   * listener: ignore truncated datagrams
   * lua: fix C format string confusion
   * lua/control: rethrow LuaJIT errors
+  * lua/curl: validate all HTTP URIs
   * lua/pg: quote the LISTEN channel name
   * lua/pg: reject execute() string parameters containing a null byte
   * fix crash on fade_children() without tag parameter

@@ -375,7 +375,7 @@ ParseHttpRequest(Action &action, lua_State *L, int request_idx)
 {
 	if (lua_isstring(L, request_idx)) {
 		const auto value = Lua::ToStringView(L, request_idx);
-		if (value.empty())
+		if (!VerifyHttpUrl(value))
 			throw std::invalid_argument{"Bad URL"};
 
 		action.param = value;
