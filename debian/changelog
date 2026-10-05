@@ -3,6 +3,7 @@ cm4all-passage (0.33) unstable; urgency=low
   * listener: ignore truncated datagrams
   * lua/control: rethrow LuaJIT errors
   * lua/pg: quote the LISTEN channel name
+  * lua/pg: reject execute() string parameters containing a null byte
   * fix crash on fade_children() without tag parameter
   * require CURL 7.85
 
