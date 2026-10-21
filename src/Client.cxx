@@ -12,6 +12,7 @@
 #include "net/SocketProtocolError.hxx"
 #include "net/UniqueSocketDescriptor.hxx"
 #include "system/Error.hxx"
+#include "util/ByteSizes.hxx"
 #include "util/NumberParser.hxx"
 #include "util/PrintException.hxx"
 #include "util/StringCompare.hxx"
@@ -112,7 +113,7 @@ Copy(FileDescriptor in, FileDescriptor out)
 	}
 
 	while (true) {
-		std::byte buffer[8192];
+		std::byte buffer[8_KiB];
 		auto nbytes = in.Read(buffer);
 		if (nbytes <= 0)
 			break;

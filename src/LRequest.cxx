@@ -20,6 +20,7 @@
 #include "net/linux/PeerAuth.hxx"
 #include "io/Beneath.hxx"
 #include "io/FileAt.hxx"
+#include "util/ByteSizes.hxx"
 #include "util/StringAPI.hxx"
 #include "util/StringCompare.hxx"
 
@@ -442,7 +443,7 @@ try {
 		return luaL_error(L, "Invalid parameters");
 
 	Action action{
-		.max_size = 64 * 1024ZU,
+		.max_size = 64_KiB,
 		.http_method = HttpMethod::UNDEFINED,
 		.type = Action::Type::HTTP_REQUEST,
 	};
