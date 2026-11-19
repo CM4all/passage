@@ -224,6 +224,9 @@ ParseStderrOption(lua_State *L, int idx)
 static void
 CollectExecEnv(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
 {
+	if (!lua_istable(L, Lua::GetStackIndex(idx)))
+		luaL_error(L, "Bad 'env' option");
+
 	Lua::ForEach(L, idx, [L, &action](auto name_idx, auto value_idx){
 		if (action.env.full())
 			luaL_error(L, "Too many environment variables");
@@ -245,6 +248,9 @@ CollectExecEnv(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
 static void
 CollectExecOptions(Action &action, lua_State *L, Lua::AnyStackIndex auto idx)
 {
+	if (!lua_istable(L, Lua::GetStackIndex(idx)))
+		luaL_error(L, "Options table expected");
+
 	Lua::ForEach(L, idx, [L, &action](auto key_idx, auto value_idx){
 		if (lua_type(L, Lua::GetStackIndex(key_idx)) != LUA_TSTRING)
 			luaL_error(L, "Option key is not a string");
@@ -295,7 +301,7 @@ NewExecPipeAction(lua_State *L)
 	if (action.exec.empty())
 		luaL_error(L, "Not enough arguments");
 
-	if (top >= 3)
+	if (top >= 3 && !lua_isnil(L, 3))
 		CollectExecOptions(action, L, 3);
 
 	NewLuaAction(L, 1, std::move(action));
