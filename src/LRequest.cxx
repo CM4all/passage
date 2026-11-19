@@ -35,6 +35,9 @@
 
 #include <fmt/format.h>
 
+#include <algorithm>
+#include <array>
+
 #include <assert.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -334,6 +337,19 @@ ParseHttpQuery(lua_State *L, Lua::RelativeStackIndex query_idx)
 	return query;
 }
 
+[[gnu::pure]]
+static bool
+IsReservedHttpRequestHeader(std::string_view name) noexcept
+{
+	std::array<char, 32> buffer;
+	if (name.size() >= buffer.size())
+		/* longer than all reserved names */
+		return false;
+
+	*std::transform(name.begin(), name.end(), buffer.begin(), ToLowerASCII) = '\0';
+	return http_header_is_hop_by_hop(buffer.data());
+}
+
 static void
 ParseHttpHeaders(std::map<std::string, std::string, std::less<>> &headers,
 		 lua_State *L, Lua::RelativeStackIndex query_idx)
@@ -347,6 +363,9 @@ ParseHttpHeaders(std::map<std::string, std::string, std::less<>> &headers,
 		const std::string_view name{Lua::ToStringView(L, Lua::GetStackIndex(key_idx))};
 		if (!http_header_name_valid(name))
 			throw std::invalid_argument{"Not a valid HTTP header name"};
+
+		if (IsReservedHttpRequestHeader(name))
+			throw std::invalid_argument{"Cannot set hop-by-hop headers"};
 
 		if (!lua_isstring(L, Lua::GetStackIndex(value_idx)))
 			throw std::invalid_argument{"Value is not a string"};

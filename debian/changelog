@@ -1,5 +1,6 @@
 cm4all-passage (0.34) unstable; urgency=low
 
+  * lua/curl: don't allow specifying hop-by-hop headers
   * debian: use "debhelper-compat" instead of "debian/compat"
 
  --   
